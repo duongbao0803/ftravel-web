@@ -66,13 +66,13 @@ const items: MenuItem[] = [
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState<boolean>(true);
 
-  const storeDefaultSelectedKeys = (keys: string) => {
-    sessionStorage.setItem("keys", keys);
+  const storeDefaultSelectedKeys = (key: string) => {
+    sessionStorage.setItem("keys", key);
   };
 
   const resetDefaultSelectedKeys = () => {
     const selectedKeys = sessionStorage.getItem("keys");
-    return selectedKeys ? selectedKeys : ["1"];
+    return selectedKeys ? selectedKeys.split(",") : ["1"];
   };
 
   const defaultSelectedKeys = useMemo(() => resetDefaultSelectedKeys(), []);
