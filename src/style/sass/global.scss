@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.scrollbar,
+#myTable {
+  &::-webkit-scrollbar {
+    width: 5px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #d3d3d3;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background-color: #c7c7c7;
+  }
+}
+
+.header {
+  width: -webkit-fill-available !important;
+}
+
+.slick-list {
+  border-radius: 10px;
+}
