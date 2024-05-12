@@ -1,10 +1,10 @@
 import React, { Suspense, lazy } from "react";
 import { Outlet, useRoutes } from "react-router-dom";
-import AuthenPage from "@/pages/AuthenPage";
+import { Error, Loading, ScrollToTop } from "@/components";
 import DashboardLayout from "@/layout";
 import { useAnimation } from "@/hooks/useAnimation";
-import { Error, Loading, ScrollToTop } from "@/components";
 import CustomerList from "@/sections/customer/CustomerList";
+import AuthenPage from "@/pages/AuthenPage";
 import StaffList from "@/sections/user/StaffList";
 
 export const AdminPage = lazy(() => import("@/pages/AdminPage"));
