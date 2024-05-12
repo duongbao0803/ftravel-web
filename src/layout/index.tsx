@@ -17,7 +17,7 @@ type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
   label: React.ReactNode,
-  key: React.Key,
+  key: string,
   icon?: React.ReactNode,
   children?: MenuItem[],
   path?: string
@@ -71,10 +71,9 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
 
   const defaultSelectedKeys = useMemo(() => resetDefaultSelectedKeys(), []);
 
-  const renderMenuItems = (items: any) => {
-    console.log("items", typeof items);
+  const renderMenuItems = (items: MenuItem[]) => {
     return items.map((item) => {
-      if (item.children && item.children.length > 0) {
+      if (item && item.children && item.children.length > 0) {
         return (
           <Menu.SubMenu key={item.key} icon={item.icon} title={item.label}>
             {renderMenuItems(item.children)}
