@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { FloatButton, Layout, Menu, MenuProps, notification } from "antd";
+import { FloatButton, Layout, Menu, notification } from "antd";
 import {
   PieChartOutlined,
   UserOutlined,
@@ -11,9 +11,15 @@ import {
 interface LayoutProps {
   children: React.ReactNode;
 }
+interface MenuItem {
+  key: string;
+  icon?: React.ReactNode;
+  label?: string;
+  path?: string;
+  children?: MenuItem[];
+}
 
 const { Content, Sider, Footer } = Layout;
-type MenuItem = Required<MenuProps>["items"][number];
 
 function getItem(
   label: React.ReactNode,
