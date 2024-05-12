@@ -23,7 +23,7 @@ const { Content, Sider, Footer } = Layout;
 
 function getItem(
   label: React.ReactNode,
-  key: string,
+  key: React.ReactNode,
   icon?: React.ReactNode,
   children?: MenuItem[],
   path?: string
@@ -79,7 +79,12 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
 
   const renderMenuItems = (items: MenuItem[]) => {
     return items.map((item) => {
-      if (item && item.children && item.children.length > 0) {
+      if (
+        item &&
+        "children" in item &&
+        item.children &&
+        item.children.length > 0
+      ) {
         return (
           <Menu.SubMenu key={item.key} icon={item.icon} title={item.label}>
             {renderMenuItems(item.children)}
@@ -90,9 +95,9 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           <Menu.Item
             key={item.key}
             icon={item.icon}
-            onClick={() => storeDefaultSelectedKeys([item.key])}
+            onClick={() => storeDefaultSelectedKeys(item.key)}
           >
-            <Link to={item.path}>{item.label}</Link>
+            {item.path ? <Link to={item.path}>{item.label}</Link> : item.label}
           </Menu.Item>
         );
       }
