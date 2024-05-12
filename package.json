@@ -12,6 +12,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.20.0",
     "@ant-design/icons": "^5.3.6",
+    "@types/aos": "^3.0.7",
     "antd": "^5.17.0",
     "aos": "^2.3.4",
     "axios": "^1.6.8",
