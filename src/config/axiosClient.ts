@@ -1,9 +1,10 @@
 import axios from "axios";
-import dotenv from "dotenv";
-dotenv.config();
 
 const axiosClient = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: "https://ftravelapi.azurewebsites.net",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export default axiosClient;

@@ -17,7 +17,6 @@
     "aos": "^2.3.4",
     "axios": "^1.6.8",
     "crypto-js": "^4.2.0",
-    "dotenv": "^16.4.5",
     "firebase": "^10.11.1",
     "js-cookie": "^3.0.5",
     "react": "^18.2.0",
@@ -28,6 +27,8 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.12.11",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.2.22",
