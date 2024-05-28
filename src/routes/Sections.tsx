@@ -1,25 +1,27 @@
 import React, { Suspense, lazy } from "react";
-import { Outlet, useRoutes } from "react-router-dom";
+import { Navigate, Outlet, useRoutes } from "react-router-dom";
 import { Error, Loading, ScrollToTop } from "@/components";
 import DashboardLayout from "@/layout";
 import { useAnimation } from "@/hooks/useAnimation";
 import CustomerList from "@/sections/customer/CustomerList";
 import AuthenPage from "@/pages/AuthenPage";
 import StaffList from "@/sections/user/StaffList";
+import useAuth from "@/hooks/useAuth";
 
 export const AdminPage = lazy(() => import("@/pages/AdminPage"));
 export const ChartPage = lazy(() => import("@/pages/ChartPage"));
 
 const Router: React.FC = () => {
   useAnimation();
+  const { isAuthenticated } = useAuth();
+
   const routes = useRoutes([
     {
       path: "/",
-      element: <AuthenPage />,
+      element: isAuthenticated ? <Navigate to="/chart" /> : <AuthenPage />,
     },
-
     {
-      element: (
+      element: isAuthenticated ? (
         <DashboardLayout>
           <ScrollToTop>
             <Suspense fallback={<Loading />}>
@@ -27,6 +29,8 @@ const Router: React.FC = () => {
             </Suspense>
           </ScrollToTop>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/" />
       ),
       children: [
         {

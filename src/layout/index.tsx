@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FloatButton, Layout, Menu, notification } from "antd";
 import {
   PieChartOutlined,
@@ -7,6 +7,7 @@ import {
   TeamOutlined,
   FileOutlined,
 } from "@ant-design/icons";
+import useAuth from "@/hooks/useAuth";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -65,6 +66,8 @@ const items: MenuItem[] = [
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState<boolean>(true);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const storeDefaultSelectedKeys = (key: string) => {
     sessionStorage.setItem("keys", key);
@@ -110,6 +113,8 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
       description: "You have successfully logged out",
       duration: 2,
     });
+    logout();
+    navigate("/");
   };
 
   return (
@@ -120,7 +125,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
         collapsedWidth="55"
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
-        className="scrollbar sider bottom-0 left-0 top-0 z-50 box-border min-h-screen w-56 flex-none overflow-auto overflow-y-auto"
+        className={`scrollbar sider bottom-0 left-0 top-0 z-[1000] box-border min-h-screen flex-none overflow-auto overflow-y-auto ${collapsed ? "collapsed" : ""}`}
         theme="light"
         collapsible
       >
@@ -141,8 +146,11 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           {renderMenuItems(items)}
         </Menu>
       </Sider>
-      <Layout className="right-bar overflow-y-auto transition-all duration-[600ms] ease-in-out">
-        <div className="header fixed z-[1000] flex h-16 items-center justify-end gap-2 bg-[#f8f8f8] bg-opacity-80 pr-4 shadow-none backdrop-blur-[6px]">
+      <Layout
+        className="right-bar ease overflow-y-auto transition-all duration-[150ms] ease-in-out"
+        style={{ marginLeft: collapsed ? 55 : 230 }}
+      >
+        <div className="header fixed z-[999] flex h-16 items-center justify-end gap-2 bg-[#f8f8f8] bg-opacity-80 pr-4 shadow-none backdrop-blur-[6px]">
           <>
             <img
               className="h-[42px] w-[42px] rounded-full border object-cover ring-2 ring-gray-300 hover:ring-[#0077ff]"

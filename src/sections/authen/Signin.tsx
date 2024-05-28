@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { Button, Form, Input, Checkbox } from "antd";
+import { Button, Form, Input, Checkbox, notification } from "antd";
 import {
   UserOutlined,
   LockOutlined,
@@ -7,15 +8,28 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "@/config/firebase";
 import Signup from "./Signup";
 import ForgotPasswordForm from "./ForgotPassword";
+import { auth } from "@/config/firebase";
+import { SigninValues } from "@/interfaces/interfaces";
+import { login } from "@/api/authenApi";
+import Cookies from "js-cookie";
+import { encryptData } from "@/util/cryptoUtils";
+import useAuth from "@/hooks/useAuth";
+import { useDecryptCredentials } from "@/hooks/useDecryptCredentials";
 
 const Signin: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isShowRegister, setIsShowRegister] = useState<boolean>(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [rememberMe, setRememberMe] = useState<boolean>(false);
   const [isShowForgotPassword, setIsShowForgotPassword] =
     useState<boolean>(false);
+  const [, setValues] = useState<SigninValues>({
+    email: "",
+    password: "",
+  });
+  const { email, password, secretKey } = useDecryptCredentials();
 
   const handleClick = (): void => {
     const googleProvider = new GoogleAuthProvider();
@@ -29,6 +43,53 @@ const Signin: React.FC = () => {
     setShowPassword(!showPassword);
   };
 
+  const onFinish = (values: SigninValues) => {
+    setValues(values);
+    if (values?.email && values?.password) {
+      handleSignin(values);
+    }
+  };
+
+  const handleSignin = async (formValues: SigninValues) => {
+    if (isLoggingIn) {
+      return;
+    }
+    try {
+      setIsLoggingIn(true);
+      const { email, password } = formValues;
+      const res = await login(formValues);
+      console.log("ceheck res", res);
+      if (res && res.status === 200) {
+        notification.success({
+          message: "Login Successful",
+          description: "You have successfully logged in.",
+          duration: 2,
+        });
+        const jwtAccessToken = res.data.accessToken;
+        const jwtRefreshToken = res.data.refreshToken;
+        Cookies.set("accessToken", jwtAccessToken, { expires: 1 });
+        Cookies.set("refreshToken", jwtRefreshToken, { expires: 10 });
+
+        if (rememberMe) {
+          const encryptedUsername = encryptData(email, secretKey);
+          const encryptedPassword = encryptData(password, secretKey);
+          Cookies.set("username", encryptedUsername);
+          Cookies.set("password", encryptedPassword);
+        }
+        const authStore = useAuth.getState();
+        authStore.login();
+      }
+    } catch (err: any) {
+      notification.error({
+        message: "Login Failed",
+        description: `${err.response.data.message}`,
+        duration: 2,
+      });
+      console.error(">>> Error signing server", err);
+      setIsLoggingIn(false);
+    }
+  };
+
   return (
     <>
       {isShowForgotPassword ? (
@@ -40,32 +101,37 @@ const Signin: React.FC = () => {
         <>
           <div className="">
             <div data-aos="fade-down">
-              <h1 className=" text-4xl font-bold mb-5 text-[#1677ff]">
+              <h1 className=" mb-5 text-4xl font-bold text-[#1677ff]">
                 Welcome Back
               </h1>
             </div>
-            <Form name="normal_login" className="login-form">
+            <Form
+              name="normal_login"
+              className="login-form"
+              onFinish={onFinish}
+            >
               <div data-aos="fade-right">
                 <Form.Item
-                  name=""
+                  name="email"
                   rules={[
                     {
                       required: true,
-                      message: "Please input your Username!",
+                      message: "Please input email",
                     },
                     {
-                      min: 8,
-                      message: "Username must be at least 8 characters",
+                      type: "email",
+                      message: "Please enter a valid email address",
                     },
                   ]}
                   colon={true}
-                  label="Username"
+                  label="Email"
                   labelCol={{ span: 24 }}
                   className="formItem"
+                  initialValue={email}
                 >
                   <Input
                     prefix={<UserOutlined className="site-form-item-icon" />}
-                    placeholder="Username"
+                    placeholder="Email"
                     className="p-2"
                     autoFocus
                   />
@@ -73,7 +139,7 @@ const Signin: React.FC = () => {
               </div>
               <div data-aos="fade-right">
                 <Form.Item
-                  name=""
+                  name="password"
                   id="formItem"
                   rules={[
                     {
@@ -81,13 +147,15 @@ const Signin: React.FC = () => {
                       message: "Please input your Password!",
                     },
                     {
-                      min: 8,
+                      min: 4,
+                      max: 20,
                       message: "Password must be at least 8 characters",
                     },
                   ]}
                   label="Password"
                   labelCol={{ span: 24 }}
                   className="formItem"
+                  initialValue={password}
                 >
                   <Input
                     prefix={<LockOutlined className="site-form-item-icon" />}
@@ -108,10 +176,12 @@ const Signin: React.FC = () => {
               </div>
               <div data-aos="fade-left">
                 <Form.Item name="remember" valuePropName="checked" noStyle>
-                  <Checkbox>Remember me</Checkbox>
+                  <Checkbox onChange={(e) => setRememberMe(e.target.checked)}>
+                    Remember me
+                  </Checkbox>
                   <a
                     href="#"
-                    className="login-form-forgot float-right text-[#3094ff] hover:underline font-semibold"
+                    className="login-form-forgot float-right font-semibold text-[#3094ff] hover:underline"
                     onClick={() => setIsShowForgotPassword(true)}
                   >
                     Forgot password?
@@ -123,28 +193,27 @@ const Signin: React.FC = () => {
                   <Button
                     type="primary"
                     htmlType="submit"
-                    className="login-form-button block mx-auto w-full h-11 text-lg tracking-wider mt-5"
+                    className="login-form-button mx-auto mt-5 block h-11 w-full text-lg tracking-wider"
                   >
                     Sign In
                   </Button>
                 </div>
               </Form.Item>
             </Form>
-
             <div data-aos="flip-up">
-              <div className="text-center mt-4 flex items-center justify-center">
-                <div className="w-full bg-[#e6e8eb] h-[1px] mr-2"></div>
+              <div className="mt-4 flex items-center justify-center text-center">
+                <div className="mr-2 h-[1px] w-full bg-[#e6e8eb]"></div>
                 <span className="text-[#999999]">OR</span>
-                <div className="w-full bg-[#e6e8eb] h-[1px] ml-2"></div>
+                <div className="ml-2 h-[1px] w-full bg-[#e6e8eb]"></div>
               </div>
             </div>
             <div data-aos="fade-left">
               <div>
                 <Button
-                  className="block bg-[#fff] text-[grey] border border-gray-300 shadow-none mx-auto w-full h-11 mt-5 rounded-[5px]"
+                  className="mx-auto mt-5 block h-11 w-full rounded-[5px] border border-gray-300 bg-[#fff] text-[grey] shadow-none"
                   onClick={handleClick}
                 >
-                  <div className="flex justify-center items-center tracking-wider">
+                  <div className="flex items-center justify-center tracking-wider">
                     <img
                       src="https://freesvg.org/img/1534129544.png"
                       width={23}
@@ -157,11 +226,11 @@ const Signin: React.FC = () => {
               </div>
             </div>
             <div data-aos="fade-up">
-              <div className="text-center mt-2 text-sm">
+              <div className="mt-2 text-center text-sm">
                 <span>You don't have account? </span>
                 <a
                   href="#"
-                  className="text-[#3094ff] hover:underline font-semibold"
+                  className="font-semibold text-[#3094ff] hover:underline"
                   onClick={() => setIsShowRegister(true)}
                 >
                   Sign Up
