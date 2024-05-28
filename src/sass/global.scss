@@ -19,10 +19,36 @@
   }
 }
 
+#myTable {
+  overflow-x: auto;
+}
+
+.sider {
+  position: fixed !important;
+}
+
+.pagination {
+  position: sticky !important;
+  bottom: 0;
+}
+
 .header {
   width: -webkit-fill-available !important;
 }
 
 .slick-list {
   border-radius: 10px;
+}
+
+//responsive
+@media (min-width: 3000) {
+  .navbar {
+    width: 65%;
+  }
+}
+
+@media (max-width: 991px) {
+  .right-bar {
+    margin-left: 55px !important;
+  }
 }
