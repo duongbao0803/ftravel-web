@@ -66,7 +66,7 @@ const items: MenuItem[] = [
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState<boolean>(true);
-  const { logout } = useAuth();
+  const logout = useAuth((state) => state.logout);
   const navigate = useNavigate();
 
   const storeDefaultSelectedKeys = (key: string) => {
