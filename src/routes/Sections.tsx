@@ -13,7 +13,7 @@ export const ChartPage = lazy(() => import("@/pages/ChartPage"));
 
 const Router: React.FC = () => {
   useAnimation();
-  const { isAuthenticated } = useAuth();
+  const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
   const routes = useRoutes([
     {
