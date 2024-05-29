@@ -214,11 +214,7 @@ const Signup: React.FC<IProps> = ({ isShowRegister, setIsShowRegister }) => {
               </Form.Item>
             </div>
           </Form>
-          <div
-            data-aos="fade-up"
-            data-aos-easing="ease-in-sine"
-            data-aos-duration="600"
-          >
+          <div>
             <div className="text-center text-sm">
               You already have an account? {""}
               <a
