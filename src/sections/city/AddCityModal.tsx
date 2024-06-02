@@ -14,7 +14,7 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields();
+      // const values = await form.validateFields();
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {

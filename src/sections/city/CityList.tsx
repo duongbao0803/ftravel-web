@@ -80,9 +80,9 @@ const CityList: React.FC = () => {
     {
       title: "",
       dataIndex: "",
-      render: (_, record) => (
-        <>{/* <DropdownFunction productInfo={record} /> */}</>
-      ),
+      // render: (_, record) => (
+      //   <>{/* <DropdownFunction productInfo={record} /> */}</>
+      // ),
     },
   ];
 
