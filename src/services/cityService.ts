@@ -9,7 +9,6 @@ const useCityService = () => {
     const { data, headers } = res;
     const pagination = JSON.parse(headers["x-pagination"]);
     const totalCount = pagination.TotalCount;
-    console.log("check total count", totalCount);
     return { data, totalCount };
   };
 

@@ -3,14 +3,15 @@ import { Navigate, Outlet, useRoutes } from "react-router-dom";
 import { Error, Loading, ScrollToTop } from "@/components";
 import DashboardLayout from "@/layout";
 import { useAnimation } from "@/hooks/useAnimation";
-import CustomerList from "@/sections/customer/CustomerList";
 import AuthenPage from "@/pages/AuthenPage";
 import useAuth from "@/hooks/useAuth";
 
-export const AdminPage = lazy(() => import("@/pages/AdminPage"));
 export const ChartPage = lazy(() => import("@/pages/ChartPage"));
 export const CityManagementPage = lazy(
   () => import("@/pages/CityManagementPage"),
+);
+export const UserManagementPage = lazy(
+  () => import("@/pages/UserManagementPage"),
 );
 
 const Router: React.FC = () => {
@@ -40,16 +41,12 @@ const Router: React.FC = () => {
           path: "/chart",
         },
         {
-          element: <AdminPage />,
-          path: "/admin",
-        },
-        {
           element: <CityManagementPage />,
           path: "/city",
         },
         {
-          element: <CustomerList />,
-          path: "/customer",
+          element: <UserManagementPage />,
+          path: "/user",
         },
 
         { element: <Error />, path: "*" },
