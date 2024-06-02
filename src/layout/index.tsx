@@ -4,8 +4,7 @@ import { FloatButton, Layout, Menu, notification } from "antd";
 import {
   PieChartOutlined,
   UserOutlined,
-  TeamOutlined,
-  FileOutlined,
+  HomeOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
 
@@ -41,8 +40,8 @@ function getItem(
 const items: MenuItem[] = [
   getItem("Chart", "1", <PieChartOutlined />, undefined, "/chart"),
   getItem("User", "2", <UserOutlined />, undefined, "/user"),
-  getItem("City", "3", <TeamOutlined />, undefined, "/city"),
-  getItem("Files", "8", <FileOutlined />, undefined, "/option2"),
+  getItem("City", "3", <HomeOutlined />, undefined, "/city"),
+  getItem("Bus company", "4", <HomeOutlined />, undefined, "/busCompany"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
