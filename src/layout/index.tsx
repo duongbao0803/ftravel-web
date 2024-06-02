@@ -5,6 +5,7 @@ import {
   PieChartOutlined,
   UserOutlined,
   HomeOutlined,
+  PushpinOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
 
@@ -40,8 +41,8 @@ function getItem(
 const items: MenuItem[] = [
   getItem("Chart", "1", <PieChartOutlined />, undefined, "/chart"),
   getItem("User", "2", <UserOutlined />, undefined, "/user"),
-  getItem("City", "3", <HomeOutlined />, undefined, "/city"),
-  getItem("Bus company", "4", <HomeOutlined />, undefined, "/busCompany"),
+  getItem("City", "3", <PushpinOutlined />, undefined, "/city"),
+  getItem("Bus company", "4", <HomeOutlined />, undefined, "/company"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
