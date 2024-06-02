@@ -40,33 +40,15 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Chart", "1", <PieChartOutlined />, undefined, "/chart"),
-  getItem(
-    "User",
-    "sub1",
-    <UserOutlined />,
-    [
-      getItem("Admin", "3", undefined, undefined, "/admin"),
-      getItem("Staff", "4", undefined, undefined, "/staff"),
-      getItem("Customer", "5", undefined, undefined, "/customer"),
-    ],
-    "/user",
-  ),
-  getItem(
-    "Team",
-    "sub2",
-    <TeamOutlined />,
-    [
-      getItem("Team 1", "6", undefined, undefined, "/option2"),
-      getItem("Team 2", "7", undefined, undefined, "/option2"),
-    ],
-    "/team",
-  ),
+  getItem("User", "2", <UserOutlined />, undefined, "/user"),
+  getItem("City", "3", <TeamOutlined />, undefined, "/city"),
   getItem("Files", "8", <FileOutlined />, undefined, "/option2"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState<boolean>(true);
   const logout = useAuth((state) => state.logout);
+  const infoUser = useAuth((state) => state.infoUser);
   const navigate = useNavigate();
 
   const storeDefaultSelectedKeys = (key: string) => {
@@ -159,7 +141,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           </>
 
           <div className="flex flex-col">
-            <strong>Dương Bảo</strong>
+            <strong>{infoUser}</strong>
             <div
               className="cursor-pointer font-semibold text-[#5099ff] hover:underline"
               onClick={handleLogout}

@@ -15,11 +15,12 @@ const signUp = (formValues: SignupValues) => {
 };
 
 const requestRefreshToken = (
-  refreshToken: string,
+  jwtToken: string,
 ): Promise<AxiosResponse<responseTokenProps>> => {
-  return axiosClient.post<responseTokenProps>("/api/authen/refresh-token", {
-    refreshToken,
-  });
+  return axiosClient.post<responseTokenProps>(
+    "/api/authen/refresh-token",
+    jwtToken,
+  );
 };
 
 const getInfoUser = () => {

@@ -7,7 +7,7 @@ export interface AuthState {
   isAuthenticated: boolean;
   login: () => void;
   logout: () => void;
-  infoUser: object;
+  infoUser: string;
   fetchUserInfo: () => void;
 }
 

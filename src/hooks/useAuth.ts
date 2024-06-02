@@ -4,12 +4,13 @@ import Cookies from "js-cookie";
 import { create } from "zustand";
 
 const useAuth = create<AuthState>((set) => ({
-  infoUser: {},
+  infoUser: "",
   fetchUserInfo: async () => {
     try {
       const res = await getInfoUser();
       if (res && res.status === 200) {
-        set({ infoUser: res?.data?.info || {} });
+        console.log("check res", res);
+        set({ infoUser: res?.data || "" });
       }
     } catch (err) {
       console.error("Error fetching userInfo", err);
