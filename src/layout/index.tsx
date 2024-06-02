@@ -4,8 +4,6 @@ import { FloatButton, Layout, Menu, notification } from "antd";
 import {
   PieChartOutlined,
   UserOutlined,
-  TeamOutlined,
-  FileOutlined,
   HomeOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
