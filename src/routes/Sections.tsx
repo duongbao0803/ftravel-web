@@ -5,11 +5,13 @@ import DashboardLayout from "@/layout";
 import { useAnimation } from "@/hooks/useAnimation";
 import CustomerList from "@/sections/customer/CustomerList";
 import AuthenPage from "@/pages/AuthenPage";
-import StaffList from "@/sections/user/StaffList";
 import useAuth from "@/hooks/useAuth";
 
 export const AdminPage = lazy(() => import("@/pages/AdminPage"));
 export const ChartPage = lazy(() => import("@/pages/ChartPage"));
+export const CityManagementPage = lazy(
+  () => import("@/pages/CityManagementPage"),
+);
 
 const Router: React.FC = () => {
   useAnimation();
@@ -42,13 +44,14 @@ const Router: React.FC = () => {
           path: "/admin",
         },
         {
+          element: <CityManagementPage />,
+          path: "/city",
+        },
+        {
           element: <CustomerList />,
           path: "/customer",
         },
-        {
-          element: <StaffList />,
-          path: "/staff",
-        },
+
         { element: <Error />, path: "*" },
       ],
     },
