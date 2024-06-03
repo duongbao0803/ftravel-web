@@ -3,8 +3,8 @@ import React from "react";
 const TotalField: React.FC = () => {
   return (
     <>
-      <div className="grid grid-cols-3 gap-12">
-        <div className="bold flex gap-5 rounded-lg px-6 py-10 text-white shadow-xl">
+      <div className="grid grid-cols-1 gap-12 sm:grid-cols-3">
+        <div className="bold flex items-center gap-5 rounded-lg px-6 py-10 text-white shadow-xl">
           <div>
             <img
               src="https://fservices-admin.vercel.app/assets/icons/glass/ic_glass_bag.png"
@@ -16,7 +16,7 @@ const TotalField: React.FC = () => {
             <p className="font-semibold text-[#bdbdbd]">Doanh thu</p>
           </div>
         </div>
-        <div className="bold flex gap-5 rounded-lg px-6 py-10 text-white shadow-xl">
+        <div className="bold flex items-center gap-5 rounded-lg px-6 py-10 text-white shadow-lg">
           <div>
             <img
               src="https://fservices-admin.vercel.app/assets/icons/glass/ic_glass_users.png"
@@ -28,7 +28,7 @@ const TotalField: React.FC = () => {
             <p className="font-semibold text-[#bdbdbd]">Người dùng</p>
           </div>
         </div>
-        <div className="bold flex gap-5 rounded-lg px-6 py-10 text-white shadow-xl">
+        <div className="bold flex items-center gap-5 rounded-lg px-6 py-10 text-white shadow-xl">
           <div>
             <img
               src="https://fservices-admin.vercel.app/assets/icons/glass/ic_glass_buy.png"
