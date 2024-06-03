@@ -6,7 +6,7 @@ const BusCompanyMangement: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title> FTravel | Bus comapany management </title>
+        <title> FTravel | Quản lý công ty </title>
       </Helmet>
       <CompanyManagementView />
     </>

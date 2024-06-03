@@ -2,15 +2,15 @@ import { UserManagementView } from "@/sections/user/view";
 import React from "react";
 import { Helmet } from "react-helmet";
 
-const CityManagementPage: React.FC = () => {
+const UserManagementPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title> FTravel | City management </title>
+        <title> FTravel | Quản lý người dùng </title>
       </Helmet>
       <UserManagementView />
     </>
   );
 };
 
-export default CityManagementPage;
+export default UserManagementPage;
