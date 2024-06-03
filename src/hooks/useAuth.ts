@@ -1,4 +1,4 @@
-import { AuthState } from "@/interfaces/interfaces";
+import { AuthState } from "@/types/auth.types";
 import Cookies from "js-cookie";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
