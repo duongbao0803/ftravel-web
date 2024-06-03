@@ -7,6 +7,7 @@ import {
   HomeOutlined,
   PushpinOutlined,
   ShoppingOutlined,
+  ShareAltOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
 import useAuthService from "@/services/authService";
@@ -46,6 +47,7 @@ const items: MenuItem[] = [
   getItem("City", "3", <PushpinOutlined />, undefined, "/city"),
   getItem("Bus company", "4", <HomeOutlined />, undefined, "/company"),
   getItem("Service", "5", <ShoppingOutlined />, undefined, "/service"),
+  getItem("Route", "6", <ShareAltOutlined />, undefined, "/route"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {

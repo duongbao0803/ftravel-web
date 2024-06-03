@@ -19,6 +19,9 @@ export const CompanyManagementPage = lazy(
 export const ServiceManagementPage = lazy(
   () => import("@/pages/ServiceManagementPage"),
 );
+export const RouteManagementPage = lazy(
+  () => import("@/pages/RouteManagementPage"),
+);
 
 const Router: React.FC = () => {
   useAnimation();
@@ -61,6 +64,10 @@ const Router: React.FC = () => {
         {
           element: <ServiceManagementPage />,
           path: "/service",
+        },
+        {
+          element: <RouteManagementPage />,
+          path: "/route",
         },
 
         { element: <Error />, path: "*" },
