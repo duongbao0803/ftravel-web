@@ -11,13 +11,13 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Signup from "./Signup";
 import ForgotPasswordForm from "./ForgotPassword";
 import { auth } from "@/config/firebase";
-import { SigninValues } from "@/types/interfaces";
 import { login } from "@/api/authenApi";
 import Cookies from "js-cookie";
 import { encryptData } from "@/util/cryptoUtils";
 import useAuth from "@/hooks/useAuth";
 import { useDecryptCredentials } from "@/hooks/useDecryptCredentials";
 import { jwtDecode } from "jwt-decode";
+import { SigninValues } from "@/types/auth.types";
 
 const Signin: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
