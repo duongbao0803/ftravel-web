@@ -1,7 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
+import BarChart from "../BarChart";
+import TotalField from "../TotalField";
+import ProcessOrder from "../ProcessOrder";
+import { SystemData } from "@/constants";
 
 const ChartView: React.FC = () => {
-  return <div>ChartView</div>;
+  const [systemData] = useState({
+    labels: SystemData.map((data) => data.year),
+    datasets: [
+      {
+        label: "Người đặt vé",
+        data: SystemData.map((data) => data.userGain),
+        backgroundColor: ["green", "blue"],
+      },
+      {
+        label: "Người hủy vé",
+        data: SystemData.map((data) => data.userLost),
+        backgroundColor: ["yellow", "orange"],
+      },
+    ],
+  });
+  return (
+    <>
+      <div className="p-5">
+        <TotalField />
+      </div>
+      <div className="grid grid-cols-3 gap-12 p-5">
+        <div className="col-span-2">
+          <BarChart chartData={systemData} />
+        </div>
+        <div className="col-span-1">
+          <ProcessOrder />
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default ChartView;
