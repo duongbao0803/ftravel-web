@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Button, Input, Table } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
-import { FilterOutlined, PushpinOutlined } from "@ant-design/icons";
-import useCityService from "@/services/cityService";
-import AddCityModal from "./AddCityModal";
-import ExportCity from "./ExportCity";
+import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
+import ExportCompany from "./ExportCompany";
+import AddCompanyModal from "./AddCompanyModal";
 
 export interface DataType {
   _id: string;
@@ -18,13 +17,10 @@ export interface DataType {
   rating: number;
 }
 
-const CityList: React.FC = () => {
-  // const { products, isFetching } = useProductService();
-  const { cities, isFetching, totalCount } = useCityService();
-
+const CompanyList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [, setCurrentPage] = useState<number>(1);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
@@ -101,12 +97,12 @@ const CityList: React.FC = () => {
         </div>
         <div className="flex gap-x-2">
           <div>
-            <ExportCity />
+            <ExportCompany />
           </div>
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <PushpinOutlined className="mr-1 text-lg" /> Add City
+                <HomeOutlined className="mr-1 text-lg" /> Add Company
               </div>
             </Button>
           </div>
@@ -116,22 +112,22 @@ const CityList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={cities?.map((record: { id: unknown }) => ({
-          ...record,
-          key: record.id,
-        }))}
-        pagination={{
-          current: currentPage,
-          total: totalCount || 0,
-          pageSize: 5,
-        }}
+        // dataSource={cities?.map((record: { id: unknown }) => ({
+        //   ...record,
+        //   key: record.id,
+        // }))}
+        // pagination={{
+        //   current: currentPage,
+        //   total: totalCount || 0,
+        //   pageSize: 5,
+        // }}
         onChange={handleTableChange}
-        loading={isFetching}
+        // loading={isFetching}
         rowKey={(record) => record._id}
       />
-      <AddCityModal setIsOpen={setIsOpen} isOpen={isOpen} />
+      <AddCompanyModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
   );
 };
 
-export default CityList;
+export default CompanyList;
