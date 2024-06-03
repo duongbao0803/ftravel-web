@@ -17,6 +17,7 @@ import Cookies from "js-cookie";
 import { encryptData } from "@/util/cryptoUtils";
 import useAuth from "@/hooks/useAuth";
 import { useDecryptCredentials } from "@/hooks/useDecryptCredentials";
+import { jwtDecode } from "jwt-decode";
 
 const Signin: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -58,7 +59,6 @@ const Signin: React.FC = () => {
       setIsLoggingIn(true);
       const { email, password } = formValues;
       const res = await login(formValues);
-      console.log("ceheck res", res);
       if (res && res.status === 200) {
         notification.success({
           message: "Login Successful",
@@ -67,17 +67,26 @@ const Signin: React.FC = () => {
         });
         const jwtAccessToken = res.data.accessToken;
         const jwtRefreshToken = res.data.refreshToken;
+
         Cookies.set("accessToken", jwtAccessToken, { expires: 1 });
         Cookies.set("refreshToken", jwtRefreshToken, { expires: 10 });
-
-        if (rememberMe) {
-          const encryptedUsername = encryptData(email, secretKey);
-          const encryptedPassword = encryptData(password, secretKey);
-          Cookies.set("username", encryptedUsername);
-          Cookies.set("password", encryptedPassword);
+        const jwtToken = Cookies.get("accessToken");
+        if (jwtToken) {
+          const decoded: any = jwtDecode(jwtToken);
+          const role =
+            decoded[
+              "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+            ];
+          if (rememberMe) {
+            const encryptedUsername = encryptData(email, secretKey);
+            const encryptedPassword = encryptData(password, secretKey);
+            Cookies.set("email", encryptedUsername);
+            Cookies.set("password", encryptedPassword);
+          }
+          const authStore = useAuth.getState();
+          authStore.setRole(role);
+          authStore.login();
         }
-        const authStore = useAuth.getState();
-        authStore.login();
       }
     } catch (err: any) {
       notification.error({

@@ -8,6 +8,7 @@ import {
   PushpinOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
+import useAuthService from "@/services/authService";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -47,8 +48,10 @@ const items: MenuItem[] = [
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState<boolean>(true);
+  const { userInfo } = useAuthService();
+
   const logout = useAuth((state) => state.logout);
-  const infoUser = useAuth((state) => state.infoUser);
+
   const navigate = useNavigate();
 
   const storeDefaultSelectedKeys = (key: string) => {
@@ -141,7 +144,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           </>
 
           <div className="flex flex-col">
-            <strong>{infoUser}</strong>
+            <strong>{userInfo || "Null"}</strong>
             <div
               className="cursor-pointer font-semibold text-[#5099ff] hover:underline"
               onClick={handleLogout}
