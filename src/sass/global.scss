@@ -40,6 +40,11 @@
   border-radius: 10px;
 }
 
+canvas {
+  min-width: 100% !important;
+  min-height: 100% !important;
+}
+
 //responsive
 @media (min-width: 3000) {
   .navbar {
