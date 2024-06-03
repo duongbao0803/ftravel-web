@@ -36,7 +36,7 @@ const TotalField: React.FC = () => {
             />
           </div>
           <div>
-            <p className="text-3xl font-bold text-[black]">26.53m</p>
+            <p className="text-3xl font-bold text-[black]">100</p>
             <p className="font-semibold text-[#bdbdbd]">Đơn hàng</p>
           </div>
         </div>

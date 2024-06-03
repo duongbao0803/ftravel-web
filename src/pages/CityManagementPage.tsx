@@ -6,7 +6,7 @@ const CityManagementPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title> FTravel | City management </title>
+        <title> FTravel | Quản lý thành phố </title>
       </Helmet>
       <CityManagementView />
     </>

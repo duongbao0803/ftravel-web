@@ -6,7 +6,7 @@ const ServiceManagementPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title> FTravel | Service management </title>
+        <title> FTravel | Quản lý dịch vụ </title>
       </Helmet>
       <ServiceManagementView />
     </>
