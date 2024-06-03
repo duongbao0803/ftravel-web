@@ -2,12 +2,11 @@ import React, { useEffect } from "react";
 import Router from "./routes/Sections";
 import useAuth from "./hooks/useAuth";
 import Cookies from "js-cookie";
-import { QueryClient, QueryClientProvider } from "react-query";
-
-const queryClient = new QueryClient();
+import useAuthService from "./services/authService";
 
 const App: React.FC = () => {
-  const fetchUserInfo = useAuth((state) => state.fetchUserInfo);
+  const { fetchUserInfo } = useAuthService();
+
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
 
   const token = Cookies.get("accessToken");
@@ -20,9 +19,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <Router />
-      </QueryClientProvider>
+      <Router />
     </>
   );
 };

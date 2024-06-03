@@ -12,7 +12,6 @@ const axiosClient = axios.create({
 axiosClient.interceptors.request.use(
   async (config) => {
     const access_token = Cookies.get("accessToken");
-    console.log("check token", access_token);
     if (access_token) {
       config.headers.Authorization = `Bearer ${access_token}`;
     }
@@ -29,11 +28,9 @@ axiosClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    console.log("Check err", error.response.status);
     if (error?.response?.status === 401) {
       originalRequest._retry = true;
       const refreshToken = Cookies.get("refreshToken");
-      console.log("check refreshToken", refreshToken);
 
       try {
         if (refreshToken) {
@@ -48,7 +45,6 @@ axiosClient.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("check refresh error", refreshError);
-        // return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);
