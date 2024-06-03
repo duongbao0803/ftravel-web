@@ -4,7 +4,7 @@ import {
   SigninValues,
   SignupValues,
   responseTokenProps,
-} from "@/interfaces/interfaces";
+} from "@/types/auth.types";
 
 const login = (formValues: SigninValues) => {
   return axiosClient.post("/api/authen/login", formValues);

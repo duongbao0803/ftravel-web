@@ -26,11 +26,3 @@ export interface SignupValues {
   confirmPassword: string;
   role: number;
 }
-
-export interface CustomError extends Error {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
-}

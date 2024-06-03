@@ -11,7 +11,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Signup from "./Signup";
 import ForgotPasswordForm from "./ForgotPassword";
 import { auth } from "@/config/firebase";
-import { SigninValues } from "@/interfaces/interfaces";
+import { SigninValues } from "@/types/interfaces";
 import { login } from "@/api/authenApi";
 import Cookies from "js-cookie";
 import { encryptData } from "@/util/cryptoUtils";
