@@ -8,9 +8,14 @@ const ProcessOrder: React.FC = () => (
     </div>
     <Steps
       progressDot
-      current={5}
+      responsive
+      current={6}
       direction="vertical"
       items={[
+        {
+          title: "Đơn hàng 6",
+          description: "Vé Vũng Tàu - Hồ Chí Minh",
+        },
         {
           title: "Đơn hàng 5",
           description: "Vé Vũng Tàu - Hồ Chí Minh",

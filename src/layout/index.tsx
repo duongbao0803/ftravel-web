@@ -136,7 +136,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
         </Menu>
       </Sider>
       <Layout
-        className="right-bar ease overflow-y-auto transition-all duration-[150ms] ease-in-out"
+        className="scrollbar right-bar ease overflow-y-auto transition-all duration-[150ms] ease-in-out"
         style={{ marginLeft: collapsed ? 55 : 230 }}
       >
         <div className="header fixed z-[999] flex h-16 items-center justify-end gap-2 bg-[#f8f8f8] bg-opacity-80 pr-4 shadow-none backdrop-blur-[6px]">
