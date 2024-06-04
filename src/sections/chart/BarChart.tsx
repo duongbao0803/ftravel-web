@@ -12,6 +12,9 @@ const BarChart: React.FC<BarChartProps> = (props) => {
   return (
     <>
       <div className="w-full">
+        <div className="mb-10">
+          <p className="text-xl font-bold">Tỉ lệ sử dụng dịch vụ</p>
+        </div>
         <Bar data={chartData} options={{}} />
       </div>
     </>

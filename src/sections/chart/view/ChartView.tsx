@@ -25,7 +25,7 @@ const ChartView: React.FC = () => {
       <div className="p-5">
         <TotalField />
       </div>
-      <div className="grid grid-cols-1 gap-12 p-5 sm:grid-cols-3">
+      <div className="mt-12 grid grid-cols-1 gap-12 p-5 sm:grid-cols-3">
         <div className="col-span-1 sm:col-span-2">
           <BarChart chartData={systemData} />
         </div>
