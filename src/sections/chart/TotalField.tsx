@@ -1,4 +1,5 @@
 import React from "react";
+import CountUp from "react-countup";
 
 const TotalField: React.FC = () => {
   return (
@@ -12,7 +13,9 @@ const TotalField: React.FC = () => {
             />
           </div>
           <div>
-            <p className="text-3xl font-bold text-[black]">26.53m</p>
+            <p className="text-3xl font-bold text-[black]">
+              <CountUp end={2653} duration={2} />m
+            </p>
             <p className="font-semibold text-[#bdbdbd]">Doanh thu</p>
           </div>
         </div>
@@ -24,7 +27,9 @@ const TotalField: React.FC = () => {
             />
           </div>
           <div>
-            <p className="text-3xl font-bold text-[black]">500</p>
+            <p className="text-3xl font-bold text-[black]">
+              <CountUp end={500} duration={2} />
+            </p>
             <p className="font-semibold text-[#bdbdbd]">Người dùng</p>
           </div>
         </div>
@@ -36,7 +41,9 @@ const TotalField: React.FC = () => {
             />
           </div>
           <div>
-            <p className="text-3xl font-bold text-[black]">100</p>
+            <p className="text-3xl font-bold text-[black]">
+              <CountUp end={100} duration={2} />
+            </p>
             <p className="font-semibold text-[#bdbdbd]">Đơn hàng</p>
           </div>
         </div>
