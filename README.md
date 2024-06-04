@@ -10,8 +10,8 @@ Updating
 
 #### 6 Members:
 
-- [Đăng Phan Gia Đức](https://github.com/giaducdang03) (Leader, Main Back-end Dev, Front-end Dev, UI Design)
-- [Dương Tôn Bảo](https://github.com/duongbao0803) (Main Front-end Dev)
+- [Đăng Phan Gia Đức](https://github.com/giaducdang03) 
+- [Dương Tôn Bảo](https://github.com/duongbao0803)
 - Updating...
 
 #### Deployment:
