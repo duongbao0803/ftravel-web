@@ -1,7 +1,7 @@
 import React from "react";
 import UserList from "../UserList";
 
-const UserManagementView: React.FC = () => {
+const UserManagementView: React.FC = React.memo(() => {
   return (
     <>
       <div className="rounded-t-xl bg-[#e8e8e8] p-5">
@@ -12,6 +12,6 @@ const UserManagementView: React.FC = () => {
       </div>
     </>
   );
-};
+});
 
 export default UserManagementView;

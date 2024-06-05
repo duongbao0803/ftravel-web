@@ -4,7 +4,7 @@ import TotalField from "../TotalField";
 import ProcessOrder from "../ProcessOrder";
 import { SystemData } from "@/constants";
 
-const ChartView: React.FC = () => {
+const ChartView: React.FC = React.memo(() => {
   const [systemData] = useState({
     labels: SystemData.map((data) => data.year),
     datasets: [
@@ -35,6 +35,6 @@ const ChartView: React.FC = () => {
       </div>
     </>
   );
-};
+});
 
 export default ChartView;

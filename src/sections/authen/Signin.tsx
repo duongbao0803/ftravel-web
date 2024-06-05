@@ -65,8 +65,8 @@ const Signin: React.FC = () => {
           description: "You have successfully logged in.",
           duration: 2,
         });
-        const jwtAccessToken = res.data.accessToken;
-        const jwtRefreshToken = res.data.refreshToken;
+        const jwtAccessToken = res.data["access-token"];
+        const jwtRefreshToken = res.data["refresh-token"];
 
         Cookies.set("accessToken", jwtAccessToken, { expires: 1 });
         Cookies.set("refreshToken", jwtRefreshToken, { expires: 10 });

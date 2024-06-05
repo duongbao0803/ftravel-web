@@ -1,7 +1,7 @@
 import React from "react";
 import RouteList from "../RouteList";
 
-const RouteManagementView: React.FC = () => {
+const RouteManagementView: React.FC = React.memo(() => {
   return (
     <>
       <div className="rounded-t-xl bg-[#e8e8e8] p-5">
@@ -12,6 +12,6 @@ const RouteManagementView: React.FC = () => {
       </div>
     </>
   );
-};
+});
 
 export default RouteManagementView;
