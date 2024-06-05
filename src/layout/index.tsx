@@ -4,10 +4,14 @@ import { FloatButton, Layout, Menu, notification } from "antd";
 import {
   PieChartOutlined,
   UserOutlined,
-  TeamOutlined,
-  FileOutlined,
+  HomeOutlined,
+  PushpinOutlined,
+  ShoppingOutlined,
+  ShareAltOutlined,
+  SmileOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
+import useAuthService from "@/services/authService";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -40,33 +44,26 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Chart", "1", <PieChartOutlined />, undefined, "/chart"),
+  getItem("User", "2", <UserOutlined />, undefined, "/user"),
+  getItem("City", "3", <PushpinOutlined />, undefined, "/city"),
+  getItem("Bus company", "4", <HomeOutlined />, undefined, "/company"),
+  getItem("Service", "5", <ShoppingOutlined />, undefined, "/service"),
+  getItem("Route", "6", <ShareAltOutlined />, undefined, "/route"),
   getItem(
-    "User",
-    "sub1",
-    <UserOutlined />,
-    [
-      getItem("Admin", "3", undefined, undefined, "/admin"),
-      getItem("Staff", "4", undefined, undefined, "/staff"),
-      getItem("Customer", "5", undefined, undefined, "/customer"),
-    ],
-    "/user",
+    "Personal information",
+    "7",
+    <SmileOutlined />,
+    undefined,
+    "/personal",
   ),
-  getItem(
-    "Team",
-    "sub2",
-    <TeamOutlined />,
-    [
-      getItem("Team 1", "6", undefined, undefined, "/option2"),
-      getItem("Team 2", "7", undefined, undefined, "/option2"),
-    ],
-    "/team",
-  ),
-  getItem("Files", "8", <FileOutlined />, undefined, "/option2"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
   const [collapsed, setCollapsed] = useState<boolean>(true);
+  const { userInfo } = useAuthService();
+
   const logout = useAuth((state) => state.logout);
+
   const navigate = useNavigate();
 
   const storeDefaultSelectedKeys = (key: string) => {
@@ -147,7 +144,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
         </Menu>
       </Sider>
       <Layout
-        className="right-bar ease overflow-y-auto transition-all duration-[150ms] ease-in-out"
+        className="scrollbar right-bar ease overflow-y-auto transition-all duration-[150ms] ease-in-out"
         style={{ marginLeft: collapsed ? 55 : 230 }}
       >
         <div className="header fixed z-[999] flex h-16 items-center justify-end gap-2 bg-[#f8f8f8] bg-opacity-80 pr-4 shadow-none backdrop-blur-[6px]">
@@ -159,7 +156,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           </>
 
           <div className="flex flex-col">
-            <strong>Dương Bảo</strong>
+            <strong>{userInfo || "Null"}</strong>
             <div
               className="cursor-pointer font-semibold text-[#5099ff] hover:underline"
               onClick={handleLogout}

@@ -55,7 +55,7 @@ const Signup: React.FC<IProps> = ({ isShowRegister, setIsShowRegister }) => {
             data-aos-easing="ease-in-sine"
             data-aos-duration="600"
           >
-            <h1 className=" text-4xl font-bold text-center mb-5 text-[#1677ff]">
+            <h1 className=" mb-5 text-center text-4xl font-bold text-[#1677ff]">
               SIGN UP
             </h1>
           </div>
@@ -207,7 +207,7 @@ const Signup: React.FC<IProps> = ({ isShowRegister, setIsShowRegister }) => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  className="login-form-button block mx-auto w-full h-11 text-lg tracking-wider mt-2"
+                  className="login-form-button mx-auto mt-2 block h-11 w-full text-lg tracking-wider"
                 >
                   Sign Up
                 </Button>
@@ -219,7 +219,7 @@ const Signup: React.FC<IProps> = ({ isShowRegister, setIsShowRegister }) => {
               You already have an account? {""}
               <a
                 href="#"
-                className="text-[#3094ff] hover:underline font-semibold"
+                className="font-semibold text-[#3094ff] hover:underline"
                 onClick={() => setIsShowRegister(false)}
               >
                 Sign In

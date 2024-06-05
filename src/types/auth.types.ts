@@ -7,12 +7,16 @@ export interface AuthState {
   isAuthenticated: boolean;
   login: () => void;
   logout: () => void;
-  infoUser: object;
-  fetchUserInfo: () => void;
+  setRole: (role: string) => void;
+  role: string | null;
 }
 
-export interface responseTokenProps {
-  accessToken: string;
+export interface Role {
+  role: string | null;
+}
+
+export interface ResponseTokenProps {
+  "access-token": string;
 }
 
 export interface SignupValues {
@@ -21,12 +25,4 @@ export interface SignupValues {
   password: string;
   confirmPassword: string;
   role: number;
-}
-
-export interface CustomError extends Error {
-  response?: {
-    data?: {
-      message?: string;
-    };
-  };
 }

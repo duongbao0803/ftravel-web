@@ -40,6 +40,85 @@
   border-radius: 10px;
 }
 
+canvas {
+  min-width: 100% !important;
+  min-height: 100% !important;
+}
+
+.ant-select-selector {
+  padding: 19px !important;
+}
+
+.ant-steps-item-progress {
+  position: relative;
+}
+
+.ant-steps-item-process {
+  background-color: #1890ff;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+  position: absolute;
+  left: 50%;
+  top: -20px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #1890ff;
+  transform: translateX(-50%);
+}
+
+.ant-steps-item-process .ant-steps-item-icon::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: white;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.ant-steps-item-process .ant-steps-item-icon::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #1890ff;
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.ant-steps-item-process .ant-steps-item-icon:hover::after {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.ant-steps-item-process .ant-steps-item-icon:hover::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
 //responsive
 @media (min-width: 3000) {
   .navbar {

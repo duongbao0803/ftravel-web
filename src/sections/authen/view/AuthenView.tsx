@@ -2,21 +2,21 @@ import React from "react";
 import Signin from "../Signin";
 import CarouselDemo from "../Carousel";
 
-const AuthenView: React.FC = () => {
+const AuthenView: React.FC = React.memo(() => {
   return (
     <>
-      <div className="bg-[hsl(0,0%,97%)] w-full min-h-screen grid place-items-center">
-        <div className=" md:max-w-[1024px] min-h-[650px] mx-5 bg-[#fff] shadow-2xl grid grid-cols-1 md:grid md:grid-cols-2 rounded-[30px] overflow-hidden border">
-          <div className="px-16 my-auto items-center order-2">
+      <div className="grid min-h-screen w-full place-items-center bg-[hsl(0,0%,97%)]">
+        <div className=" mx-5 grid min-h-[650px] grid-cols-1 overflow-hidden rounded-[30px] border bg-[#fff] shadow-2xl md:grid md:max-w-[1024px] md:grid-cols-2">
+          <div className="order-2 my-auto items-center px-16">
             <Signin />
           </div>
-          <div className="hidden md:block order-1 rounded-lg">
+          <div className="order-1 hidden rounded-lg md:block">
             <CarouselDemo />
           </div>
         </div>
       </div>
     </>
   );
-};
+});
 
 export default AuthenView;

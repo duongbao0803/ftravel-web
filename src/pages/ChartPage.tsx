@@ -6,7 +6,7 @@ const ChartPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title> FTravel | Chart </title>
+        <title> FTravel | Biểu đồ </title>
       </Helmet>
       <ChartView />
     </>

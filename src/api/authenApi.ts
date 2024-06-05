@@ -1,10 +1,10 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "@/config/axiosClient";
 import {
+  ResponseTokenProps,
   SigninValues,
   SignupValues,
-  responseTokenProps,
-} from "@/interfaces/interfaces";
+} from "@/types/auth.types";
 
 const login = (formValues: SigninValues) => {
   return axiosClient.post("/api/authen/login", formValues);
@@ -15,11 +15,12 @@ const signUp = (formValues: SignupValues) => {
 };
 
 const requestRefreshToken = (
-  refreshToken: string,
-): Promise<AxiosResponse<responseTokenProps>> => {
-  return axiosClient.post<responseTokenProps>("/api/authen/refresh-token", {
-    refreshToken,
-  });
+  jwtToken: string,
+): Promise<AxiosResponse<ResponseTokenProps>> => {
+  return axiosClient.post<ResponseTokenProps>(
+    "/api/authen/refresh-token",
+    jwtToken,
+  );
 };
 
 const getInfoUser = () => {
