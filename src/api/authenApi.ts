@@ -1,9 +1,9 @@
 import { AxiosResponse } from "axios";
 import axiosClient from "@/config/axiosClient";
 import {
+  ResponseTokenProps,
   SigninValues,
   SignupValues,
-  responseTokenProps,
 } from "@/types/auth.types";
 
 const login = (formValues: SigninValues) => {
@@ -16,8 +16,8 @@ const signUp = (formValues: SignupValues) => {
 
 const requestRefreshToken = (
   jwtToken: string,
-): Promise<AxiosResponse<responseTokenProps>> => {
-  return axiosClient.post<responseTokenProps>(
+): Promise<AxiosResponse<ResponseTokenProps>> => {
+  return axiosClient.post<ResponseTokenProps>(
     "/api/authen/refresh-token",
     jwtToken,
   );

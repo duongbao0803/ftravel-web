@@ -1,7 +1,7 @@
 import React from "react";
 import ServiceList from "../ServiceList";
 
-const ServiceManagementView: React.FC = () => {
+const ServiceManagementView: React.FC = React.memo(() => {
   return (
     <>
       <div className="rounded-t-xl bg-[#e8e8e8] p-5">
@@ -12,6 +12,6 @@ const ServiceManagementView: React.FC = () => {
       </div>
     </>
   );
-};
+});
 
 export default ServiceManagementView;

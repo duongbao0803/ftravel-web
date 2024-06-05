@@ -15,8 +15,8 @@ export interface Role {
   role: string | null;
 }
 
-export interface responseTokenProps {
-  accessToken: string;
+export interface ResponseTokenProps {
+  "access-token": string;
 }
 
 export interface SignupValues {

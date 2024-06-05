@@ -1,7 +1,7 @@
 import React from "react";
 import CompanyList from "../CompanyList";
 
-const BusCompanyManagement: React.FC = () => {
+const BusCompanyManagement: React.FC = React.memo(() => {
   return (
     <>
       <div className="rounded-t-xl bg-[#e8e8e8] p-5">
@@ -12,6 +12,6 @@ const BusCompanyManagement: React.FC = () => {
       </div>
     </>
   );
-};
+});
 
 export default BusCompanyManagement;

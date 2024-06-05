@@ -30,3 +30,10 @@ export const SystemData = [
     userLost: 190,
   },
 ];
+
+export const genders = ["Nam", "Nữ"];
+
+export enum ROLE {
+  ADMIN = "ADMIN",
+  BUSCOMPANY = "BUSCOMPANY",
+}
