@@ -68,6 +68,7 @@ const UploadImageUser: React.FC<UploadImageUserProps> = (props) => {
     if (newFile && newFile.originFileObj) {
       try {
         const resizedImage = await resizeFile(newFile.originFileObj);
+        console.log("check file", newFile);
         const storageRef = ref(storage, `/FTravel/${newFile.name}`);
         await uploadBytes(storageRef, resizedImage);
         const downloadURL = await getDownloadURL(storageRef);

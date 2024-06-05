@@ -1,10 +1,11 @@
 import React, { Suspense, lazy } from "react";
 import { Navigate, Outlet, useRoutes } from "react-router-dom";
-import { Error, Loading, ScrollToTop } from "@/components";
+import { Error, ForBidden, Loading, ScrollToTop } from "@/components";
 import DashboardLayout from "@/layout";
 import { useAnimation } from "@/hooks/useAnimation";
 import AuthenPage from "@/pages/AuthenPage";
 import useAuth from "@/hooks/useAuth";
+import { ROLE } from "@/constants";
 
 export const ChartPage = lazy(() => import("@/pages/ChartPage"));
 export const CityManagementPage = lazy(
@@ -26,9 +27,25 @@ export const PersonalInformationPage = lazy(
   () => import("@/pages/PersonalInformationPage"),
 );
 
+const checkAccessAdmin = (role: string) => {
+  return role === ROLE.ADMIN;
+};
+
+const checkAccessBusCompany = (role: string) => {
+  return role === ROLE.BUSCOMPANY;
+};
+
 const Router: React.FC = () => {
   useAnimation();
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
+  const role = useAuth((state) => state.role);
+  let hasAccessAdmin = false;
+  let hasAccessBusCompany = false;
+
+  if (role !== null) {
+    hasAccessAdmin = checkAccessAdmin(role);
+    hasAccessBusCompany = checkAccessBusCompany(role);
+  }
 
   const routes = useRoutes([
     {
@@ -49,27 +66,39 @@ const Router: React.FC = () => {
       ),
       children: [
         {
-          element: <ChartPage />,
+          element: hasAccessAdmin ? <ChartPage /> : <ForBidden />,
           path: "/chart",
         },
         {
-          element: <CityManagementPage />,
+          element: hasAccessBusCompany ? <CityManagementPage /> : <ForBidden />,
           path: "/city",
         },
         {
-          element: <UserManagementPage />,
+          element: hasAccessAdmin ? <UserManagementPage /> : <ForBidden />,
           path: "/user",
         },
         {
-          element: <CompanyManagementPage />,
+          element: hasAccessBusCompany ? (
+            <CompanyManagementPage />
+          ) : (
+            <ForBidden />
+          ),
           path: "/company",
         },
         {
-          element: <ServiceManagementPage />,
+          element: hasAccessBusCompany ? (
+            <ServiceManagementPage />
+          ) : (
+            <ForBidden />
+          ),
           path: "/service",
         },
         {
-          element: <RouteManagementPage />,
+          element: hasAccessBusCompany ? (
+            <RouteManagementPage />
+          ) : (
+            <ForBidden />
+          ),
           path: "/route",
         },
         {
