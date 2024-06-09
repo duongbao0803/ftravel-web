@@ -21,7 +21,7 @@ const AccountInfo: React.FC = () => {
     "avatar-url": "",
     dob: "",
     email: "",
-    gender: 0,
+    role: 0,
     "phone-number": "",
     "full-name": "",
   });

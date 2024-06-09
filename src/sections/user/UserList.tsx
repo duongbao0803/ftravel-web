@@ -34,7 +34,7 @@ const UserList: React.FC = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (text, record, index) => index + 1,
+      render: (index) => index + 1,
     },
     {
       title: "Email",
