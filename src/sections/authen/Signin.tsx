@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { Button, Form, Input, Checkbox, notification } from "antd";
+import { Button, Form, Input, Checkbox, notification, Spin } from "antd";
 import {
   UserOutlined,
   LockOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import Signup from "./Signup";
@@ -61,8 +62,8 @@ const Signin: React.FC = () => {
       const res = await login(formValues);
       if (res && res.status === 200) {
         notification.success({
-          message: "Login Successful",
-          description: "You have successfully logged in.",
+          message: "Đăng nhập thành công",
+          description: "Bạn đã đăng nhập thành công",
           duration: 2,
         });
         const jwtAccessToken = res.data["access-token"];
@@ -90,7 +91,7 @@ const Signin: React.FC = () => {
       }
     } catch (err: any) {
       notification.error({
-        message: "Login Failed",
+        message: "Đăng nhập thất bại",
         description: `${err.response.data.message}`,
         duration: 2,
       });
@@ -111,7 +112,7 @@ const Signin: React.FC = () => {
           <div className="">
             <div data-aos="fade-down">
               <h1 className=" mb-5 text-4xl font-bold text-[#1677ff]">
-                Welcome Back
+                Chào mừng trở lại
               </h1>
             </div>
             <Form
@@ -125,11 +126,11 @@ const Signin: React.FC = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input email",
+                      message: "Vui lòng nhập email",
                     },
                     {
                       type: "email",
-                      message: "Please enter a valid email address",
+                      message: "Vui lòng nhập đúng kiểu email",
                     },
                   ]}
                   colon={true}
@@ -153,15 +154,15 @@ const Signin: React.FC = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Please input your Password!",
+                      message: "Vui lòng nhập mật khẩu!",
                     },
                     {
                       min: 4,
                       max: 20,
-                      message: "Password must be at least 8 characters",
+                      message: "Mật khẩu phải có ít nhất 8 kí tự",
                     },
                   ]}
-                  label="Password"
+                  label="Mật khẩu"
                   labelCol={{ span: 24 }}
                   className="formItem"
                   initialValue={password}
@@ -170,7 +171,7 @@ const Signin: React.FC = () => {
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     className="p-2"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Password"
+                    placeholder="Mật khẩu"
                     suffix={
                       <>
                         {showPassword ? (
@@ -186,14 +187,14 @@ const Signin: React.FC = () => {
               <div data-aos="fade-left">
                 <Form.Item name="remember" valuePropName="checked" noStyle>
                   <Checkbox onChange={(e) => setRememberMe(e.target.checked)}>
-                    Remember me
+                    Ghi nhớ
                   </Checkbox>
                   <a
                     href="#"
                     className="login-form-forgot float-right font-semibold text-[#3094ff] hover:underline"
                     onClick={() => setIsShowForgotPassword(true)}
                   >
-                    Forgot password?
+                    Quên mật khẩu
                   </a>
                 </Form.Item>
               </div>
@@ -204,7 +205,13 @@ const Signin: React.FC = () => {
                     htmlType="submit"
                     className="login-form-button mx-auto mt-5 block h-11 w-full text-lg tracking-wider"
                   >
-                    Sign In
+                    {isLoggingIn ? (
+                      <Spin
+                        indicator={<LoadingOutlined className="text-[#fff]" />}
+                      />
+                    ) : (
+                      "Đăng nhập"
+                    )}
                   </Button>
                 </div>
               </Form.Item>
@@ -229,20 +236,20 @@ const Signin: React.FC = () => {
                       alt=""
                       className="mr-2"
                     />
-                    Continue with Google
+                    Tiếp tục với Google
                   </div>
                 </Button>
               </div>
             </div>
             <div data-aos="fade-up">
               <div className="mt-2 text-center text-sm">
-                <span>You don't have account? </span>
+                <span>Bạn không có tài khoản? </span>
                 <a
                   href="#"
                   className="font-semibold text-[#3094ff] hover:underline"
                   onClick={() => setIsShowRegister(true)}
                 >
-                  Sign Up
+                  Đăng ký
                 </a>
               </div>
             </div>

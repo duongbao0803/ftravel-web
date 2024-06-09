@@ -62,19 +62,16 @@ const UploadImageUser: React.FC<UploadImageUserProps> = (props) => {
     if (newFileList.length === 0) {
       setFile(null);
       setFileChange("");
-      return;
     }
 
     if (newFile && newFile.originFileObj) {
       try {
         const resizedImage = await resizeFile(newFile.originFileObj);
-        console.log("check file", newFile);
         const storageRef = ref(storage, `/FTravel/${newFile.name}`);
         await uploadBytes(storageRef, resizedImage);
         const downloadURL = await getDownloadURL(storageRef);
-        console.log("check firebase image", downloadURL);
         newFile.url = downloadURL;
-        newFile.status = "done";
+        // newFile.status = "done";
         setFileChange(downloadURL);
       } catch (error) {
         console.error("Error uploading file:", error);

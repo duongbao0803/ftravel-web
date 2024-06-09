@@ -1,24 +1,27 @@
 import React, { useState } from "react";
-import { Button, Input, Table } from "antd";
+import { Button, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, UserAddOutlined } from "@ant-design/icons";
 import ExportUser from "./ExportUser";
 import AddUserModal from "./AddUserModal";
+import useUserService from "@/services/userService";
+import { formatDate2 } from "@/util/validate";
+import DropdownUserFunc from "./DropdownUserFunc";
 
 export interface DataType {
-  _id: string;
+  id: string;
   key: string;
   name: string;
   image: string;
   description: string;
-  quantity: number;
-  typeOfProduct: string;
-  price: number;
-  rating: number;
+  gender: number;
+  dob: string | Date;
+  "role-id": number;
 }
 
 const UserList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { userData, isFetching } = useUserService();
 
   const [, setCurrentPage] = useState<number>(1);
 
@@ -28,28 +31,60 @@ const UserList: React.FC = () => {
 
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "Unsign name",
-      dataIndex: "unsignName",
-      width: "25%",
-      className: "first-column",
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (index) => index + 1,
     },
     {
-      title: "Name",
-      dataIndex: "name",
-      width: "25%",
+      title: "Email",
+      dataIndex: "email",
+      width: "20%",
     },
     {
-      title: "Create Date",
-      dataIndex: "createDate",
-      width: "25%",
+      title: "Họ và tên",
+      dataIndex: "full-name",
+      width: "15%",
     },
     {
-      title: "Update Date",
-      dataIndex: "updateDate",
-      width: "25%",
+      title: "Ngày sinh",
+      dataIndex: "dob",
+      width: "15%",
     },
     {
-      title: "Status",
+      title: "Địa chỉ",
+      dataIndex: "address",
+      width: "17%",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phone-number",
+      width: "10%",
+    },
+    {
+      title: "Vai trò",
+      dataIndex: "role-id",
+      render: (roleId) => {
+        const roleList: { [key: number]: { name: string; color: string } } = {
+          0: { name: "CUSTOMER", color: "pink" },
+          1: { name: "DRIVER", color: "green" },
+          2: { name: "BUS", color: "red" },
+          3: { name: "ADMIN", color: "blue" },
+        };
+        const role = roleList[roleId];
+        if (role) {
+          const { name, color } = role;
+          return (
+            <Tag key={roleId} color={color}>
+              {name}
+            </Tag>
+          );
+        }
+      },
+      width: "5%",
+    },
+    {
+      title: "Trạng thái",
       dataIndex: "isDelete",
       filters: [
         { text: "TRUE", value: true },
@@ -72,13 +107,16 @@ const UserList: React.FC = () => {
       //       </Tag>
       //     );
       //   },
+      width: "10%",
     },
     {
       title: "",
       dataIndex: "",
-      // render: (_, record) => (
-      //   <>{/* <DropdownFunction productInfo={record} /> */}</>
-      // ),
+      render: (_, record) => (
+        <>
+          <DropdownUserFunc userInfo={record} />
+        </>
+      ),
     },
   ];
 
@@ -87,12 +125,12 @@ const UserList: React.FC = () => {
       <div className="flex justify-between">
         <div className="flex gap-x-2">
           <Input
-            placeholder="Search by..."
+            placeholder="Tìm kiếm..."
             className="h-8 max-w-lg rounded-lg sm:mb-5 sm:w-[300px]"
           />
           <Button className="flex items-center" type="primary">
             <FilterOutlined className="align-middle" />
-            Sort
+            Sắp xếp
           </Button>
         </div>
         <div className="flex gap-x-2">
@@ -102,7 +140,7 @@ const UserList: React.FC = () => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <UserAddOutlined className="mr-1 text-lg" /> Add User
+                <UserAddOutlined className="mr-1 text-lg" /> Thêm người dùng
               </div>
             </Button>
           </div>
@@ -112,18 +150,22 @@ const UserList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        // dataSource={cities?.map((record: { id: unknown }) => ({
-        //   ...record,
-        //   key: record.id,
-        // }))}
+        dataSource={userData?.map(
+          (record: { id: unknown; dob: string }, index: number) => ({
+            ...record,
+            key: record.id,
+            dob: formatDate2(record.dob),
+            index: index + 1,
+          }),
+        )}
         // pagination={{
         //   current: currentPage,
         //   total: totalCount || 0,
         //   pageSize: 5,
         // }}
         onChange={handleTableChange}
-        // loading={isFetching}
-        rowKey={(record) => record._id}
+        loading={isFetching}
+        rowKey={(record) => record.id}
       />
       <AddUserModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>

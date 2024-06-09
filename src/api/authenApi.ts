@@ -24,7 +24,7 @@ const requestRefreshToken = (
 };
 
 const getInfoUser = () => {
-  return axiosClient.get("/api/authen/test-admin");
+  return axiosClient.get("/api/authen/current-user");
 };
 
 export { login, getInfoUser, signUp, requestRefreshToken };

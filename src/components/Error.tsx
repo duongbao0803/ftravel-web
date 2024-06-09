@@ -7,10 +7,10 @@ const Error: React.FC = () => {
     <Result
       status="404"
       title="404"
-      subTitle="Sorry, the page you visited does not exist."
+      subTitle="Xin lỗi, trang này không tồn tại"
       extra={
         <Button type="primary" className="bg-[#1677ff]">
-          <Link to="/chart">Back home</Link>
+          <Link to="/chart">Trở về trang chủ</Link>
         </Button>
       }
     />
