@@ -7,11 +7,11 @@ const DeleteProductModal: React.FC<{
 }> = ({ deleteProductItem, productId }) => {
   const confirm = Modal.confirm;
   confirm({
-    title: "Delete User",
-    content: `Do you really want to delete? This user cannot be restored.`,
-    okText: "Yes",
+    title: "Xóa người dùng",
+    content: `Bạn có muốn xóa người này không. Người dùng này không thể được khôi phục`,
+    okText: "Có",
     okType: "danger",
-    cancelText: "No",
+    cancelText: "Không",
     onOk() {
       deleteProductItem(productId);
     },

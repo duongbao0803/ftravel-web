@@ -64,7 +64,7 @@ const EditRouteModal: React.FC<EditRouteModalProps> = (props) => {
 
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Sửa dịch vụ</p>}
+      title={<p className="text-lg text-[red]">Chỉnh sửa tuyến xe</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}

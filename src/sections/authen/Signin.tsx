@@ -126,7 +126,7 @@ const Signin: React.FC = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng nhập email",
+                      message: "Vui lòng nhập email!",
                     },
                     {
                       type: "email",
@@ -219,7 +219,7 @@ const Signin: React.FC = () => {
             <div data-aos="flip-up">
               <div className="mt-4 flex items-center justify-center text-center">
                 <div className="mr-2 h-[1px] w-full bg-[#e6e8eb]"></div>
-                <span className="text-[#999999]">OR</span>
+                <span className="text-[#999999]">hoặc</span>
                 <div className="ml-2 h-[1px] w-full bg-[#e6e8eb]"></div>
               </div>
             </div>

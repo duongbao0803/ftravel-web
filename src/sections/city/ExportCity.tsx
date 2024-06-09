@@ -21,7 +21,7 @@ const ExportPost: React.FC = () => {
 
   return (
     <Button type="primary" onClick={exportToFile} className="flex items-center">
-      <ExportOutlined /> Export
+      <ExportOutlined /> Xuất file
     </Button>
   );
 };

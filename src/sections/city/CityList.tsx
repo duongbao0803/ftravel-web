@@ -96,7 +96,7 @@ const CityList: React.FC = () => {
           />
           <Button className="flex items-center" type="primary">
             <FilterOutlined className="align-middle" />
-            Sort
+            Sắp xếp
           </Button>
         </div>
         <div className="flex gap-x-2">
@@ -106,7 +106,7 @@ const CityList: React.FC = () => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <PushpinOutlined className="mr-1 text-lg" /> Add City
+                <PushpinOutlined className="mr-1 text-lg" /> Thêm công ty
               </div>
             </Button>
           </div>

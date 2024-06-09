@@ -1,7 +1,7 @@
 export enum Gender {
-  MALE,
-  FEMALE,
-  OTHER,
+  Nam,
+  Nữ,
+  Khác,
 }
 
 export enum Roles {

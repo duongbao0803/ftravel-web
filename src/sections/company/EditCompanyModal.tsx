@@ -64,7 +64,7 @@ const EditCompanyModal: React.FC<EditCompanyModalProps> = (props) => {
 
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Edit product</p>}
+      title={<p className="text-lg text-[red]">Chỉnh sửa công ty</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}

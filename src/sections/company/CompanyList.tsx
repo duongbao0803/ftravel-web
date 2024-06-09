@@ -92,7 +92,7 @@ const CompanyList: React.FC = () => {
           />
           <Button className="flex items-center" type="primary">
             <FilterOutlined className="align-middle" />
-            Sort
+            Sắp xếp
           </Button>
         </div>
         <div className="flex gap-x-2">
@@ -102,7 +102,7 @@ const CompanyList: React.FC = () => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <HomeOutlined className="mr-1 text-lg" /> Add Company
+                <HomeOutlined className="mr-1 text-lg" /> Thêm công ty
               </div>
             </Button>
           </div>
