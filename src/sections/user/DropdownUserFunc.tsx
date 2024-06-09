@@ -11,8 +11,8 @@ export interface DropdownUserFuncProps {
 
 const DropdownUserFunc: React.FC<DropdownUserFuncProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // const { productInfo } = props;
-  // const productId = productInfo?._id;
+  // const { userInfo } = props;
+  // const userId = userInfo?.id;
 
   const openEditModal = () => {
     setIsOpen(true);

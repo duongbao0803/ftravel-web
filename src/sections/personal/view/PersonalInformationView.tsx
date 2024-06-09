@@ -4,9 +4,11 @@ import { Divider, Progress, Tag } from "antd";
 import AccountInfo from "../AccountInfo";
 import useAuth from "@/hooks/useAuth";
 import { ROLE } from "@/constants";
+import useAuthService from "@/services/authService";
 
 const PersonalInformationView: React.FC = React.memo(() => {
   const role = useAuth((state) => state.role);
+  const { userInfo } = useAuthService();
   const [, setFileChange] = useState<string>("");
 
   const handleFileChange = useCallback((newFileChange: string) => {
@@ -24,7 +26,7 @@ const PersonalInformationView: React.FC = React.memo(() => {
             <div className="flex flex-col items-center">
               <div className="h-[110px]">
                 <UploadImageUser
-                  initialImage={""}
+                  initialImage={userInfo?.["avatar-url"]}
                   onFileChange={handleFileChange}
                 />
               </div>

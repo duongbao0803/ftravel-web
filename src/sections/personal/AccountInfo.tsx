@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col, Form, Input, Button, DatePicker, Select } from "antd";
 import {
   AuditOutlined,
@@ -8,13 +8,30 @@ import {
 } from "@ant-design/icons";
 import { validatePhoneNumber } from "@/util/validate";
 import moment from "moment";
-import { genders } from "@/constants";
+import useAuthService from "@/services/authService";
+import dayjs from "dayjs";
+import { Gender } from "@/enums/enums";
+import { UserInfo } from "@/types/auth.types";
 
 const AccountInfo: React.FC = () => {
   const [form] = Form.useForm();
+  const { userInfo } = useAuthService();
+  const [, setValues] = useState<UserInfo>({
+    address: "",
+    "avatar-url": "",
+    dob: "",
+    email: "",
+    gender: 0,
+    "phone-number": "",
+    "full-name": "",
+  });
 
-  const onFinish = () => {
-    console.log("hihi");
+  const onFinish = (values: UserInfo) => {
+    setValues(values);
+    console.log("check values", values);
+    // if (values?.email && values?.password) {
+    //   handleSignin(values);
+    // }
   };
 
   const disabledDate = (current: object) => {
@@ -28,32 +45,23 @@ const AccountInfo: React.FC = () => {
           <Col span={12}>
             <Form.Item
               name="email"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập email của bạn",
-                },
-                {
-                  min: 8,
-                  message: "Tên phải có ít nhất 8 ký tự",
-                },
-              ]}
               colon={true}
               label="Email"
               labelCol={{ span: 24 }}
               className="formItem"
+              initialValue={userInfo?.email}
             >
               <Input
                 prefix={<MailOutlined className="site-form-item-icon" />}
                 placeholder="Email của bạn"
                 className="p-2"
-                autoFocus
+                readOnly
               />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              name="fullName"
+              name="full-name"
               rules={[
                 {
                   required: true,
@@ -68,6 +76,7 @@ const AccountInfo: React.FC = () => {
               label="Họ và tên"
               labelCol={{ span: 24 }}
               className="formItem"
+              initialValue={userInfo?.["full-name"]}
             >
               <Input
                 prefix={<AuditOutlined className="site-form-item-icon" />}
@@ -81,7 +90,7 @@ const AccountInfo: React.FC = () => {
         <Row gutter={16} className="relative">
           <Col span={12}>
             <Form.Item
-              name="phoneNumber"
+              name="phone-number"
               id="formItem"
               rules={[
                 {
@@ -93,6 +102,7 @@ const AccountInfo: React.FC = () => {
               label="Số điện thoại"
               labelCol={{ span: 24 }}
               className="formItem"
+              initialValue={userInfo?.["phone-number"]}
             >
               <Input
                 prefix={
@@ -115,8 +125,9 @@ const AccountInfo: React.FC = () => {
               <DatePicker
                 picker="date"
                 disabledDate={disabledDate}
-                format="YYYY-MM-DD"
+                format="DD/MM/YYYY"
                 className="formItem w-full p-2"
+                defaultValue={dayjs(userInfo?.dob)}
               />
             </Form.Item>
           </Col>
@@ -126,15 +137,10 @@ const AccountInfo: React.FC = () => {
             <Form.Item
               name="address"
               id="formItem"
-              // rules={[
-              //   {
-              //     required: true,
-              //     message: "Vui lòng nhập địa chỉ",
-              //   },
-              // ]}
               label="Địa chỉ"
               labelCol={{ span: 24 }}
               className="formItem"
+              initialValue={userInfo?.address}
             >
               <Input
                 prefix={<EnvironmentOutlined className="site-form-item-icon" />}
@@ -157,12 +163,24 @@ const AccountInfo: React.FC = () => {
               labelCol={{ span: 24 }}
               className="formItem"
             >
-              <Select placeholder="Chọn giới tính">
-                {genders.map((gender) => (
-                  <Select.Option key={gender} value={gender}>
-                    {gender}
-                  </Select.Option>
-                ))}
+              <Select
+                placeholder="Chọn giới tính"
+                onChange={(value) => console.log("check key", value)}
+              >
+                {Object.keys(Gender).map((key: string) => {
+                  const genderValue = Gender[key as keyof typeof Gender];
+                  if (typeof genderValue === "number") {
+                    return (
+                      <Select.Option
+                        key={genderValue}
+                        value={genderValue.toString()}
+                      >
+                        {key}
+                      </Select.Option>
+                    );
+                  }
+                  return null;
+                })}
               </Select>
             </Form.Item>
           </Col>

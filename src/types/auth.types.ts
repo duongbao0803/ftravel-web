@@ -24,5 +24,15 @@ export interface SignupValues {
   fullName: string;
   password: string;
   confirmPassword: string;
-  role: number;
+  role: 0;
+}
+
+export interface UserInfo {
+  address?: string;
+  "avatar-url"?: string;
+  dob?: Date | string;
+  email: string;
+  role?: number;
+  "phone-number": string;
+  "full-name": string;
 }

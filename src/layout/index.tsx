@@ -106,8 +106,8 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
 
   const handleLogout = () => {
     notification.success({
-      message: "Logout Successful",
-      description: "You have successfully logged out",
+      message: "Đăng xuất thành công",
+      description: "Bạn đã đăng xuất thành công",
       duration: 2,
     });
     logout();
@@ -156,7 +156,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           </>
 
           <div className="flex flex-col">
-            <strong>{userInfo || "Null"}</strong>
+            <strong>{userInfo?.["full-name"] || "Null"}</strong>
             <div
               className="cursor-pointer font-semibold text-[#5099ff] hover:underline"
               onClick={handleLogout}
