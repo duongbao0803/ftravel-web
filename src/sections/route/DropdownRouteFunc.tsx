@@ -28,7 +28,7 @@ const DropdownRouteFunc: React.FC<DropdownRouteFuncProps> = () => {
               label: (
                 <Link rel="noopener noreferrer" to="#" onClick={openEditModal}>
                   <EditOutlined className="pr-2" />
-                  Sửa dịch vụ
+                  Chỉnh sửa tuyến xe
                 </Link>
               ),
             },
@@ -46,7 +46,7 @@ const DropdownRouteFunc: React.FC<DropdownRouteFuncProps> = () => {
                   // }
                 >
                   <DeleteOutlined className="pr-2" />
-                  Xóa dịch vụ
+                  Xóa tuyến xe
                 </Link>
               ),
             },

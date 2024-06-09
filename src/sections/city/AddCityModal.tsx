@@ -39,7 +39,7 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
 
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Add new city</p>}
+      title={<p className="text-lg text-[red]">Thêm thành phố</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}

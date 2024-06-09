@@ -82,7 +82,6 @@ const AccountInfo: React.FC = () => {
                 prefix={<AuditOutlined className="site-form-item-icon" />}
                 placeholder="Họ và tên"
                 className="p-2"
-                autoFocus
               />
             </Form.Item>
           </Col>

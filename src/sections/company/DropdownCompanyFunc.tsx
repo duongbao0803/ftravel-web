@@ -28,7 +28,7 @@ const DropdownCompanyFunc: React.FC<DropdownCompanyFuncProps> = () => {
               label: (
                 <Link rel="noopener noreferrer" to="#" onClick={openEditModal}>
                   <EditOutlined className="pr-2" />
-                  Edit Product
+                  Chỉnh sửa công ty
                 </Link>
               ),
             },
@@ -46,7 +46,7 @@ const DropdownCompanyFunc: React.FC<DropdownCompanyFuncProps> = () => {
                   // }
                 >
                   <DeleteOutlined className="pr-2" />
-                  Delete Product
+                  Xóa công ty
                 </Link>
               ),
             },

@@ -6,7 +6,7 @@ const AuthenPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title> FTravel | Authen </title>
+        <title> FTravel | Xác thực </title>
       </Helmet>
       <AuthenView />
     </>

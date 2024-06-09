@@ -70,7 +70,12 @@ const Router: React.FC = () => {
           path: "/chart",
         },
         {
-          element: hasAccessBusCompany ? <CityManagementPage /> : <ForBidden />,
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <CityManagementPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/city",
         },
         {
@@ -78,31 +83,39 @@ const Router: React.FC = () => {
           path: "/user",
         },
         {
-          element: hasAccessBusCompany ? (
-            <CompanyManagementPage />
-          ) : (
-            <ForBidden />
-          ),
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <CompanyManagementPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/company",
         },
         {
-          element: hasAccessBusCompany ? (
-            <ServiceManagementPage />
-          ) : (
-            <ForBidden />
-          ),
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <ServiceManagementPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/service",
         },
         {
-          element: hasAccessBusCompany ? (
-            <RouteManagementPage />
-          ) : (
-            <ForBidden />
-          ),
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <RouteManagementPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/route",
         },
         {
-          element: <PersonalInformationPage />,
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <PersonalInformationPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/personal",
         },
 
