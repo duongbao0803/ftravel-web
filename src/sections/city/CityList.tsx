@@ -1,25 +1,22 @@
 import React, { useState } from "react";
-import { Button, Input, Table } from "antd";
+import { Button, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, PushpinOutlined } from "@ant-design/icons";
 import useCityService from "@/services/cityService";
 import AddCityModal from "./AddCityModal";
 import ExportCity from "./ExportCity";
+import { formatDate2 } from "@/util/validate";
+import DropdownCityFunc from "./DropdownCityFunc";
 
 export interface DataType {
-  _id: string;
-  key: string;
+  id: number;
   name: string;
-  image: string;
-  description: string;
-  quantity: number;
-  typeOfProduct: string;
-  price: number;
-  rating: number;
+  "create-date": string | Date;
+  "update-date"?: string | Date;
+  "is-deleted": boolean;
 }
 
-const CityList: React.FC = () => {
-  // const { products, isFetching } = useProductService();
+const CityList: React.FC = React.memo(() => {
   const { cities, isFetching, totalCount } = useCityService();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -32,57 +29,52 @@ const CityList: React.FC = () => {
 
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "Unsign name",
-      dataIndex: "unsignName",
-      width: "25%",
-      className: "first-column",
-    },
-    {
-      title: "Name",
+      title: "Tên thành phố",
       dataIndex: "name",
+      width: "35%",
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "create-date",
       width: "25%",
     },
     {
-      title: "Create Date",
-      dataIndex: "createDate",
+      title: "Ngày thay đổi",
+      dataIndex: "update-date",
       width: "25%",
     },
     {
-      title: "Update Date",
-      dataIndex: "updateDate",
-      width: "25%",
-    },
-    {
-      title: "Status",
-      dataIndex: "isDelete",
-      filters: [
-        { text: "TRUE", value: true },
-        { text: "FALSE", value: false },
-      ],
-      // onFilter: (value, record) => record.isDelete === value,
-      //   render: (isDelete) => {
-      //     let color;
-      //     switch (isDelete) {
-      //       case true:
-      //         color = "green";
-      //         break;
-      //       case false:
-      //         color = "red";
-      //         break;
-      //     }
-      //     return (
-      //       <Tag color={color} key={isDelete.toString()}>
-      //         {isDelete.toString().toUpperCase()}
-      //       </Tag>
-      //     );
-      //   },
+      title: "Trạng thái",
+      dataIndex: "is-deleted",
+      render: (isDeleted) => {
+        let statusText = "";
+        let tagColor = "";
+        switch (isDeleted) {
+          case false:
+            statusText = "ACTIVE";
+            tagColor = "green";
+            break;
+          case true:
+            statusText = "INACTIVE";
+            tagColor = "pink";
+            break;
+          default:
+            statusText = "UNKNOWN";
+            tagColor = "gray";
+            break;
+        }
+        return <Tag color={tagColor}>{statusText}</Tag>;
+      },
+      width: "15%",
     },
     {
       title: "",
       dataIndex: "",
-      // render: (_, record) => (
-      //   <>{/* <DropdownFunction productInfo={record} /> */}</>
-      // ),
+      render: (_, record) => (
+        <>
+          <DropdownCityFunc cityInfo={record} />
+        </>
+      ),
     },
   ];
 
@@ -116,10 +108,18 @@ const CityList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={cities?.map((record: { id: unknown }) => ({
-          ...record,
-          key: record.id,
-        }))}
+        dataSource={cities?.map(
+          (record: {
+            id: unknown;
+            "create-date": string | Date;
+            "update-date": string | Date;
+          }) => ({
+            ...record,
+            key: record.id,
+            "create-date": formatDate2(record["create-date"]),
+            "update-date": formatDate2(record["update-date"]),
+          }),
+        )}
         pagination={{
           current: currentPage,
           total: totalCount || 0,
@@ -127,11 +127,11 @@ const CityList: React.FC = () => {
         }}
         onChange={handleTableChange}
         loading={isFetching}
-        rowKey={(record) => record._id}
+        rowKey={(record) => record.id}
       />
       <AddCityModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
   );
-};
+});
 
 export default CityList;

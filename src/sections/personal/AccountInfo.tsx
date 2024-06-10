@@ -28,7 +28,6 @@ const AccountInfo: React.FC = () => {
 
   const onFinish = (values: UserInfo) => {
     setValues(values);
-    console.log("check values", values);
   };
 
   const disabledDate = (current: object) => {
