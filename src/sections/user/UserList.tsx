@@ -21,9 +21,9 @@ export interface DataType {
 
 const UserList: React.FC = React.memo(() => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { userData, isFetching } = useUserService();
+  const { users, isFetching, totalCount } = useUserService();
 
-  const [, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
@@ -158,16 +158,16 @@ const UserList: React.FC = React.memo(() => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={userData?.map((record: { id: unknown; dob: string }) => ({
+        dataSource={users?.map((record: { id: unknown; dob: string }) => ({
           ...record,
           key: record.id,
           dob: formatDate2(record.dob),
         }))}
-        // pagination={{
-        //   current: currentPage,
-        //   total: totalCount || 0,
-        //   pageSize: 5,
-        // }}
+        pagination={{
+          current: currentPage,
+          total: totalCount || 0,
+          pageSize: 5,
+        }}
         onChange={handleTableChange}
         loading={isFetching}
         rowKey={(record) => record.id}
