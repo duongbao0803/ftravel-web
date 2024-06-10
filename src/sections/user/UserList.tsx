@@ -19,7 +19,7 @@ export interface DataType {
   "role-id": number;
 }
 
-const UserList: React.FC = () => {
+const UserList: React.FC = React.memo(() => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { userData, isFetching } = useUserService();
 
@@ -175,6 +175,6 @@ const UserList: React.FC = () => {
       <AddUserModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
   );
-};
+});
 
 export default UserList;
