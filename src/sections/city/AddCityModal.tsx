@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal, Form, Input } from "antd";
-import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import { PushpinOutlined } from "@ant-design/icons";
+import useCityService from "@/services/cityService";
 
 export interface AddModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -9,16 +10,17 @@ export interface AddModalProps {
 
 const AddCityModal: React.FC<AddModalProps> = (props) => {
   const { setIsOpen, isOpen } = props;
+  const { addNewCityItem } = useCityService();
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
 
   const handleOk = async () => {
     try {
-      // const values = await form.validateFields();
+      const values = await form.validateFields();
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          // await addNewProductItem(values);
+          await addNewCityItem(values);
           form.resetFields();
           setIsConfirmLoading(false);
           setIsOpen(false);
@@ -39,7 +41,7 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
 
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Thêm thành phố</p>}
+      title={<p className="text-lg font-bold text-[red]">Thêm thành phố</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
@@ -47,47 +49,22 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
     >
       <Form name="normal_login" className="login-form" form={form}>
         <Form.Item
-          name="unsignName"
-          rules={[
-            {
-              required: true,
-              message: "Please input name",
-            },
-            {
-              min: 5,
-              message: "Name must be at least 5 characters",
-            },
-          ]}
-          colon={true}
-          label="Name"
-          labelCol={{ span: 24 }}
-          className="formItem"
-        >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon mr-1" />}
-            placeholder="Unsign name"
-            autoFocus
-          />
-        </Form.Item>
-        <Form.Item
           name="name"
           rules={[
             {
               required: true,
-              message: "Please input typeOfProduct",
+              message: "Vui lòng nhập tên thành phố",
             },
           ]}
           colon={true}
-          label="Name"
+          label="Tên thành phố"
           labelCol={{ span: 24 }}
           className="formItem"
         >
           <Input
-            prefix={
-              <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
-            }
-            placeholder="Name"
-            maxLength={10}
+            prefix={<PushpinOutlined className="site-form-item-icon mr-1" />}
+            placeholder="Tên thành phố"
+            autoFocus
           />
         </Form.Item>
       </Form>

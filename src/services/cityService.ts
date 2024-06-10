@@ -1,8 +1,11 @@
-import { getAllCity } from "@/api/cityApi";
-import { useQuery } from "react-query";
+import { addCity, editCity, getAllCity, removeCity } from "@/api/cityApi";
+import { CityInfo } from "@/types/city.types";
+import { CustomError } from "@/types/error.types";
+import { notification } from "antd";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const useCityService = () => {
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const fetchCities = async (page: number) => {
     const res = await getAllCity(page);
@@ -17,24 +20,18 @@ const useCityService = () => {
   //   return res.data.postInfo;
   // };
 
-  // const deletePost = async (postId: string) => {
-  //   await removePost(postId);
-  //   return postId;
-  // };
+  const deleteCity = async (cityId: number) => {
+    await removeCity(cityId);
+    return cityId;
+  };
 
-  // const addNewPost = async (formValues: PostInfo) => {
-  //   await addPost(formValues);
-  // };
+  const addNewCity = async (formValues: CityInfo) => {
+    await addCity(formValues);
+  };
 
-  // const updatePostInfo = async ({
-  //   postId,
-  //   postInfo,
-  // }: {
-  //   postId: string;
-  //   postInfo: PostInfo;
-  // }) => {
-  //   await editPostInfo(postId, postInfo);
-  // };
+  const updateCity = async (formValues: CityInfo) => {
+    await editCity(formValues);
+  };
 
   const { data: citiesData, isLoading: isFetching } = useQuery(
     ["cities", 1],
@@ -45,6 +42,73 @@ const useCityService = () => {
     },
   );
 
+  const addNewCityMutation = useMutation(addNewCity, {
+    onSuccess: () => {
+      notification.success({
+        message: "Tạo thành công",
+        description: "Tạo thành phố thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("cities");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Tạo thất bại",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
+  const deleteCityMutation = useMutation(deleteCity, {
+    onSuccess: () => {
+      notification.success({
+        message: "Xóa thành công",
+        description: "Xóa thành phố thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("cities");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Xóa thất bại",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
+  const updateCityMutation = useMutation(updateCity, {
+    onSuccess: () => {
+      notification.success({
+        message: "Chỉnh sửa thành công",
+        description: "Chỉnh sửa thành phố thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("cities");
+    },
+    onError: (err: CustomError) => {
+      console.error("Xóa thành công", err);
+      notification.error({
+        message: "Update Failed",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
+  const addNewCityItem = async (formValues: CityInfo) => {
+    await addNewCityMutation.mutateAsync(formValues);
+  };
+
+  const deleteCityItem = async (cityId: number) => {
+    await deleteCityMutation.mutateAsync(cityId);
+  };
+
+  const updateCityItem = async (formValues: CityInfo) => {
+    await updateCityMutation.mutateAsync(formValues);
+  };
+
   const cities = citiesData?.data || [];
   const totalCount = citiesData?.totalCount || 0;
 
@@ -52,6 +116,9 @@ const useCityService = () => {
     isFetching,
     cities,
     totalCount,
+    deleteCityItem,
+    addNewCityItem,
+    updateCityItem,
   };
 };
 
