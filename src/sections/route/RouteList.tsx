@@ -4,14 +4,17 @@ import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
 import ExportRoute from "./ExportRoute";
 import AddRouteModal from "./AddRouteModal";
+import DropdownRouteFunc from "./DropdownRouteFunc";
+import useRouteService from "@/services/routeService";
+import { formatDate2 } from "@/util/validate";
 
 export interface DataType {
-  _id: string;
-  key: string;
+  id: number;
   name: string;
-  defaultPrice: number;
-  imgUrl: [];
-  quantity: number;
+  "start-point": string;
+  "end-point": string;
+  "bus-company-name": string;
+  "create-date": string | Date;
   shortDescription: string;
   fullDescription: string;
 }
@@ -19,7 +22,8 @@ export interface DataType {
 const RouteList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const [, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const { routes, totalCount, isFetching } = useRouteService();
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
@@ -27,38 +31,46 @@ const RouteList: React.FC = () => {
 
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "Tên dịch vụ",
+      title: "Tên tuyến xe",
       dataIndex: "name",
       width: "25%",
       className: "first-column",
     },
     {
-      title: "Giá gốc",
-      dataIndex: "defaultPrice",
+      title: "Điểm bắt đầu",
+      dataIndex: "start-point",
       width: "10%",
     },
     {
-      title: "Ảnh",
-      dataIndex: "imgUrl",
-      width: "15%",
+      title: "Điểm kết thúc",
+      dataIndex: "end-point",
+      width: "10%",
     },
     {
-      title: "Mô tả ngắn gọn",
-      dataIndex: "shortDescription",
+      title: "Nhà xe",
+      dataIndex: "bus-company-name",
       width: "20%",
     },
     {
-      title: "Mô tả chi tiết",
-      dataIndex: "fullDescription",
-      width: "30%",
+      title: "Ngày tạo",
+      dataIndex: "create-date",
+      width: "20%",
     },
     {
-      title: "",
-      dataIndex: "",
-      // render: (_, record) => (
-      //   <>{/* <DropdownFunction productInfo={record} /> */}</>
-      // ),
+      title: "Trạng thái",
+      dataIndex: "status",
+      width: "20%",
     },
+    // {
+    //   title: "",
+    //   dataIndex: "",
+    //   render: (_, record) => (
+    //     <>
+    //       {" "}
+    //       <DropdownRouteFunc />{" "}
+    //     </>
+    //   ),
+    // },
   ];
 
   return (
@@ -91,18 +103,21 @@ const RouteList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        // dataSource={cities?.map((record: { id: unknown }) => ({
-        //   ...record,
-        //   key: record.id,
-        // }))}
-        // pagination={{
-        //   current: currentPage,
-        //   total: totalCount || 0,
-        //   pageSize: 5,
-        // }}
+        dataSource={routes?.map(
+          (record: { id: unknown; "create-date": Date | string }) => ({
+            ...record,
+            "create-date": formatDate2(record["create-date"]),
+            key: record.id,
+          }),
+        )}
+        pagination={{
+          current: currentPage,
+          total: totalCount || 0,
+          pageSize: 5,
+        }}
         onChange={handleTableChange}
-        // loading={isFetching}
-        rowKey={(record) => record._id}
+        loading={isFetching}
+        rowKey={(record) => record.id}
       />
       <AddRouteModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
