@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Button, Input, Table } from "antd";
+import { Button, Image, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
 import ExportCompany from "./ExportCompany";
 import AddCompanyModal from "./AddCompanyModal";
+import useCompanyService from "@/services/companyService";
+import { formatDate2 } from "@/util/validate";
 
 export interface DataType {
   _id: string;
@@ -19,8 +21,8 @@ export interface DataType {
 
 const CompanyList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const [, setCurrentPage] = useState<number>(1);
+  const { companys, totalCount, isFetching } = useCompanyService();
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
@@ -28,58 +30,76 @@ const CompanyList: React.FC = () => {
 
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "Unsign name",
-      dataIndex: "unsignName",
-      width: "25%",
-      className: "first-column",
-    },
-    {
-      title: "Name",
+      title: "Tên nhà xe",
       dataIndex: "name",
       width: "25%",
     },
     {
-      title: "Create Date",
-      dataIndex: "createDate",
+      title: "Hình ảnh",
+      dataIndex: "img-url",
+      width: "15%",
+      render: (image) => (
+        <Image
+          src={image}
+          style={{
+            width: "100px",
+            height: "100px",
+            borderRadius: "100%",
+            objectFit: "cover",
+          }}
+        />
+      ),
+    },
+    {
+      title: "Email quản lý",
+      dataIndex: "manager-email",
       width: "25%",
     },
     {
-      title: "Update Date",
-      dataIndex: "updateDate",
-      width: "25%",
+      title: "Mô tả ngắn gọn",
+      dataIndex: "short-description",
+      width: "15%",
     },
     {
-      title: "Status",
-      dataIndex: "isDelete",
-      filters: [
-        { text: "TRUE", value: true },
-        { text: "FALSE", value: false },
-      ],
-      // onFilter: (value, record) => record.isDelete === value,
-      //   render: (isDelete) => {
-      //     let color;
-      //     switch (isDelete) {
-      //       case true:
-      //         color = "green";
-      //         break;
-      //       case false:
-      //         color = "red";
-      //         break;
-      //     }
-      //     return (
-      //       <Tag color={color} key={isDelete.toString()}>
-      //         {isDelete.toString().toUpperCase()}
-      //       </Tag>
-      //     );
-      //   },
+      title: "Ngày tạo",
+      dataIndex: "create-date",
+      width: "10%",
     },
+
     {
-      title: "",
-      dataIndex: "",
-      // render: (_, record) => (
-      //   <>{/* <DropdownFunction productInfo={record} /> */}</>
-      // ),
+      title: "Trạng thái",
+      dataIndex: "is-deleted",
+      render: (isDeleted) => {
+        let statusText = "";
+        let tagColor = "";
+        switch (isDeleted) {
+          case false:
+            statusText = "ACTIVE";
+            tagColor = "green";
+            break;
+          case true:
+            statusText = "INACTIVE";
+            tagColor = "pink";
+            break;
+          default:
+            statusText = "UNKNOWN";
+            tagColor = "gray";
+            break;
+        }
+        return <Tag color={tagColor}>{statusText}</Tag>;
+      },
+      width: "10%",
     },
+    // {
+    //   title: "",
+    //   dataIndex: "",
+    //   render: (_, record) => (
+    //     <>
+    //       {" "}
+    //       <DropdownCompanyFunc />
+    //     </>
+    //   ),
+    // },
   ];
 
   return (
@@ -112,17 +132,20 @@ const CompanyList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        // dataSource={cities?.map((record: { id: unknown }) => ({
-        //   ...record,
-        //   key: record.id,
-        // }))}
-        // pagination={{
-        //   current: currentPage,
-        //   total: totalCount || 0,
-        //   pageSize: 5,
-        // }}
+        dataSource={companys?.map(
+          (record: { id: unknown; "create-date": string | Date }) => ({
+            ...record,
+            key: record.id,
+            "create-date": formatDate2(record["create-date"]),
+          }),
+        )}
+        pagination={{
+          current: currentPage,
+          total: totalCount || 0,
+          pageSize: 5,
+        }}
         onChange={handleTableChange}
-        // loading={isFetching}
+        loading={isFetching}
         rowKey={(record) => record._id}
       />
       <AddCompanyModal setIsOpen={setIsOpen} isOpen={isOpen} />

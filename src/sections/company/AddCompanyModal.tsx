@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Modal, Form, Input } from "antd";
-import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  ContainerOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
+import useCompanyService from "@/services/companyService";
+import { UploadImage } from "@/components";
 
 export interface AddCompanyProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,15 +16,21 @@ export interface AddCompanyProps {
 const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
   const { setIsOpen, isOpen } = props;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
+  const [fileChange, setFileChange] = useState<string>("");
+  const { addNewCompanyItem } = useCompanyService();
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue({ "img-url": fileChange });
+  }, [fileChange, form]);
 
   const handleOk = async () => {
     try {
-      // const values = await form.validateFields();
+      const values = await form.validateFields();
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          // await addNewProductItem(values);
+          await addNewCompanyItem(values);
           form.resetFields();
           setIsConfirmLoading(false);
           setIsOpen(false);
@@ -37,9 +49,13 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
     form.resetFields();
   };
 
+  const handleFileChange = useCallback((newFileChange: string) => {
+    setFileChange(newFileChange);
+  }, []);
+
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Thêm công ty</p>}
+      title={<p className="text-lg font-bold text-[red]">Thêm công ty</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
@@ -47,48 +63,78 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
     >
       <Form name="normal_login" className="login-form" form={form}>
         <Form.Item
-          name="unsignName"
+          name="name"
           rules={[
             {
               required: true,
-              message: "Please input name",
-            },
-            {
-              min: 5,
-              message: "Name must be at least 5 characters",
+              message: "Vui lòng nhập tên nhà xe",
             },
           ]}
           colon={true}
-          label="Name"
+          label="Tên nhà xe"
           labelCol={{ span: 24 }}
           className="formItem"
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon mr-1" />}
-            placeholder="Unsign name"
+            placeholder="Tên nhà xe"
             autoFocus
           />
         </Form.Item>
         <Form.Item
-          name="name"
+          name="short-description"
           rules={[
             {
               required: true,
-              message: "Please input typeOfProduct",
+              message: "Vui lòng nhập ngắn gọn thông tin mô tả",
             },
           ]}
           colon={true}
-          label="Name"
+          label="Mô tả ngắn gọn"
           labelCol={{ span: 24 }}
           className="formItem"
         >
           <Input
             prefix={
-              <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
+              <ContainerOutlined className="site-form-item-icon mr-1 rotate-90" />
             }
-            placeholder="Name"
-            maxLength={10}
+            placeholder="Mô tả ngắn gọn"
           />
+        </Form.Item>
+        <Form.Item
+          name="full-description"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập chi tiết thông tin mô tả",
+            },
+          ]}
+          colon={true}
+          label="Mô tả chi tiết"
+          labelCol={{ span: 24 }}
+          className="formItem"
+        >
+          <Input
+            prefix={
+              <FileTextOutlined className="site-form-item-icon mr-1 rotate-90" />
+            }
+            placeholder="Mô tả chi tiết"
+          />
+        </Form.Item>
+        <Form.Item
+          name="img-url"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn hỉnh ảnh",
+            },
+          ]}
+          colon={true}
+          label="Hình ảnh"
+          labelCol={{ span: 24 }}
+          className="formItem"
+        >
+          <UploadImage onFileChange={handleFileChange} initialImage={""} />
         </Form.Item>
       </Form>
     </Modal>
