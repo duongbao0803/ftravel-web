@@ -110,6 +110,10 @@ canvas {
   transform: translate(-50%, -50%) scale(1);
 }
 
+.ant-image-mask {
+  border-radius: 100% !important;
+}
+
 @keyframes bounce {
   0% {
     transform: translateY(0);
