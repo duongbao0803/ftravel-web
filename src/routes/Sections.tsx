@@ -83,12 +83,7 @@ const Router: React.FC = () => {
           path: "/user",
         },
         {
-          element:
-            hasAccessBusCompany || hasAccessAdmin ? (
-              <CompanyManagementPage />
-            ) : (
-              <ForBidden />
-            ),
+          element: hasAccessAdmin ? <CompanyManagementPage /> : <ForBidden />,
           path: "/company",
         },
         {
