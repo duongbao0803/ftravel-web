@@ -4,6 +4,7 @@ import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { DataType } from "./UserList";
 import EditUserModal from "./EditUserModal";
+import DeleteUserModal from "./DeleteUserModal";
 
 export interface DropdownUserFuncProps {
   userInfo: DataType;
@@ -38,12 +39,7 @@ const DropdownUserFunc: React.FC<DropdownUserFuncProps> = () => {
                 <Link
                   rel="noopener noreferrer"
                   to="#"
-                  // onClick={() =>
-                  //   DeleteProductModal({
-                  //     productId,
-                  //     deleteProductItem,
-                  //   })
-                  // }
+                  onClick={() => DeleteUserModal({})}
                 >
                   <DeleteOutlined className="pr-2" />
                   Xóa người dùng
