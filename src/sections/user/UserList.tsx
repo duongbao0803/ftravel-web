@@ -34,7 +34,7 @@ const UserList: React.FC = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (index) => index + 1,
+      render: (_, _record, index) => index + 1,
     },
     {
       title: "Email",
@@ -64,49 +64,57 @@ const UserList: React.FC = () => {
     {
       title: "Vai trò",
       dataIndex: "role-id",
-      render: (roleId) => {
-        const roleList: { [key: number]: { name: string; color: string } } = {
-          0: { name: "CUSTOMER", color: "pink" },
-          1: { name: "DRIVER", color: "green" },
-          2: { name: "BUS", color: "red" },
-          3: { name: "ADMIN", color: "blue" },
-        };
-        const role = roleList[roleId];
-        if (role) {
-          const { name, color } = role;
-          return (
-            <Tag key={roleId} color={color}>
-              {name}
-            </Tag>
-          );
-        }
-      },
       width: "5%",
+      render: (roleId) => {
+        let roleText = "";
+        let tagColor = "";
+        switch (roleId) {
+          case 0:
+            roleText = "CUSTOMER";
+            tagColor = "pink";
+            break;
+          case 1:
+            roleText = "DRIVER";
+            tagColor = "green";
+            break;
+          case 2:
+            roleText = "BUS";
+            tagColor = "red";
+            break;
+          case 3:
+            roleText = "ADMIN";
+            tagColor = "blue";
+            break;
+          default:
+            roleText = "UNKNOWN";
+            tagColor = "gray";
+            break;
+        }
+        return <Tag color={tagColor}>{roleText}</Tag>;
+      },
     },
     {
       title: "Trạng thái",
-      dataIndex: "isDelete",
-      filters: [
-        { text: "TRUE", value: true },
-        { text: "FALSE", value: false },
-      ],
-      // onFilter: (value, record) => record.isDelete === value,
-      //   render: (isDelete) => {
-      //     let color;
-      //     switch (isDelete) {
-      //       case true:
-      //         color = "green";
-      //         break;
-      //       case false:
-      //         color = "red";
-      //         break;
-      //     }
-      //     return (
-      //       <Tag color={color} key={isDelete.toString()}>
-      //         {isDelete.toString().toUpperCase()}
-      //       </Tag>
-      //     );
-      //   },
+      dataIndex: "status",
+      render: (status) => {
+        let statusText = "";
+        let tagColor = "";
+        switch (status) {
+          case "ACTIVE":
+            statusText = "ACTIVE";
+            tagColor = "green";
+            break;
+          case "INACTIVE":
+            statusText = "INACTIVE";
+            tagColor = "pink";
+            break;
+          default:
+            statusText = "UNKNOWN";
+            tagColor = "gray";
+            break;
+        }
+        return <Tag color={tagColor}>{statusText}</Tag>;
+      },
       width: "10%",
     },
     {
@@ -150,14 +158,11 @@ const UserList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={userData?.map(
-          (record: { id: unknown; dob: string }, index: number) => ({
-            ...record,
-            key: record.id,
-            dob: formatDate2(record.dob),
-            index: index + 1,
-          }),
-        )}
+        dataSource={userData?.map((record: { id: unknown; dob: string }) => ({
+          ...record,
+          key: record.id,
+          dob: formatDate2(record.dob),
+        }))}
         // pagination={{
         //   current: currentPage,
         //   total: totalCount || 0,
