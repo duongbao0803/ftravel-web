@@ -27,6 +27,11 @@
   position: fixed !important;
 }
 
+.first-column:hover {
+  cursor: pointer;
+  color: rgb(0, 153, 255);
+}
+
 .pagination {
   position: sticky !important;
   bottom: 0;
