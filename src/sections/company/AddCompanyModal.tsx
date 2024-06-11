@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, Row, Col } from "antd";
 import {
   UserOutlined,
   ContainerOutlined,
-  FileTextOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import useCompanyService from "@/services/companyService";
 import { UploadImage } from "@/components";
@@ -19,6 +19,7 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
   const [fileChange, setFileChange] = useState<string>("");
   const { addNewCompanyItem } = useCompanyService();
   const [form] = Form.useForm();
+  const { TextArea } = Input;
 
   useEffect(() => {
     form.setFieldsValue({ "img-url": fileChange });
@@ -46,7 +47,6 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
 
   const handleCancel = () => {
     setIsOpen(false);
-    form.resetFields();
   };
 
   const handleFileChange = useCallback((newFileChange: string) => {
@@ -62,25 +62,50 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
       onCancel={handleCancel}
     >
       <Form name="normal_login" className="login-form" form={form}>
-        <Form.Item
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập tên nhà xe",
-            },
-          ]}
-          colon={true}
-          label="Tên nhà xe"
-          labelCol={{ span: 24 }}
-          className="formItem"
-        >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon mr-1" />}
-            placeholder="Tên nhà xe"
-            autoFocus
-          />
-        </Form.Item>
+        <Row gutter={16} className="relative mt-1">
+          <Col span={12}>
+            <Form.Item
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên nhà xe",
+                },
+              ]}
+              colon={true}
+              label="Tên nhà xe"
+              labelCol={{ span: 24 }}
+              className="formItem"
+            >
+              <Input
+                prefix={<UserOutlined className="site-form-item-icon mr-1" />}
+                placeholder="Tên nhà xe"
+                autoFocus
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="manager-email"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập email quản lý",
+                },
+              ]}
+              colon={true}
+              label="Email quản lý"
+              labelCol={{ span: 24 }}
+              className="formItem"
+            >
+              <Input
+                prefix={<MailOutlined className="site-form-item-icon mr-1" />}
+                placeholder="Email quản lý"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item
           name="short-description"
           rules={[
@@ -95,12 +120,11 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
           className="formItem"
         >
           <Input
-            prefix={
-              <ContainerOutlined className="site-form-item-icon mr-1 rotate-90" />
-            }
+            prefix={<ContainerOutlined className="site-form-item-icon mr-1" />}
             placeholder="Mô tả ngắn gọn"
           />
         </Form.Item>
+
         <Form.Item
           name="full-description"
           rules={[
@@ -114,12 +138,7 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
           labelCol={{ span: 24 }}
           className="formItem"
         >
-          <Input
-            prefix={
-              <FileTextOutlined className="site-form-item-icon mr-1 rotate-90" />
-            }
-            placeholder="Mô tả chi tiết"
-          />
+          <TextArea showCount placeholder="Mô tả chi tiết" />
         </Form.Item>
         <Form.Item
           name="img-url"

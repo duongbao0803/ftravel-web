@@ -1,4 +1,4 @@
-import { addCompany, getAllCompany } from "@/api/companyApi";
+import { addCompany, getAllCompany, getCompanyDetail } from "@/api/companyApi";
 import { CompanyInfo } from "@/types/company.types";
 import { CustomError } from "@/types/error.types";
 import { notification } from "antd";
@@ -13,6 +13,11 @@ const useCompanyService = () => {
     const pagination = JSON.parse(headers["x-pagination"]);
     const totalCount = pagination.TotalCount;
     return { data, totalCount };
+  };
+
+  const fetchCompanyDetail = async (companyId: number) => {
+    const res = await getCompanyDetail(companyId);
+    return res;
   };
 
   // const getInfoPostDetail = async (postId: string) => {
@@ -78,6 +83,7 @@ const useCompanyService = () => {
     isFetching,
     totalCount,
     addNewCompanyItem,
+    fetchCompanyDetail,
   };
 };
 

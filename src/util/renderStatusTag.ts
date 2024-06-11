@@ -1,4 +1,4 @@
-export const renderStatusTag = (status: string) => {
+export const renderStatusTag = (status: string | boolean) => {
   let tagColor = "";
   let statusText = "";
 
@@ -8,6 +8,14 @@ export const renderStatusTag = (status: string) => {
       tagColor = "green";
       break;
     case "INACTIVE":
+      statusText = "KHÔNG HOẠT ĐỘNG";
+      tagColor = "red";
+      break;
+    case true:
+      statusText = "ĐANG HOẠT ĐỘNG";
+      tagColor = "green";
+      break;
+    case false:
       statusText = "KHÔNG HOẠT ĐỘNG";
       tagColor = "red";
       break;
