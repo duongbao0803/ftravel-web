@@ -1,5 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Button, Form, Input, Modal, Table, Tag } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Skeleton,
+  Table,
+  Tag,
+} from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import {
   EnvironmentOutlined,
@@ -11,6 +22,8 @@ import AddRouteModal from "./AddRouteModal";
 import useRouteService from "@/services/routeService";
 import { formatDate2 } from "@/util/validate";
 import { RouteInfo } from "@/types/route.types";
+import dayjs from "dayjs";
+import { renderStatusTag } from "@/util/renderStatusTag";
 
 export interface DataType {
   id: number;
@@ -28,7 +41,10 @@ const RouteList: React.FC = React.memo(() => {
   const { routes, totalCount, isFetching, fetchRouteDetail } =
     useRouteService();
   const [routeId, setRouteId] = useState<number>(0);
-  const [form] = Form.useForm();
+  const { statusText, tagColor } =
+    routeDetail && routeDetail.status
+      ? renderStatusTag(routeDetail.status)
+      : { statusText: "UNKNOWN", tagColor: "gray" };
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -37,7 +53,6 @@ const RouteList: React.FC = React.memo(() => {
       try {
         const res = await fetchRouteDetail(routeId);
         if (res && res.status === 200) {
-          console.log("check res", res);
           setRouteDetail(res.data);
         }
       } catch (error) {
@@ -99,11 +114,11 @@ const RouteList: React.FC = React.memo(() => {
           let tagColor = "";
           switch (status) {
             case "ACTIVE":
-              statusText = "HOẠT ĐỘNG";
+              statusText = "ĐANG HOẠT ĐỘNG";
               tagColor = "green";
               break;
             case "INACTIVE":
-              statusText = "Không hoạt động";
+              statusText = "KHÔNG HOẠT ĐỘNG";
               tagColor = "pink";
               break;
             default:
@@ -171,45 +186,124 @@ const RouteList: React.FC = React.memo(() => {
       <AddRouteModal setIsOpen={setIsOpen} isOpen={isOpen} />
       <Modal
         title={
-          <p className="text-lg font-bold text-[red]">Chi tiết tuyến xe</p>
+          <p className="text-lg font-bold text-[red]">
+            Chi tiết tuyến xe &nbsp;
+            {routeDetail?.status && <Tag color={tagColor}>{statusText}</Tag>}
+          </p>
         }
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
-        <Form name="normal_login" className="login-form" form={form}>
-          <Form.Item
-            name="name"
-            id="formItem"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng chọn vai trò",
-              },
-            ]}
-            colon={true}
-            label="Vai trò"
-            labelCol={{ span: 24 }}
-            className="formItem"
-            initialValue={routeDetail?.name}
-          >
-            <Input
-              prefix={
-                <EnvironmentOutlined className="site-form-item-icon mr-1" />
-              }
-              className="p-2"
-              readOnly
-            />
-          </Form.Item>
-          <p>{routeDetail?.name}</p>
-          <p>{routeDetail?.["start-point"]}</p>
-          <p>{routeDetail?.["end-point"]}</p>
-          <p>{routeDetail?.status}</p>
-          <p>{routeDetail?.["bus-company-name"]}</p>
-          <p>{String(routeDetail?.["create-date"])}</p>
-          <p>{String(routeDetail?.["update-date"])}</p>
-          <p>{String(routeDetail?.["is-deleted"])}</p>
-        </Form>
+        {routeDetail ? (
+          <Form name="normal_login" className="login-form">
+            <Row gutter={16} className="relative mt-1">
+              <Col span={12}>
+                <Form.Item
+                  label="Tuyến xe"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <Input
+                    prefix={
+                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                    }
+                    className="p-2"
+                    defaultValue={routeDetail?.name}
+                    readOnly
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Tên nhà xe"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <Input
+                    prefix={
+                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                    }
+                    className="p-2"
+                    defaultValue={routeDetail?.["bus-company-name"]}
+                    readOnly
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16} className="relative mt-1">
+              <Col span={12}>
+                <Form.Item
+                  label="Điểm bắt đầu"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <Input
+                    prefix={
+                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                    }
+                    className="p-2"
+                    defaultValue={routeDetail?.["start-point"]}
+                    readOnly
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Điếm kết thúc"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <Input
+                    prefix={
+                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                    }
+                    className="p-2"
+                    defaultValue={routeDetail?.["end-point"]}
+                    readOnly
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16} className="relative mt-1">
+              <Col span={12}>
+                <Form.Item
+                  label="Ngày tạo"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <DatePicker
+                    picker="date"
+                    format="DD/MM/YYYY"
+                    className="formItem w-full p-2"
+                    defaultValue={dayjs(routeDetail["create-date"])}
+                    disabled
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Ngày chỉnh sửa"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <DatePicker
+                    picker="date"
+                    format="DD/MM/YYYY"
+                    className="formItem w-full p-2"
+                    defaultValue={dayjs(routeDetail["update-date"])}
+                    disabled
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        ) : (
+          <>
+            <Skeleton active className="mb-5" />
+            <Skeleton active />
+          </>
+        )}
       </Modal>
     </>
   );

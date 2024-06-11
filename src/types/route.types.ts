@@ -1,5 +1,6 @@
 export interface RouteInfo {
   id: number;
+  "unsign-name": string;
   name: string;
   "start-point": string;
   "end-point": string;
