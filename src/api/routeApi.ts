@@ -10,16 +10,20 @@ const getAllRoute = (page: number) => {
   });
 };
 
+const getRouteDetail = (routeId: number) => {
+  return axiosClient.get(`/api/routes/${routeId}`);
+};
+
 const addCompany = (formValues: CompanyInfo) => {
   return axiosClient.post("/api/buscompany", formValues);
 };
 
-const deleteService = (serviceId: number) => {
-  return axiosClient.delete(`/api/services/${serviceId}`);
+const removeRoute = (routeId: number) => {
+  return axiosClient.delete(`/api/routes/${routeId}`);
 };
 
 const editService = () => {
   return axiosClient.put("/api/services");
 };
 
-export { getAllRoute, addCompany, deleteService, editService };
+export { getAllRoute, addCompany, removeRoute, getRouteDetail, editService };

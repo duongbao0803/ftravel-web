@@ -1,5 +1,5 @@
-import { addCity, editCity, removeCity } from "@/api/cityApi";
-import { getAllRoute } from "@/api/routeApi";
+import { addCity, editCity } from "@/api/cityApi";
+import { getAllRoute, getRouteDetail, removeRoute } from "@/api/routeApi";
 import { CityInfo } from "@/types/city.types";
 import { CustomError } from "@/types/error.types";
 import { notification } from "antd";
@@ -16,14 +16,19 @@ const useRouteService = () => {
     return { data, totalCount };
   };
 
+  const fetchRouteDetail = async (routeId: number) => {
+    const res = await getRouteDetail(routeId);
+    return res;
+  };
+
   // const getInfoPostDetail = async (postId: string) => {
   //   const res = await getDetailPost(postId);
   //   return res.data.postInfo;
   // };
 
-  const deleteCity = async (cityId: number) => {
-    await removeCity(cityId);
-    return cityId;
+  const deleteRoute = async (routeId: number) => {
+    await removeRoute(routeId);
+    return routeId;
   };
 
   const addNewCity = async (formValues: CityInfo) => {
@@ -61,7 +66,7 @@ const useRouteService = () => {
     },
   });
 
-  const deleteCityMutation = useMutation(deleteCity, {
+  const deleteRouteMutation = useMutation(deleteRoute, {
     onSuccess: () => {
       notification.success({
         message: "Xóa thành công",
@@ -102,8 +107,8 @@ const useRouteService = () => {
     await addNewCityMutation.mutateAsync(formValues);
   };
 
-  const deleteCityItem = async (cityId: number) => {
-    await deleteCityMutation.mutateAsync(cityId);
+  const deleteRouteItem = async (routeId: number) => {
+    await deleteRouteMutation.mutateAsync(routeId);
   };
 
   const updateCityItem = async (formValues: CityInfo) => {
@@ -117,9 +122,10 @@ const useRouteService = () => {
     isFetching,
     routes,
     totalCount,
-    deleteCityItem,
     addNewCityItem,
     updateCityItem,
+    deleteRouteItem,
+    fetchRouteDetail,
   };
 };
 
