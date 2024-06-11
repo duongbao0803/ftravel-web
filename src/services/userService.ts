@@ -7,13 +7,12 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 const useUserService = () => {
   const queryClient = useQueryClient();
 
-  const fetchUsers = async () => {
-    const res = await getAllUser();
-    return res.data;
-    // const { data, headers } = res;
-    // const pagination = JSON.parse(headers["x-pagination"]);
-    // const totalCount = pagination.TotalCount;
-    // return { data, totalCount };
+  const fetchUsers = async (page: number) => {
+    const res = await getAllUser(page);
+    const { data, headers } = res;
+    const pagination = JSON.parse(headers["x-pagination"]);
+    const totalCount = pagination.TotalCount;
+    return { data, totalCount };
   };
 
   // const getInfoPostDetail = async (postId: string) => {
@@ -42,7 +41,7 @@ const useUserService = () => {
 
   const { data: userData, isLoading: isFetching } = useQuery(
     "users",
-    () => fetchUsers(),
+    () => fetchUsers(1),
     {
       retry: 3,
       retryDelay: 5000,
@@ -71,13 +70,13 @@ const useUserService = () => {
     await addNewUserMutation.mutateAsync(formValues);
   };
 
-  // const users = userData?.data || [];
-  // const totalCount = userData?.totalCount || 0;
+  const users = userData?.data || [];
+  const totalCount = userData?.totalCount || 0;
 
   return {
     isFetching,
-    userData,
-    // totalCount,
+    users,
+    totalCount,
     addNewUserItem,
   };
 };

@@ -1,8 +1,13 @@
 import axiosClient from "@/config/axiosClient";
 import { UserInfo } from "@/types/auth.types";
 
-const getAllUser = () => {
-  return axiosClient.get(`/api/account/accountList`);
+const getAllUser = (page: number) => {
+  return axiosClient.get(`/api/accounts`, {
+    params: {
+      "page-index": page,
+      "page-size": 20,
+    },
+  });
 };
 
 const addUser = (formValues: UserInfo) => {
