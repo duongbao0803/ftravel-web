@@ -10,6 +10,10 @@ const getAllCompany = (page: number) => {
   });
 };
 
+const getCompanyDetail = (companyId: number) => {
+  return axiosClient.get(`/api/buscompany/by-bus-id/${companyId}`);
+};
+
 const addCompany = (formValues: CompanyInfo) => {
   return axiosClient.post("/api/buscompany", formValues);
 };
@@ -22,4 +26,10 @@ const editService = () => {
   return axiosClient.put("/api/services");
 };
 
-export { getAllCompany, addCompany, deleteService, editService };
+export {
+  getAllCompany,
+  addCompany,
+  deleteService,
+  getCompanyDetail,
+  editService,
+};
