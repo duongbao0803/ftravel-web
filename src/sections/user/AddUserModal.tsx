@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { formatDate, validatePhoneNumber } from "@/util/validate";
 import moment from "moment";
-import { CreateRoles, Roles } from "@/enums/enums";
+import { CreateRoles } from "@/enums/enums";
 import useUserService from "@/services/userService";
 import { UserInfo } from "@/types/auth.types";
 import { UploadImage } from "@/components";
