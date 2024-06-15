@@ -19,6 +19,7 @@ export interface DataType {
 const CityList: React.FC = React.memo(() => {
   const { cities, isFetching, totalCount } = useCityService();
 
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -28,6 +29,12 @@ const CityList: React.FC = React.memo(() => {
   };
 
   const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (_, _record, index) => index + 1,
+    },
     {
       title: "Tên thành phố",
       dataIndex: "name",
@@ -46,23 +53,9 @@ const CityList: React.FC = React.memo(() => {
     {
       title: "Trạng thái",
       dataIndex: "is-deleted",
-      render: (isDeleted) => {
-        let statusText = "";
-        let tagColor = "";
-        switch (isDeleted) {
-          case false:
-            statusText = "ACTIVE";
-            tagColor = "green";
-            break;
-          case true:
-            statusText = "INACTIVE";
-            tagColor = "pink";
-            break;
-          default:
-            statusText = "UNKNOWN";
-            tagColor = "gray";
-            break;
-        }
+      render: () => {
+        const statusText = "ACTIVE";
+        const tagColor = "green";
         return <Tag color={tagColor}>{statusText}</Tag>;
       },
       width: "15%",
@@ -83,7 +76,7 @@ const CityList: React.FC = React.memo(() => {
       <div className="flex justify-between">
         <div className="flex gap-x-2">
           <Input
-            placeholder="Search by..."
+            placeholder="Tìm kiếm..."
             className="h-8 max-w-lg rounded-lg sm:mb-5 sm:w-[300px]"
           />
           <Button className="flex items-center" type="primary">
@@ -98,7 +91,7 @@ const CityList: React.FC = React.memo(() => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <PushpinOutlined className="mr-1 text-lg" /> Thêm công ty
+                <PushpinOutlined className="mr-1 text-lg" /> Thêm thành phố
               </div>
             </Button>
           </div>
@@ -116,8 +109,8 @@ const CityList: React.FC = React.memo(() => {
           }) => ({
             ...record,
             key: record.id,
-            "create-date": formatDate2(record["create-date"]),
-            "update-date": formatDate2(record["update-date"]),
+            "create-date": record["create-date"] ? formatDate2(record["create-date"]) : "N/A",
+            "update-date": record["update-date"] ? formatDate2(record["update-date"]) : "N/A",
           }),
         )}
         pagination={{

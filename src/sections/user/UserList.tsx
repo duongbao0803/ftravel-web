@@ -7,6 +7,7 @@ import AddUserModal from "./AddUserModal";
 import useUserService from "@/services/userService";
 import { formatDate2 } from "@/util/validate";
 import DropdownUserFunc from "./DropdownUserFunc";
+import { Roles } from "@/enums/enums";
 
 export interface DataType {
   id: string;
@@ -63,25 +64,25 @@ const UserList: React.FC = React.memo(() => {
     },
     {
       title: "Vai trò",
-      dataIndex: "role-id",
+      dataIndex: "role",
       width: "5%",
-      render: (roleId) => {
+      render: (roleName) => {
         let roleText = "";
         let tagColor = "";
-        switch (roleId) {
-          case 0:
+        switch (roleName) {
+          case "CUSTOMER":
             roleText = "CUSTOMER";
             tagColor = "pink";
             break;
-          case 1:
+          case Roles.DRIVER.toString():
             roleText = "DRIVER";
             tagColor = "green";
             break;
-          case 2:
+          case Roles.BUSCOMPANY.toString():
             roleText = "BUS";
             tagColor = "red";
             break;
-          case 3:
+          case Roles.ADMIN.toString():
             roleText = "ADMIN";
             tagColor = "blue";
             break;
@@ -161,7 +162,7 @@ const UserList: React.FC = React.memo(() => {
         dataSource={users?.map((record: { id: unknown; dob: string }) => ({
           ...record,
           key: record.id,
-          dob: formatDate2(record.dob),
+          dob: record.dob ? formatDate2(record.dob) : "N/A"
         }))}
         pagination={{
           current: currentPage,

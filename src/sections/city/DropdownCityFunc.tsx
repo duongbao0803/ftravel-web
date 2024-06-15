@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dropdown } from "antd";
-import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
+import { DeleteOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import EditCityModal from "./EditCityModal";
 import { DataType } from "./CityList";
@@ -18,28 +18,12 @@ const DropdownCityFunc: React.FC<DropdownCityFuncProps> = React.memo(
     const { cityInfo } = props;
     const cityId = cityInfo?.id;
 
-    const openEditModal = () => {
-      setIsOpen(true);
-    };
 
     return (
       <>
         <Dropdown
           menu={{
             items: [
-              {
-                key: "1",
-                label: (
-                  <Link
-                    rel="noopener noreferrer"
-                    to="#"
-                    onClick={openEditModal}
-                  >
-                    <EditOutlined className="pr-2" />
-                    Chỉnh sửa thành phố
-                  </Link>
-                ),
-              },
               {
                 key: "2",
                 label: (
