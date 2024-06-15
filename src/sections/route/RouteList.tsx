@@ -74,6 +74,12 @@ const RouteList: React.FC = React.memo(() => {
   const columns: TableProps<DataType>["columns"] = useMemo(
     () => [
       {
+        title: "STT",
+        dataIndex: "index",
+        key: "index",
+        render: (_, _record, index) => index + 1,
+      },
+      {
         title: "Tên tuyến xe",
         dataIndex: "name",
         width: "20%",

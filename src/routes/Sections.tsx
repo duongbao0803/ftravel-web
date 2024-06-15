@@ -107,6 +107,15 @@ const Router: React.FC = () => {
         {
           element:
             hasAccessBusCompany || hasAccessAdmin ? (
+              <RouteManagementPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/route/:id",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
               <PersonalInformationPage />
             ) : (
               <ForBidden />

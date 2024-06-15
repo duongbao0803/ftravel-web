@@ -43,14 +43,14 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Chart", "1", <PieChartOutlined />, undefined, "/chart"),
-  getItem("User", "2", <UserOutlined />, undefined, "/user"),
-  getItem("City", "3", <PushpinOutlined />, undefined, "/city"),
-  getItem("Bus company", "4", <HomeOutlined />, undefined, "/company"),
-  getItem("Service", "5", <ShoppingOutlined />, undefined, "/service"),
-  getItem("Route", "6", <ShareAltOutlined />, undefined, "/route"),
+  getItem("Dashboard", "1", <PieChartOutlined />, undefined, "/chart"),
+  getItem("Người dùng", "2", <UserOutlined />, undefined, "/user"),
+  getItem("Thành phố", "3", <PushpinOutlined />, undefined, "/city"),
+  getItem("Nhà xe", "4", <HomeOutlined />, undefined, "/company"),
+  getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
+  getItem("Tuyến đường", "6", <ShareAltOutlined />, undefined, "/route"),
   getItem(
-    "Personal information",
+    "Thông tin",
     "7",
     <SmileOutlined />,
     undefined,

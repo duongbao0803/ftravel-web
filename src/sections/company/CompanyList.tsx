@@ -15,8 +15,8 @@ import type { TablePaginationConfig, TableProps } from "antd";
 import {
   EnvironmentOutlined,
   FilterOutlined,
-  HomeOutlined,
   MailOutlined,
+  PlusCircleOutlined,
 } from "@ant-design/icons";
 import ExportCompany from "./ExportCompany";
 import AddCompanyModal from "./AddCompanyModal";
@@ -76,6 +76,12 @@ const CompanyList: React.FC = () => {
 
   const columns: TableProps<DataType>["columns"] = useMemo(
     () => [
+      {
+        title: "STT",
+        dataIndex: "index",
+        key: "index",
+        render: (_, _record, index) => index + 1,
+      },
       {
         title: "Tên nhà xe",
         dataIndex: "name",
@@ -163,7 +169,7 @@ const CompanyList: React.FC = () => {
       <div className="flex justify-between">
         <div className="flex gap-x-2">
           <Input
-            placeholder="Search by..."
+            placeholder="Tìm kiếm..."
             className="h-8 max-w-lg rounded-lg sm:mb-5 sm:w-[300px]"
           />
           <Button className="flex items-center" type="primary">
@@ -178,7 +184,7 @@ const CompanyList: React.FC = () => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <HomeOutlined className="mr-1 text-lg" /> Thêm công ty
+                <PlusCircleOutlined className="mr-1 text-lg"/>Thêm nhà xe
               </div>
             </Button>
           </div>
