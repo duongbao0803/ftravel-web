@@ -24,6 +24,7 @@ import { formatDate2 } from "@/util/validate";
 import { RouteInfo } from "@/types/route.types";
 import dayjs from "dayjs";
 import { renderStatusTag } from "@/util/renderStatusTag";
+import { useNavigate } from "react-router-dom";
 
 export interface DataType {
   id: number;
@@ -45,6 +46,7 @@ const RouteList: React.FC = React.memo(() => {
     routeDetail && routeDetail.status
       ? renderStatusTag(routeDetail.status)
       : { statusText: "UNKNOWN", tagColor: "gray" };
+  const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -69,6 +71,7 @@ const RouteList: React.FC = React.memo(() => {
 
   const handleRowClick = (record: number) => {
     setRouteId(record);
+    navigate(`/route/${record}`);
   };
 
   const columns: TableProps<DataType>["columns"] = useMemo(

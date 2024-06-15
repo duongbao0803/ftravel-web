@@ -23,6 +23,11 @@ export const ServiceManagementPage = lazy(
 export const RouteManagementPage = lazy(
   () => import("@/pages/RouteManagementPage"),
 );
+export const RouteDetailsPage = lazy(() => import("@/pages/RouteDetailsPage"));
+export const StationManagementPage = lazy(
+  () => import("@/pages/StationManagementPage"),
+);
+
 export const PersonalInformationPage = lazy(
   () => import("@/pages/PersonalInformationPage"),
 );
@@ -107,11 +112,20 @@ const Router: React.FC = () => {
         {
           element:
             hasAccessBusCompany || hasAccessAdmin ? (
-              <RouteManagementPage />
+              <RouteDetailsPage />
             ) : (
               <ForBidden />
             ),
           path: "/route/:id",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <StationManagementPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/station",
         },
         {
           element:

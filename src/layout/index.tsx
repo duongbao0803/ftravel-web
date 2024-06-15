@@ -49,13 +49,8 @@ const items: MenuItem[] = [
   getItem("Nhà xe", "4", <HomeOutlined />, undefined, "/company"),
   getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
   getItem("Tuyến đường", "6", <ShareAltOutlined />, undefined, "/route"),
-  getItem(
-    "Thông tin",
-    "7",
-    <SmileOutlined />,
-    undefined,
-    "/personal",
-  ),
+  getItem("Trạm xe", "7", <SmileOutlined />, undefined, "/station"),
+  getItem("Thông tin", "8", <SmileOutlined />, undefined, "/personal"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
