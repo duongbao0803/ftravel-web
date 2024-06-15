@@ -37,7 +37,7 @@ const useCityService = () => {
     ["cities", 1],
     () => fetchCities(1),
     {
-      retry: 3,
+      retry: 1,
       retryDelay: 5000,
     },
   );
@@ -109,7 +109,7 @@ const useCityService = () => {
     await updateCityMutation.mutateAsync(formValues);
   };
 
-  const cities = citiesData?.data || [];
+  const cities = citiesData?.data.filter((city: { [x: string]: boolean; }) => city["is-deleted"] === false) || [];
   const totalCount = citiesData?.totalCount || 0;
 
   return {

@@ -26,7 +26,8 @@ const useUserService = () => {
   // };
 
   const addNewUser = async (formValues: UserInfo) => {
-    await addUser(formValues);
+    const res = await addUser(formValues);
+    return res;
   };
 
   // const updatePostInfo = async ({
@@ -49,10 +50,10 @@ const useUserService = () => {
   );
 
   const addNewUserMutation = useMutation(addNewUser, {
-    onSuccess: () => {
+    onSuccess: (res) => {
       notification.success({
         message: "Tạo thành công",
-        description: "Tạo người dùng thành công",
+        description: res.data.message,
         duration: 2,
       });
       queryClient.invalidateQueries("users");

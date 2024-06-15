@@ -11,7 +11,7 @@ const getAllUser = (page: number) => {
 };
 
 const addUser = (formValues: UserInfo) => {
-  return axiosClient.post(`/api/account`, formValues);
+  return axiosClient.post(`/api/accounts`, formValues);
 };
 
 // const deleteUser = (userId) => {

@@ -2,8 +2,15 @@ import { requestRefreshToken } from "@/api/authenApi";
 import axios from "axios";
 import Cookies from "js-cookie";
 
+// const axiosClient = axios.create({
+//   baseURL: "https://ftravelapi.azurewebsites.net",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
+
 const axiosClient = axios.create({
-  baseURL: "https://ftravelapi.azurewebsites.net",
+  baseURL: "https://localhost:7074/",
   headers: {
     "Content-Type": "application/json",
   },

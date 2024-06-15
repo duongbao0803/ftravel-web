@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { formatDate, validatePhoneNumber } from "@/util/validate";
 import moment from "moment";
-import { Roles } from "@/enums/enums";
+import { CreateRoles } from "@/enums/enums";
 import useUserService from "@/services/userService";
 import { UserInfo } from "@/types/auth.types";
 import { UploadImage } from "@/components";
@@ -206,10 +206,9 @@ const AddUserModal: React.FC<AddModalProps> = React.memo((props) => {
             >
               <Select
                 placeholder="Chọn vai trò"
-                onChange={(value) => console.log("check key", value)}
               >
-                {Object.keys(Roles).map((key: string) => {
-                  const roleValue = Roles[key as keyof typeof Roles];
+                {Object.keys(CreateRoles).map((key: string) => {
+                  const roleValue = CreateRoles[key as keyof typeof CreateRoles];
                   if (typeof roleValue === "number") {
                     return (
                       <Select.Option
