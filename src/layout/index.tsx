@@ -9,9 +9,11 @@ import {
   ShoppingOutlined,
   ShareAltOutlined,
   SmileOutlined,
+  TruckOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
 import useAuthService from "@/services/authService";
+import logo from '../assets/images/logo/FTravel.png';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -49,7 +51,7 @@ const items: MenuItem[] = [
   getItem("Nhà xe", "4", <HomeOutlined />, undefined, "/company"),
   getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
   getItem("Tuyến đường", "6", <ShareAltOutlined />, undefined, "/route"),
-  getItem("Trạm xe", "7", <SmileOutlined />, undefined, "/station"),
+  getItem("Trạm xe", "7", <TruckOutlined />, undefined, "/station"),
   getItem("Thông tin", "8", <SmileOutlined />, undefined, "/personal"),
 ];
 
@@ -125,7 +127,8 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
         <div className="my-4 flex justify-center">
           <img
             className="w-5/12 select-none object-cover"
-            src="https://insacmau.com/wp-content/uploads/2023/02/logo-FPT-Polytechnic-.png"
+            // src="https://insacmau.com/wp-content/uploads/2023/02/logo-FPT-Polytechnic-.png"
+            src={logo}
             alt=""
           />
         </div>

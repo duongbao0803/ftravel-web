@@ -17,3 +17,13 @@ export enum CreateRoles {
   BUSCOMPANY,
   ADMIN
 }
+
+export enum CommonStatus {
+  ACTIVE,
+  INACTIVE
+}
+
+export enum CommonStatusString {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE"
+}

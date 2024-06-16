@@ -23,7 +23,9 @@ export const ServiceManagementPage = lazy(
 export const RouteManagementPage = lazy(
   () => import("@/pages/RouteManagementPage"),
 );
-export const RouteDetailsPage = lazy(() => import("@/pages/RouteDetailsPage"));
+export const RouteDetailsPage = lazy(
+  () => import("@/pages/RouteDetailsPage"));
+  
 export const StationManagementPage = lazy(
   () => import("@/pages/StationManagementPage"),
 );

@@ -1,5 +1,4 @@
 import React from "react";
-import StationList from "../StationList";
 
 const RouteDetails: React.FC = () => {
   return (
@@ -8,7 +7,8 @@ const RouteDetails: React.FC = () => {
         <p className="text-2xl font-bold text-[#000000]">Quản lý tuyến xe</p>
       </div>
       <div className="p-5">
-        <StationList />
+        {/* <StationList /> */}
+        Tính năng này quá khó vui lòng sửa DB
       </div>
     </div>
   );

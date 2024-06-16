@@ -57,7 +57,7 @@ const useCompanyService = () => {
     onSuccess: () => {
       notification.success({
         message: "Tạo thành công",
-        description: "Tạo thành phố thành công",
+        description: "Tạo nhà xe thành công",
         duration: 2,
       });
       queryClient.invalidateQueries("companys");

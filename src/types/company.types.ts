@@ -1,4 +1,5 @@
 export interface CompanyInfo {
+  id: number;
   name: string;
   "img-url": string;
   "short-description": string;
