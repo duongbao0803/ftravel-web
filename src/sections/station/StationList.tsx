@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Button,
   Col,
@@ -12,66 +12,63 @@ import {
   Tag,
 } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
-import {
-  EnvironmentOutlined,
-  FilterOutlined,
-  HomeOutlined,
-} from "@ant-design/icons";
-import ExportRoute from "./ExportRoute";
-import AddRouteModal from "./AddRouteModal";
-import useRouteService from "@/services/routeService";
+import { CarOutlined, EnvironmentOutlined, FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
+// import ExportRoute from "./ExportRoute";
+// import AddRouteModal from "./AddRouteModal";
 import { formatDate2 } from "@/util/validate";
-import { RouteInfo } from "@/types/route.types";
 import dayjs from "dayjs";
 import { renderStatusTag } from "@/util/renderStatusTag";
-import { useNavigate } from "react-router-dom";
+import useStationService from "@/services/stationService";
+import { StationDetailInfo } from "@/types/station.types";
+import { CommonStatusString } from "@/enums/enums";
+import AddStationModal from "./AddStationModal";
 
 export interface DataType {
   id: number;
   name: string;
-  "start-point": string;
-  "end-point": string;
   "bus-company-name": string;
+  status: string;
   "create-date": string | Date;
+  "update-date": string | Date;
+  "is-deleted": boolean;
 }
 
-const RouteList: React.FC = React.memo(() => {
+const StationList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [routeDetail, setRouteDetail] = useState<RouteInfo>();
-  const { routes, totalCount, isFetching, fetchRouteDetail } =
-    useRouteService();
-  const [routeId, setRouteId] = useState<number>(0);
+  const [stationDetail, setStationDetail] = useState<StationDetailInfo>();
+  const { stations, totalCount, isFetching, fetchStationDetail } =
+    useStationService();
+  // const [stationId, setStationId] = useState<number>(0);
   const { statusText, tagColor } =
-    routeDetail && routeDetail.status
-      ? renderStatusTag(routeDetail.status)
+    stationDetail && stationDetail.status
+      ? renderStatusTag(stationDetail.status)
       : { statusText: "UNKNOWN", tagColor: "gray" };
-  const navigate = useNavigate();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetchRouteDetail(routeId);
-        if (res && res.status === 200) {
-          setRouteDetail(res.data);
-        }
-      } catch (error) {
-        console.error("Error fetching route detail:", error);
+  const fetchData = async (stationId: number) => {
+    try {
+      const res = await fetchStationDetail(stationId);
+      if (res && res.status === 200) {
+        setStationDetail(res.data);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching station detail:", error);
+    }
+  };
 
-    fetchData();
-  }, [routeId]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [stationId]);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
   };
 
-  const handleRowClick = (record: number) => {
-    setRouteId(record);
-    navigate(`/route/${record}`);
+  const handleRowClick = async (record: number) => {
+    setStationDetail(undefined);
+    await fetchData(record);
   };
 
   const columns: TableProps<DataType>["columns"] = useMemo(
@@ -83,9 +80,8 @@ const RouteList: React.FC = React.memo(() => {
         render: (_, _record, index) => index + 1,
       },
       {
-        title: "Tên tuyến xe",
+        title: "Tên trạm",
         dataIndex: "name",
-        width: "20%",
         className: "first-column",
         onCell: () => {
           return {
@@ -96,24 +92,16 @@ const RouteList: React.FC = React.memo(() => {
         },
       },
       {
-        title: "Điểm bắt đầu",
-        dataIndex: "start-point",
-        width: "20%",
-      },
-      {
-        title: "Điểm kết thúc",
-        dataIndex: "end-point",
-        width: "20%",
-      },
-      {
         title: "Tên nhà xe",
         dataIndex: "bus-company-name",
-        width: "20%",
       },
       {
         title: "Ngày tạo",
         dataIndex: "create-date",
-        width: "10%",
+      },
+      {
+        title: "Ngày chỉnh sửa",
+        dataIndex: "update-date",
       },
       {
         title: "Trạng thái",
@@ -122,11 +110,11 @@ const RouteList: React.FC = React.memo(() => {
           let statusText = "";
           let tagColor = "";
           switch (status) {
-            case "ACTIVE":
+            case CommonStatusString.ACTIVE.toString():
               statusText = "ĐANG HOẠT ĐỘNG";
               tagColor = "green";
               break;
-            case "INACTIVE":
+            case CommonStatusString.INACTIVE.toString():
               statusText = "KHÔNG HOẠT ĐỘNG";
               tagColor = "pink";
               break;
@@ -143,6 +131,15 @@ const RouteList: React.FC = React.memo(() => {
     [],
   );
 
+  const getStatusText = (status: string) => {
+    if (status === CommonStatusString.ACTIVE) {
+      return "HOẠT ĐỘNG";
+    } else if (status === CommonStatusString.INACTIVE) {
+      return "TẠM DỪNG";
+    }
+    return "KHÔNG XÁC ĐỊNH";
+  };
+
   return (
     <>
       <div className="flex justify-between">
@@ -157,13 +154,13 @@ const RouteList: React.FC = React.memo(() => {
           </Button>
         </div>
         <div className="flex gap-x-2">
-          <div>
+          {/* <div>
             <ExportRoute />
-          </div>
+          </div> */}
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <HomeOutlined className="mr-1 text-lg" /> Thêm tuyến xe
+                <PlusCircleOutlined className="mr-1 text-lg" /> Thêm trạm
               </div>
             </Button>
           </div>
@@ -173,11 +170,20 @@ const RouteList: React.FC = React.memo(() => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={routes?.map(
-          (record: { id: unknown; "create-date": Date | string }) => ({
+        dataSource={stations?.map(
+          (record: {
+            id: unknown;
+            "create-date": Date | string;
+            "update-date": Date | string;
+          }) => ({
             ...record,
-            "create-date": formatDate2(record["create-date"]),
             key: record.id,
+            "create-date": record["create-date"]
+              ? formatDate2(record["create-date"])
+              : "N/A",
+            "update-date": record["update-date"]
+              ? formatDate2(record["update-date"])
+              : "N/A",
           }),
         )}
         pagination={{
@@ -192,24 +198,24 @@ const RouteList: React.FC = React.memo(() => {
           onClick: () => handleRowClick(record.id),
         })}
       />
-      <AddRouteModal setIsOpen={setIsOpen} isOpen={isOpen} />
+      <AddStationModal setIsOpen={setIsOpen} isOpen={isOpen} />
       <Modal
         title={
           <p className="text-lg font-bold text-[red]">
-            Chi tiết tuyến xe &nbsp;
-            {routeDetail?.status && <Tag color={tagColor}>{statusText}</Tag>}
+            Chi tiết trạm &nbsp;
+            {stationDetail?.status && <Tag color={tagColor}>{statusText}</Tag>}
           </p>
         }
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         footer={null}
       >
-        {routeDetail ? (
+        {stationDetail ? (
           <Form name="normal_login" className="login-form">
             <Row gutter={16} className="relative mt-1">
               <Col span={12}>
                 <Form.Item
-                  label="Tuyến xe"
+                  label="Tên trạm"
                   labelCol={{ span: 24 }}
                   className="formItem"
                 >
@@ -218,23 +224,23 @@ const RouteList: React.FC = React.memo(() => {
                       <EnvironmentOutlined className="site-form-item-icon mr-1" />
                     }
                     className="p-2"
-                    defaultValue={routeDetail?.name}
+                    defaultValue={stationDetail?.name}
                     readOnly
                   />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item
-                  label="Tên nhà xe"
+                  label="Nhà xe quản lí"
                   labelCol={{ span: 24 }}
                   className="formItem"
                 >
                   <Input
                     prefix={
-                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                      <CarOutlined className="site-form-item-icon mr-1" />
                     }
                     className="p-2"
-                    defaultValue={routeDetail?.["bus-company-name"]}
+                    defaultValue={stationDetail?.["bus-company"].name}
                     readOnly
                   />
                 </Form.Item>
@@ -243,7 +249,7 @@ const RouteList: React.FC = React.memo(() => {
             <Row gutter={16} className="relative mt-1">
               <Col span={12}>
                 <Form.Item
-                  label="Điểm bắt đầu"
+                  label="Trạng thái"
                   labelCol={{ span: 24 }}
                   className="formItem"
                 >
@@ -252,25 +258,29 @@ const RouteList: React.FC = React.memo(() => {
                       <EnvironmentOutlined className="site-form-item-icon mr-1" />
                     }
                     className="p-2"
-                    defaultValue={routeDetail?.["start-point"]}
+                    defaultValue={getStatusText(stationDetail?.status)}
                     readOnly
                   />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Điếm kết thúc"
-                  labelCol={{ span: 24 }}
-                  className="formItem"
-                >
-                  <Input
-                    prefix={
-                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
-                    }
-                    className="p-2"
-                    defaultValue={routeDetail?.["end-point"]}
-                    readOnly
-                  />
+                  {/* <Select
+                    placeholder="Trạng thái"
+                    defaultValue={stationDetail?.status}
+                  >
+                    {Object.keys(CommonStatus).map((key: string) => {
+                      const roleValue =
+                        CommonStatus[key as keyof typeof CommonStatus];
+                      if (typeof roleValue === "number") {
+                        return (
+                          <Select.Option
+                            key={roleValue}
+                            value={roleValue.toString()}
+                          >
+                            {key}
+                          </Select.Option>
+                        );
+                      }
+                      return null;
+                    })}
+                  </Select> */}
                 </Form.Item>
               </Col>
             </Row>
@@ -285,7 +295,7 @@ const RouteList: React.FC = React.memo(() => {
                     picker="date"
                     format="DD/MM/YYYY"
                     className="formItem w-full p-2"
-                    defaultValue={dayjs(routeDetail["create-date"])}
+                    defaultValue={dayjs(stationDetail["create-date"])}
                     disabled
                   />
                 </Form.Item>
@@ -300,7 +310,7 @@ const RouteList: React.FC = React.memo(() => {
                     picker="date"
                     format="DD/MM/YYYY"
                     className="formItem w-full p-2"
-                    defaultValue={dayjs(routeDetail["update-date"])}
+                    defaultValue={dayjs(stationDetail["update-date"])}
                     disabled
                   />
                 </Form.Item>
@@ -316,6 +326,6 @@ const RouteList: React.FC = React.memo(() => {
       </Modal>
     </>
   );
-});
+};
 
-export default RouteList;
+export default StationList;

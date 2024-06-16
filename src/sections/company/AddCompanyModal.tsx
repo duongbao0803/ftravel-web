@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Modal, Form, Input, Row, Col } from "antd";
 import {
-  UserOutlined,
   ContainerOutlined,
   MailOutlined,
+  CarOutlined,
 } from "@ant-design/icons";
 import useCompanyService from "@/services/companyService";
 import { UploadImage } from "@/components";
@@ -55,7 +55,7 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
 
   return (
     <Modal
-      title={<p className="text-lg font-bold text-[red]">Thêm công ty</p>}
+      title={<p className="text-lg font-bold text-[red]">Thêm nhà xe mới</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
@@ -78,7 +78,7 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
               className="formItem"
             >
               <Input
-                prefix={<UserOutlined className="site-form-item-icon mr-1" />}
+                prefix={<CarOutlined className="site-form-item-icon mr-1"/>}
                 placeholder="Tên nhà xe"
                 autoFocus
               />
