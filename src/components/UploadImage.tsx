@@ -8,7 +8,7 @@ import { resizeFile } from "@/util/resizeImage";
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
-interface UploadImageUserProps {
+interface UploadImageProps {
   onFileChange: (fileChange: string) => void;
   initialImage?: string;
 }
@@ -21,7 +21,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 
-const UploadImageUser: React.FC<UploadImageUserProps> = (props) => {
+const UploadImage: React.FC<UploadImageProps> = (props) => {
   const { onFileChange, initialImage } = props;
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -62,6 +62,7 @@ const UploadImageUser: React.FC<UploadImageUserProps> = (props) => {
     if (newFileList.length === 0) {
       setFile(null);
       setFileChange("");
+      return;
     }
 
     if (newFile && newFile.originFileObj) {
@@ -70,8 +71,7 @@ const UploadImageUser: React.FC<UploadImageUserProps> = (props) => {
         const storageRef = ref(storage, `/FTravel/${newFile.name}`);
         await uploadBytes(storageRef, resizedImage);
         const downloadURL = await getDownloadURL(storageRef);
-        newFile.url = downloadURL;
-        // newFile.status = "done";
+        newFile.status = "done";
         setFileChange(downloadURL);
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -123,4 +123,4 @@ const UploadImageUser: React.FC<UploadImageUserProps> = (props) => {
   );
 };
 
-export default UploadImageUser;
+export default UploadImage;

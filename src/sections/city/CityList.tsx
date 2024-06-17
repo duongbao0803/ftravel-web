@@ -1,26 +1,24 @@
 import React, { useState } from "react";
-import { Button, Input, Table } from "antd";
+import { Button, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, PushpinOutlined } from "@ant-design/icons";
 import useCityService from "@/services/cityService";
 import AddCityModal from "./AddCityModal";
 import ExportCity from "./ExportCity";
+import { formatDate2 } from "@/util/validate";
+import DropdownCityFunc from "./DropdownCityFunc";
 
 export interface DataType {
-  _id: string;
-  key: string;
+  id: number;
   name: string;
-  image: string;
-  description: string;
-  quantity: number;
-  typeOfProduct: string;
-  price: number;
-  rating: number;
+  "create-date": string | Date;
+  "update-date"?: string | Date;
+  "is-deleted": boolean;
 }
 
-const CityList: React.FC = () => {
-  // const { products, isFetching } = useProductService();
+const CityList: React.FC = React.memo(() => {
   const { cities, isFetching, totalCount } = useCityService();
+
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -32,57 +30,44 @@ const CityList: React.FC = () => {
 
   const columns: TableProps<DataType>["columns"] = [
     {
-      title: "Unsign name",
-      dataIndex: "unsignName",
-      width: "25%",
-      className: "first-column",
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (_, _record, index) => index + 1,
     },
     {
-      title: "Name",
+      title: "Tên thành phố",
       dataIndex: "name",
+      width: "35%",
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "create-date",
       width: "25%",
     },
     {
-      title: "Create Date",
-      dataIndex: "createDate",
+      title: "Ngày thay đổi",
+      dataIndex: "update-date",
       width: "25%",
     },
     {
-      title: "Update Date",
-      dataIndex: "updateDate",
-      width: "25%",
-    },
-    {
-      title: "Status",
-      dataIndex: "isDelete",
-      filters: [
-        { text: "TRUE", value: true },
-        { text: "FALSE", value: false },
-      ],
-      // onFilter: (value, record) => record.isDelete === value,
-      //   render: (isDelete) => {
-      //     let color;
-      //     switch (isDelete) {
-      //       case true:
-      //         color = "green";
-      //         break;
-      //       case false:
-      //         color = "red";
-      //         break;
-      //     }
-      //     return (
-      //       <Tag color={color} key={isDelete.toString()}>
-      //         {isDelete.toString().toUpperCase()}
-      //       </Tag>
-      //     );
-      //   },
+      title: "Trạng thái",
+      dataIndex: "is-deleted",
+      render: () => {
+        const statusText = "ACTIVE";
+        const tagColor = "green";
+        return <Tag color={tagColor}>{statusText}</Tag>;
+      },
+      width: "15%",
     },
     {
       title: "",
       dataIndex: "",
-      // render: (_, record) => (
-      //   <>{/* <DropdownFunction productInfo={record} /> */}</>
-      // ),
+      render: (_, record) => (
+        <>
+          <DropdownCityFunc cityInfo={record} />
+        </>
+      ),
     },
   ];
 
@@ -91,12 +76,12 @@ const CityList: React.FC = () => {
       <div className="flex justify-between">
         <div className="flex gap-x-2">
           <Input
-            placeholder="Search by..."
+            placeholder="Tìm kiếm..."
             className="h-8 max-w-lg rounded-lg sm:mb-5 sm:w-[300px]"
           />
           <Button className="flex items-center" type="primary">
             <FilterOutlined className="align-middle" />
-            Sort
+            Sắp xếp
           </Button>
         </div>
         <div className="flex gap-x-2">
@@ -106,7 +91,7 @@ const CityList: React.FC = () => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <PushpinOutlined className="mr-1 text-lg" /> Add City
+                <PushpinOutlined className="mr-1 text-lg" /> Thêm thành phố
               </div>
             </Button>
           </div>
@@ -116,10 +101,18 @@ const CityList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={cities?.map((record: { id: unknown }) => ({
-          ...record,
-          key: record.id,
-        }))}
+        dataSource={cities?.map(
+          (record: {
+            id: unknown;
+            "create-date": string | Date;
+            "update-date": string | Date;
+          }) => ({
+            ...record,
+            key: record.id,
+            "create-date": record["create-date"] ? formatDate2(record["create-date"]) : "N/A",
+            "update-date": record["update-date"] ? formatDate2(record["update-date"]) : "N/A",
+          }),
+        )}
         pagination={{
           current: currentPage,
           total: totalCount || 0,
@@ -127,11 +120,11 @@ const CityList: React.FC = () => {
         }}
         onChange={handleTableChange}
         loading={isFetching}
-        rowKey={(record) => record._id}
+        rowKey={(record) => record.id}
       />
       <AddCityModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
   );
-};
+});
 
 export default CityList;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Modal, Form, Input, DatePicker, Select, Col, Row } from "antd";
 import {
   UserOutlined,
@@ -8,17 +8,17 @@ import {
 } from "@ant-design/icons";
 import { formatDate, validatePhoneNumber } from "@/util/validate";
 import moment from "moment";
-import UploadImageUser from "../personal/UploadImageUser";
-import { Roles } from "@/enums/enums";
+import { CreateRoles } from "@/enums/enums";
 import useUserService from "@/services/userService";
 import { UserInfo } from "@/types/auth.types";
+import { UploadImage } from "@/components";
 
 export interface AddModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
 }
 
-const AddUserModal: React.FC<AddModalProps> = (props) => {
+const AddUserModal: React.FC<AddModalProps> = React.memo((props) => {
   const { addNewUserItem } = useUserService();
   const { setIsOpen, isOpen } = props;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
@@ -65,9 +65,9 @@ const AddUserModal: React.FC<AddModalProps> = (props) => {
     return current && current > moment().startOf("day");
   };
 
-  const handleFileChange = (newFileChange: string) => {
+  const handleFileChange = useCallback((newFileChange: string) => {
     setFileChange(newFileChange);
-  };
+  }, []);
 
   return (
     <Modal
@@ -206,10 +206,9 @@ const AddUserModal: React.FC<AddModalProps> = (props) => {
             >
               <Select
                 placeholder="Chọn vai trò"
-                onChange={(value) => console.log("check key", value)}
               >
-                {Object.keys(Roles).map((key: string) => {
-                  const roleValue = Roles[key as keyof typeof Roles];
+                {Object.keys(CreateRoles).map((key: string) => {
+                  const roleValue = CreateRoles[key as keyof typeof CreateRoles];
                   if (typeof roleValue === "number") {
                     return (
                       <Select.Option
@@ -233,11 +232,11 @@ const AddUserModal: React.FC<AddModalProps> = (props) => {
           labelCol={{ span: 24 }}
           className="formItem"
         >
-          <UploadImageUser onFileChange={handleFileChange} initialImage={""} />
+          <UploadImage onFileChange={handleFileChange} initialImage={""} />
         </Form.Item>
       </Form>
     </Modal>
   );
-};
+});
 
 export default AddUserModal;

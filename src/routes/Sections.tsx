@@ -23,6 +23,13 @@ export const ServiceManagementPage = lazy(
 export const RouteManagementPage = lazy(
   () => import("@/pages/RouteManagementPage"),
 );
+export const RouteDetailsPage = lazy(
+  () => import("@/pages/RouteDetailsPage"));
+  
+export const StationManagementPage = lazy(
+  () => import("@/pages/StationManagementPage"),
+);
+
 export const PersonalInformationPage = lazy(
   () => import("@/pages/PersonalInformationPage"),
 );
@@ -70,7 +77,12 @@ const Router: React.FC = () => {
           path: "/chart",
         },
         {
-          element: hasAccessBusCompany ? <CityManagementPage /> : <ForBidden />,
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <CityManagementPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/city",
         },
         {
@@ -78,31 +90,52 @@ const Router: React.FC = () => {
           path: "/user",
         },
         {
-          element: hasAccessBusCompany ? (
-            <CompanyManagementPage />
-          ) : (
-            <ForBidden />
-          ),
+          element: hasAccessAdmin ? <CompanyManagementPage /> : <ForBidden />,
           path: "/company",
         },
         {
-          element: hasAccessBusCompany ? (
-            <ServiceManagementPage />
-          ) : (
-            <ForBidden />
-          ),
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <ServiceManagementPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/service",
         },
         {
-          element: hasAccessBusCompany ? (
-            <RouteManagementPage />
-          ) : (
-            <ForBidden />
-          ),
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <RouteManagementPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/route",
         },
         {
-          element: <PersonalInformationPage />,
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <RouteDetailsPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/route/:id",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <StationManagementPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/station",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <PersonalInformationPage />
+            ) : (
+              <ForBidden />
+            ),
           path: "/personal",
         },
 

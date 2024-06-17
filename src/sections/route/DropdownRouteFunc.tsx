@@ -4,15 +4,18 @@ import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { DataType } from "./RouteList";
 import EditRouteModal from "./EditRouteModal";
+import DeleteRouteModal from "./DeleteRouteModal";
+import useRouteService from "@/services/routeService";
 
 export interface DropdownRouteFuncProps {
-  userInfo: DataType;
+  routeInfo: DataType;
 }
 
-const DropdownRouteFunc: React.FC<DropdownRouteFuncProps> = () => {
+const DropdownRouteFunc: React.FC<DropdownRouteFuncProps> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-  // const { productInfo } = props;
-  // const productId = productInfo?._id;
+  const { routeInfo } = props;
+  const { deleteRouteItem } = useRouteService();
+  const routeId = routeInfo?.id;
 
   const openEditModal = () => {
     setIsOpen(true);
@@ -28,7 +31,7 @@ const DropdownRouteFunc: React.FC<DropdownRouteFuncProps> = () => {
               label: (
                 <Link rel="noopener noreferrer" to="#" onClick={openEditModal}>
                   <EditOutlined className="pr-2" />
-                  Sửa dịch vụ
+                  Chỉnh sửa tuyến xe
                 </Link>
               ),
             },
@@ -38,15 +41,15 @@ const DropdownRouteFunc: React.FC<DropdownRouteFuncProps> = () => {
                 <Link
                   rel="noopener noreferrer"
                   to="#"
-                  // onClick={() =>
-                  //   DeleteProductModal({
-                  //     productId,
-                  //     deleteProductItem,
-                  //   })
-                  // }
+                  onClick={() =>
+                    DeleteRouteModal({
+                      routeId,
+                      deleteRouteItem,
+                    })
+                  }
                 >
                   <DeleteOutlined className="pr-2" />
-                  Xóa dịch vụ
+                  Xóa tuyến xe
                 </Link>
               ),
             },

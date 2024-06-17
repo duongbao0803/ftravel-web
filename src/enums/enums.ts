@@ -1,12 +1,29 @@
 export enum Gender {
-  MALE,
-  FEMALE,
-  OTHER,
+  Nam,
+  Nữ,
+  Khác,
 }
 
 export enum Roles {
+  CUSTOMER = "CUSTOMER",
+  DRIVER = "DRIVER",
+  BUSCOMPANY = "BUSCOMPANY",
+  ADMIN = "ADMIN",
+}
+
+export enum CreateRoles {
   CUSTOMER,
   DRIVER,
   BUSCOMPANY,
-  ADMIN,
+  ADMIN
+}
+
+export enum CommonStatus {
+  ACTIVE,
+  INACTIVE
+}
+
+export enum CommonStatusString {
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE"
 }

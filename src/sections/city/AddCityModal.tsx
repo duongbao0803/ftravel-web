@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Modal, Form, Input } from "antd";
-import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import { Modal, Form, Select } from "antd";
+import useCityService from "@/services/cityService";
+import { cityData } from "@/constants/cityData";
+import { CreateCity } from "@/types/city.types";
 
 export interface AddModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -8,17 +10,27 @@ export interface AddModalProps {
 }
 
 const AddCityModal: React.FC<AddModalProps> = (props) => {
+  const { Option } = Select;
   const { setIsOpen, isOpen } = props;
+  const { addNewCityItem } = useCityService();
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
 
   const handleOk = async () => {
     try {
-      // const values = await form.validateFields();
+      const values = await form.validateFields();
+      
+      const [cityCode, cityName] = values.name.split(';');
+      const updateValues = {
+        code: cityCode, 
+        name: cityName
+      }
+      console.log("check value", updateValues);
+      
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          // await addNewProductItem(values);
+          await addNewCityItem(updateValues as unknown as CreateCity);
           form.resetFields();
           setIsConfirmLoading(false);
           setIsOpen(false);
@@ -37,9 +49,22 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
     form.resetFields();
   };
 
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
+  const onSearch = (value: string) => {
+    console.log("search:", value);
+  };
+
+  const filterOption = (
+    input: string,
+    option?: { label: string; value: string },
+  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Add new city</p>}
+      title={<p className="text-lg font-bold text-[red]">Thêm thành phố</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
@@ -47,48 +72,36 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
     >
       <Form name="normal_login" className="login-form" form={form}>
         <Form.Item
-          name="unsignName"
-          rules={[
-            {
-              required: true,
-              message: "Please input name",
-            },
-            {
-              min: 5,
-              message: "Name must be at least 5 characters",
-            },
-          ]}
-          colon={true}
-          label="Name"
-          labelCol={{ span: 24 }}
-          className="formItem"
-        >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon mr-1" />}
-            placeholder="Unsign name"
-            autoFocus
-          />
-        </Form.Item>
-        <Form.Item
           name="name"
           rules={[
             {
               required: true,
-              message: "Please input typeOfProduct",
+              message: "Vui lòng nhập tên thành phố",
             },
           ]}
           colon={true}
-          label="Name"
+          label="Tên thành phố"
           labelCol={{ span: 24 }}
           className="formItem"
         >
-          <Input
-            prefix={
-              <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
-            }
-            placeholder="Name"
-            maxLength={10}
-          />
+          <Select
+            showSearch
+            placeholder="Chọn thành phố"
+            optionFilterProp="children"
+            onChange={onChange}
+            onSearch={onSearch}
+            filterOption={filterOption}
+          >
+            {cityData.map((city, index) => (
+              <Option
+                key={index}
+                value={`${city.code};${city.name}`}
+                label={city.name}
+              >
+                {`${city.code} - ${city.name}`}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
       </Form>
     </Modal>

@@ -9,9 +9,11 @@ import {
   ShoppingOutlined,
   ShareAltOutlined,
   SmileOutlined,
+  TruckOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
 import useAuthService from "@/services/authService";
+import logo from '../assets/images/logo/FTravel.png';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -43,19 +45,14 @@ function getItem(
 }
 
 const items: MenuItem[] = [
-  getItem("Chart", "1", <PieChartOutlined />, undefined, "/chart"),
-  getItem("User", "2", <UserOutlined />, undefined, "/user"),
-  getItem("City", "3", <PushpinOutlined />, undefined, "/city"),
-  getItem("Bus company", "4", <HomeOutlined />, undefined, "/company"),
-  getItem("Service", "5", <ShoppingOutlined />, undefined, "/service"),
-  getItem("Route", "6", <ShareAltOutlined />, undefined, "/route"),
-  getItem(
-    "Personal information",
-    "7",
-    <SmileOutlined />,
-    undefined,
-    "/personal",
-  ),
+  getItem("Dashboard", "1", <PieChartOutlined />, undefined, "/chart"),
+  getItem("Người dùng", "2", <UserOutlined />, undefined, "/user"),
+  getItem("Thành phố", "3", <PushpinOutlined />, undefined, "/city"),
+  getItem("Nhà xe", "4", <HomeOutlined />, undefined, "/company"),
+  getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
+  getItem("Tuyến đường", "6", <ShareAltOutlined />, undefined, "/route"),
+  getItem("Trạm xe", "7", <TruckOutlined />, undefined, "/station"),
+  getItem("Thông tin", "8", <SmileOutlined />, undefined, "/personal"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
@@ -130,7 +127,8 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
         <div className="my-4 flex justify-center">
           <img
             className="w-5/12 select-none object-cover"
-            src="https://insacmau.com/wp-content/uploads/2023/02/logo-FPT-Polytechnic-.png"
+            // src="https://insacmau.com/wp-content/uploads/2023/02/logo-FPT-Polytechnic-.png"
+            src={logo}
             alt=""
           />
         </div>

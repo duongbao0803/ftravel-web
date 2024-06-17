@@ -7,9 +7,9 @@ import { ExportOutlined } from "@ant-design/icons";
 import useUserService from "@/services/userService";
 
 const ExportUser: React.FC = () => {
-  const { userData } = useUserService();
+  const { users } = useUserService();
   const exportToFile = () => {
-    const jsonData = JSON.stringify(userData, null, 2);
+    const jsonData = JSON.stringify(users, null, 2);
     const worksheet = XLSX.utils.json_to_sheet(JSON.parse(jsonData));
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Data");

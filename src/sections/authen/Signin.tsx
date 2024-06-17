@@ -61,11 +61,6 @@ const Signin: React.FC = () => {
       const { email, password } = formValues;
       const res = await login(formValues);
       if (res && res.status === 200) {
-        notification.success({
-          message: "Đăng nhập thành công",
-          description: "Bạn đã đăng nhập thành công",
-          duration: 2,
-        });
         const jwtAccessToken = res.data["access-token"];
         const jwtRefreshToken = res.data["refresh-token"];
 
@@ -78,15 +73,33 @@ const Signin: React.FC = () => {
             decoded[
               "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
             ];
+
           if (rememberMe) {
             const encryptedUsername = encryptData(email, secretKey);
             const encryptedPassword = encryptData(password, secretKey);
             Cookies.set("email", encryptedUsername);
             Cookies.set("password", encryptedPassword);
           }
-          const authStore = useAuth.getState();
-          authStore.setRole(role);
-          authStore.login();
+          if (role !== "ADMIN" && role !== "BUSCOMPANY") {
+            notification.error({
+              message: "Đăng nhập thất bại",
+              description: "Bạn không có quyền truy cập vào trang này",
+              duration: 2,
+            });
+            setIsLoggingIn(false);
+            const authStore = useAuth.getState();
+            authStore.logout();
+            return;
+          } else {
+            notification.success({
+              message: "Đăng nhập thành công",
+              description: "Bạn đã đăng nhập thành công",
+              duration: 2,
+            });
+            const authStore = useAuth.getState();
+            authStore.setRole(role);
+            authStore.login();
+          }
         }
       }
     } catch (err: any) {
@@ -126,7 +139,7 @@ const Signin: React.FC = () => {
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng nhập email",
+                      message: "Vui lòng nhập email!",
                     },
                     {
                       type: "email",
@@ -219,7 +232,7 @@ const Signin: React.FC = () => {
             <div data-aos="flip-up">
               <div className="mt-4 flex items-center justify-center text-center">
                 <div className="mr-2 h-[1px] w-full bg-[#e6e8eb]"></div>
-                <span className="text-[#999999]">OR</span>
+                <span className="text-[#999999]">hoặc</span>
                 <div className="ml-2 h-[1px] w-full bg-[#e6e8eb]"></div>
               </div>
             </div>

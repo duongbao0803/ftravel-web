@@ -7,6 +7,7 @@ import AddUserModal from "./AddUserModal";
 import useUserService from "@/services/userService";
 import { formatDate2 } from "@/util/validate";
 import DropdownUserFunc from "./DropdownUserFunc";
+import { Roles } from "@/enums/enums";
 
 export interface DataType {
   id: string;
@@ -19,11 +20,11 @@ export interface DataType {
   "role-id": number;
 }
 
-const UserList: React.FC = () => {
+const UserList: React.FC = React.memo(() => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { userData, isFetching } = useUserService();
+  const { users, isFetching, totalCount } = useUserService();
 
-  const [, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
@@ -34,7 +35,7 @@ const UserList: React.FC = () => {
       title: "STT",
       dataIndex: "index",
       key: "index",
-      render: (index) => index + 1,
+      render: (_, _record, index) => index + 1,
     },
     {
       title: "Email",
@@ -63,50 +64,58 @@ const UserList: React.FC = () => {
     },
     {
       title: "Vai trò",
-      dataIndex: "role-id",
-      render: (roleId) => {
-        const roleList: { [key: number]: { name: string; color: string } } = {
-          0: { name: "CUSTOMER", color: "pink" },
-          1: { name: "DRIVER", color: "green" },
-          2: { name: "BUS", color: "red" },
-          3: { name: "ADMIN", color: "blue" },
-        };
-        const role = roleList[roleId];
-        if (role) {
-          const { name, color } = role;
-          return (
-            <Tag key={roleId} color={color}>
-              {name}
-            </Tag>
-          );
-        }
-      },
+      dataIndex: "role",
       width: "5%",
+      render: (roleName) => {
+        let roleText = "";
+        let tagColor = "";
+        switch (roleName) {
+          case "CUSTOMER":
+            roleText = "CUSTOMER";
+            tagColor = "pink";
+            break;
+          case Roles.DRIVER.toString():
+            roleText = "DRIVER";
+            tagColor = "green";
+            break;
+          case Roles.BUSCOMPANY.toString():
+            roleText = "BUS";
+            tagColor = "red";
+            break;
+          case Roles.ADMIN.toString():
+            roleText = "ADMIN";
+            tagColor = "blue";
+            break;
+          default:
+            roleText = "UNKNOWN";
+            tagColor = "gray";
+            break;
+        }
+        return <Tag color={tagColor}>{roleText}</Tag>;
+      },
     },
     {
       title: "Trạng thái",
-      dataIndex: "isDelete",
-      filters: [
-        { text: "TRUE", value: true },
-        { text: "FALSE", value: false },
-      ],
-      // onFilter: (value, record) => record.isDelete === value,
-      //   render: (isDelete) => {
-      //     let color;
-      //     switch (isDelete) {
-      //       case true:
-      //         color = "green";
-      //         break;
-      //       case false:
-      //         color = "red";
-      //         break;
-      //     }
-      //     return (
-      //       <Tag color={color} key={isDelete.toString()}>
-      //         {isDelete.toString().toUpperCase()}
-      //       </Tag>
-      //     );
-      //   },
+      dataIndex: "status",
+      render: (status) => {
+        let statusText = "";
+        let tagColor = "";
+        switch (status) {
+          case "ACTIVE":
+            statusText = "ACTIVE";
+            tagColor = "green";
+            break;
+          case "INACTIVE":
+            statusText = "INACTIVE";
+            tagColor = "pink";
+            break;
+          default:
+            statusText = "UNKNOWN";
+            tagColor = "gray";
+            break;
+        }
+        return <Tag color={tagColor}>{statusText}</Tag>;
+      },
       width: "10%",
     },
     {
@@ -150,19 +159,16 @@ const UserList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={userData?.map(
-          (record: { id: unknown; dob: string }, index: number) => ({
-            ...record,
-            key: record.id,
-            dob: formatDate2(record.dob),
-            index: index + 1,
-          }),
-        )}
-        // pagination={{
-        //   current: currentPage,
-        //   total: totalCount || 0,
-        //   pageSize: 5,
-        // }}
+        dataSource={users?.map((record: { id: unknown; dob: string }) => ({
+          ...record,
+          key: record.id,
+          dob: record.dob ? formatDate2(record.dob) : "N/A"
+        }))}
+        pagination={{
+          current: currentPage,
+          total: totalCount || 0,
+          pageSize: 5,
+        }}
         onChange={handleTableChange}
         loading={isFetching}
         rowKey={(record) => record.id}
@@ -170,6 +176,6 @@ const UserList: React.FC = () => {
       <AddUserModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
   );
-};
+});
 
 export default UserList;

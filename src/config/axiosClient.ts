@@ -9,6 +9,13 @@ const axiosClient = axios.create({
   },
 });
 
+// const axiosClient = axios.create({
+//   baseURL: "https://localhost:7074/",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
+
 axiosClient.interceptors.request.use(
   async (config) => {
     const access_token = Cookies.get("accessToken");

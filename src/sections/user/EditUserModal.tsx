@@ -64,7 +64,7 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
 
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Edit product</p>}
+      title={<p className="text-lg text-[red]">Chỉnh sửa người dùng</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}

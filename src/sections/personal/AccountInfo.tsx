@@ -28,10 +28,6 @@ const AccountInfo: React.FC = () => {
 
   const onFinish = (values: UserInfo) => {
     setValues(values);
-    console.log("check values", values);
-    // if (values?.email && values?.password) {
-    //   handleSignin(values);
-    // }
   };
 
   const disabledDate = (current: object) => {
@@ -45,6 +41,11 @@ const AccountInfo: React.FC = () => {
           <Col span={12}>
             <Form.Item
               name="email"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
               colon={true}
               label="Email"
               labelCol={{ span: 24 }}
@@ -82,7 +83,6 @@ const AccountInfo: React.FC = () => {
                 prefix={<AuditOutlined className="site-form-item-icon" />}
                 placeholder="Họ và tên"
                 className="p-2"
-                autoFocus
               />
             </Form.Item>
           </Col>

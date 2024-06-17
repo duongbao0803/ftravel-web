@@ -1,6 +1,12 @@
-import { useState } from "react";
-import { Modal, Form, Input } from "antd";
-import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import { useCallback, useEffect, useState } from "react";
+import { Modal, Form, Input, Row, Col } from "antd";
+import {
+  ContainerOutlined,
+  MailOutlined,
+  CarOutlined,
+} from "@ant-design/icons";
+import useCompanyService from "@/services/companyService";
+import { UploadImage } from "@/components";
 
 export interface AddCompanyProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,15 +16,22 @@ export interface AddCompanyProps {
 const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
   const { setIsOpen, isOpen } = props;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
+  const [fileChange, setFileChange] = useState<string>("");
+  const { addNewCompanyItem } = useCompanyService();
   const [form] = Form.useForm();
+  const { TextArea } = Input;
+
+  useEffect(() => {
+    form.setFieldsValue({ "img-url": fileChange });
+  }, [fileChange, form]);
 
   const handleOk = async () => {
     try {
-      // const values = await form.validateFields();
+      const values = await form.validateFields();
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          // await addNewProductItem(values);
+          await addNewCompanyItem(values);
           form.resetFields();
           setIsConfirmLoading(false);
           setIsOpen(false);
@@ -34,61 +47,113 @@ const AddCompanyModal: React.FC<AddCompanyProps> = (props) => {
 
   const handleCancel = () => {
     setIsOpen(false);
-    form.resetFields();
   };
+
+  const handleFileChange = useCallback((newFileChange: string) => {
+    setFileChange(newFileChange);
+  }, []);
 
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Add new city</p>}
+      title={<p className="text-lg font-bold text-[red]">Thêm nhà xe mới</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
       onCancel={handleCancel}
     >
       <Form name="normal_login" className="login-form" form={form}>
+        <Row gutter={16} className="relative mt-1">
+          <Col span={12}>
+            <Form.Item
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên nhà xe",
+                },
+              ]}
+              colon={true}
+              label="Tên nhà xe"
+              labelCol={{ span: 24 }}
+              className="formItem"
+            >
+              <Input
+                prefix={<CarOutlined className="site-form-item-icon mr-1"/>}
+                placeholder="Tên nhà xe"
+                autoFocus
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="manager-email"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập email quản lý",
+                },
+              ]}
+              colon={true}
+              label="Email quản lý"
+              labelCol={{ span: 24 }}
+              className="formItem"
+            >
+              <Input
+                prefix={<MailOutlined className="site-form-item-icon mr-1" />}
+                placeholder="Email quản lý"
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item
-          name="unsignName"
+          name="short-description"
           rules={[
             {
               required: true,
-              message: "Please input name",
-            },
-            {
-              min: 5,
-              message: "Name must be at least 5 characters",
+              message: "Vui lòng nhập ngắn gọn thông tin mô tả",
             },
           ]}
           colon={true}
-          label="Name"
+          label="Mô tả ngắn gọn"
           labelCol={{ span: 24 }}
           className="formItem"
         >
           <Input
-            prefix={<UserOutlined className="site-form-item-icon mr-1" />}
-            placeholder="Unsign name"
-            autoFocus
+            prefix={<ContainerOutlined className="site-form-item-icon mr-1" />}
+            placeholder="Mô tả ngắn gọn"
           />
         </Form.Item>
+
         <Form.Item
-          name="name"
+          name="full-description"
           rules={[
             {
               required: true,
-              message: "Please input typeOfProduct",
+              message: "Vui lòng nhập chi tiết thông tin mô tả",
             },
           ]}
           colon={true}
-          label="Name"
+          label="Mô tả chi tiết"
           labelCol={{ span: 24 }}
           className="formItem"
         >
-          <Input
-            prefix={
-              <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
-            }
-            placeholder="Name"
-            maxLength={10}
-          />
+          <TextArea showCount placeholder="Mô tả chi tiết" />
+        </Form.Item>
+        <Form.Item
+          name="img-url"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn hỉnh ảnh",
+            },
+          ]}
+          colon={true}
+          label="Hình ảnh"
+          labelCol={{ span: 24 }}
+          className="formItem"
+        >
+          <UploadImage onFileChange={handleFileChange} initialImage={""} />
         </Form.Item>
       </Form>
     </Modal>

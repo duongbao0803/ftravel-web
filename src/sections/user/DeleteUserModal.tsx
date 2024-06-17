@@ -1,22 +1,17 @@
 import React from "react";
 import { Modal } from "antd";
 
-const DeleteProductModal: React.FC<{
-  deleteProductItem: (id: string) => void;
-  productId: string;
-}> = ({ deleteProductItem, productId }) => {
+const DeleteUserModal: React.FC = () => {
   const confirm = Modal.confirm;
   confirm({
-    title: "Delete User",
-    content: `Do you really want to delete? This user cannot be restored.`,
-    okText: "Yes",
+    title: "Xóa người dùng",
+    content: `Bạn có muốn xóa người này không. Người dùng này không thể được khôi phục`,
+    okText: "Có",
     okType: "danger",
-    cancelText: "No",
-    onOk() {
-      deleteProductItem(productId);
-    },
+    cancelText: "Không",
+    onOk() {},
   });
   return null;
 };
 
-export default DeleteProductModal;
+export default DeleteUserModal;

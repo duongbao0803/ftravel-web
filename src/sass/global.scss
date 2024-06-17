@@ -27,6 +27,11 @@
   position: fixed !important;
 }
 
+.first-column:hover {
+  cursor: pointer;
+  color: rgb(0, 153, 255);
+}
+
 .pagination {
   position: sticky !important;
   bottom: 0;
@@ -108,6 +113,10 @@ canvas {
 .ant-steps-item-process .ant-steps-item-icon:hover::before {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
+}
+
+.ant-image-mask {
+  border-radius: 100% !important;
 }
 
 @keyframes bounce {
