@@ -1,7 +1,8 @@
-import { addCity, editCity } from "@/api/cityApi";
-import { getAllRoute, getRouteDetail, removeRoute } from "@/api/routeApi";
+import { editCity } from "@/api/cityApi";
+import { addRoute, getAllRoute, getRouteDetail, removeRoute } from "@/api/routeApi";
 import { CityInfo } from "@/types/city.types";
 import { CustomError } from "@/types/error.types";
+import { CreateRoute } from "@/types/route.types";
 import { notification } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
@@ -31,8 +32,8 @@ const useRouteService = () => {
     return routeId;
   };
 
-  const addNewCity = async (formValues: CityInfo) => {
-    await addCity(formValues);
+  const addNewRoute = async (formValues: CreateRoute) => {
+    await addRoute(formValues);
   };
 
   const updateCity = async (formValues: CityInfo) => {
@@ -48,14 +49,14 @@ const useRouteService = () => {
     },
   );
 
-  const addNewCityMutation = useMutation(addNewCity, {
+  const addNewRouteMutation = useMutation(addNewRoute, {
     onSuccess: () => {
       notification.success({
         message: "Tạo thành công",
-        description: "Tạo thành phố thành công",
+        description: "Tạo tuyến đường thành công",
         duration: 2,
       });
-      queryClient.invalidateQueries("cities");
+      queryClient.invalidateQueries("routes");
     },
     onError: (err: CustomError) => {
       notification.error({
@@ -70,7 +71,7 @@ const useRouteService = () => {
     onSuccess: () => {
       notification.success({
         message: "Xóa thành công",
-        description: "Xóa thành phố thành công",
+        description: "Xóa tuyến đường thành công",
         duration: 2,
       });
       queryClient.invalidateQueries("cities");
@@ -88,23 +89,22 @@ const useRouteService = () => {
     onSuccess: () => {
       notification.success({
         message: "Chỉnh sửa thành công",
-        description: "Chỉnh sửa thành phố thành công",
+        description: "Chỉnh sửa tuyến đường thành công",
         duration: 2,
       });
       queryClient.invalidateQueries("cities");
     },
     onError: (err: CustomError) => {
-      console.error("Xóa thành công", err);
       notification.error({
-        message: "Update Failed",
+        message: "Lỗi khi chỉnh sửa",
         description: `${err?.response?.data?.message}`,
         duration: 2,
       });
     },
   });
 
-  const addNewCityItem = async (formValues: CityInfo) => {
-    await addNewCityMutation.mutateAsync(formValues);
+  const addNewRouteItem = async (formValues: CreateRoute) => {
+    await addNewRouteMutation.mutateAsync(formValues);
   };
 
   const deleteRouteItem = async (routeId: number) => {
@@ -122,7 +122,7 @@ const useRouteService = () => {
     isFetching,
     routes,
     totalCount,
-    addNewCityItem,
+    addNewRouteItem,
     updateCityItem,
     deleteRouteItem,
     fetchRouteDetail,

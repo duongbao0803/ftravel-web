@@ -10,3 +10,10 @@ export interface RouteInfo {
   status: string;
   "is-deleted"?: boolean;
 }
+
+export interface CreateRoute {
+  name: string;
+  "start-point": number;
+  "end-point": number;
+  "bus-company-id": number;
+}

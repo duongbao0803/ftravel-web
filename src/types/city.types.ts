@@ -1,6 +1,7 @@
 export interface CityInfo {
   id: number;
   name: string;
+  code: number;
   "is-deleted": boolean;
 }
 
