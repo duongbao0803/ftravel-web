@@ -163,10 +163,7 @@ const AccountInfo: React.FC = () => {
               labelCol={{ span: 24 }}
               className="formItem"
             >
-              <Select
-                placeholder="Chọn giới tính"
-                onChange={(value) => console.log("check key", value)}
-              >
+              <Select placeholder="Chọn giới tính">
                 {Object.keys(Gender).map((key: string) => {
                   const genderValue = Gender[key as keyof typeof Gender];
                   if (typeof genderValue === "number") {

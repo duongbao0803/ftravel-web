@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Select } from "antd";
+import { Modal, Form, Select, Input } from "antd";
 import useCityService from "@/services/cityService";
 import { CityInfo } from "@/types/city.types";
 import useCompanyService from "@/services/companyService";
 import { CompanyInfo } from "@/types/company.types";
 import useRouteService from "@/services/routeService";
 import useRoute from "@/hooks/useRoute";
+import { ShareAltOutlined } from "@ant-design/icons";
 
 export interface AddRouteProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,22 +21,25 @@ const AddRouteModal: React.FC<AddRouteProps> = (props) => {
   const { companys } = useCompanyService();
   const { addNewRouteItem } = useRouteService();
   const [form] = Form.useForm();
-  // const [routeName, setRouteName] = useState<string>();
-  // const [startName, setStartName] = useState<string>();
-  // const [endName, setEndName] = useState<string>();
-  // const [routeName, setRouteName] = useState("")
 
-  const {startName, endName, setStartName, setEndName, setRouteName, routeName}: unknown = useRoute()
-  //  routeName = `${startName} - ${endName}`
+  const {
+    startName,
+    endName,
+    setStartName,
+    setEndName,
+    setRouteName,
+    routeName,
+  } = useRoute();
 
-useEffect(() => {
-  if (startName && endName)
-  setRouteName(`${startName} - ${endName}`)
-}, [startName, endName])
+  useEffect(() => {
+    if (startName && endName) setRouteName(`${startName} - ${endName}`);
+  }, [startName, endName]);
 
-console.log("check route", routeName)
-  
-console.log("checl",routeName )
+  useEffect(() => {
+    if (routeName) {
+      form.setFieldsValue({ name: routeName });
+    }
+  }, [routeName, form]);
 
   const handleOk = async () => {
     try {
@@ -63,24 +67,16 @@ console.log("checl",routeName )
   };
 
   const onChangeStart = (value: string) => {
-    if (value !== ""){
+    if (value !== "") {
       setStartName(value.split(";")[1]);
     }
   };
 
   const onChangeEnd = (value: string) => {
-    if (value !== ""){
+    if (value !== "") {
       setEndName(value.split(";")[1]);
-      // generateRouteName();s
     }
   };
-
-  // const generateRouteName = () => {
-  //   console.log("check fun")
-  //   if (startName && endName) {
-  //     setRouteName(`${startName} - ${endName}`);
-  //   }
-  // }
 
   const filterOption = (
     input: string,
@@ -115,13 +111,13 @@ console.log("checl",routeName )
           labelCol={{ span: 24 }}
           className="formItem"
         >
-          {/* <Input
-            value={routeName}
+          <Input
             prefix={<ShareAltOutlined className="site-form-item-icon mr-1" />}
             placeholder="Tên tuyến đường"
             autoFocus
-          /> */}
-          <p>{routeName}</p>
+            readOnly
+            value={routeName}
+          />
         </Form.Item>
         <Form.Item
           name="start-point"
@@ -205,11 +201,7 @@ console.log("checl",routeName )
             filterOption={filterOption}
           >
             {companys.map((company: CompanyInfo, index: number) => (
-              <Option
-                key={index}
-                value={`${company.id}`}
-                label={company.name}
-              >
+              <Option key={index} value={`${company.id}`} label={company.name}>
                 {`${company.name}`}
               </Option>
             ))}

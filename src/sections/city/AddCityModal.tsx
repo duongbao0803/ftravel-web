@@ -19,14 +19,13 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      
-      const [cityCode, cityName] = values.name.split(';');
+
+      const [cityCode, cityName] = values.name.split(";");
       const updateValues = {
-        code: cityCode, 
-        name: cityName
-      }
-      console.log("check value", updateValues);
-      
+        code: cityCode,
+        name: cityName,
+      };
+
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
@@ -47,14 +46,6 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
   const handleCancel = () => {
     setIsOpen(false);
     form.resetFields();
-  };
-
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
-  const onSearch = (value: string) => {
-    console.log("search:", value);
   };
 
   const filterOption = (
@@ -88,8 +79,6 @@ const AddCityModal: React.FC<AddModalProps> = (props) => {
             showSearch
             placeholder="Chọn thành phố"
             optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
             filterOption={filterOption}
           >
             {cityData.map((city, index) => (

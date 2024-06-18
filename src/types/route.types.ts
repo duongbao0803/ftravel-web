@@ -17,3 +17,12 @@ export interface CreateRoute {
   "end-point": number;
   "bus-company-id": number;
 }
+
+export interface RouteStore {
+  startName: string;
+  endName: string;
+  setStartName: (name: string) => void;
+  setEndName: (name: string) => void;
+  setRouteName: (name: string) => void;
+  routeName: string;
+}
