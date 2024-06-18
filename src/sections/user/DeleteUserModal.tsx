@@ -1,7 +1,10 @@
 import React from "react";
 import { Modal } from "antd";
 
-const DeleteUserModal: React.FC = () => {
+const DeleteUserModal: React.FC<{
+  deleteUserItem: (id: number) => void;
+  userId: number;
+}> = ({ deleteUserItem, userId }) => {
   const confirm = Modal.confirm;
   confirm({
     title: "Xóa người dùng",
@@ -9,7 +12,9 @@ const DeleteUserModal: React.FC = () => {
     okText: "Có",
     okType: "danger",
     cancelText: "Không",
-    onOk() {},
+    onOk() {
+      deleteUserItem(userId);
+    },
   });
   return null;
 };

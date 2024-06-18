@@ -109,7 +109,10 @@ const useCityService = () => {
     await updateCityMutation.mutateAsync(formValues);
   };
 
-  const cities = citiesData?.data.filter((city: { [x: string]: boolean; }) => city["is-deleted"] === false) || [];
+  const cities =
+    citiesData?.data.filter(
+      (city: { [x: string]: boolean }) => city["is-deleted"] === false,
+    ) || [];
   const totalCount = citiesData?.totalCount || 0;
 
   return {

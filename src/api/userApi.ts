@@ -14,8 +14,8 @@ const addUser = (formValues: UserInfo) => {
   return axiosClient.post(`/api/accounts`, formValues);
 };
 
-// const deleteUser = (userId) => {
-//   return axiosClient.post(`/api/account`, userId);
-// };
+const deleteUser = (userId: number) => {
+  return axiosClient.delete(`/api/accounts/${userId}`);
+};
 
-export { getAllUser, addUser };
+export { getAllUser, addUser, deleteUser };

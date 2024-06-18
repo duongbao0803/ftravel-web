@@ -5,15 +5,17 @@ import { Link } from "react-router-dom";
 import { DataType } from "./UserList";
 import EditUserModal from "./EditUserModal";
 import DeleteUserModal from "./DeleteUserModal";
+import useUserService from "@/services/userService";
 
 export interface DropdownUserFuncProps {
   userInfo: DataType;
 }
 
-const DropdownUserFunc: React.FC<DropdownUserFuncProps> = () => {
+const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-  // const { userInfo } = props;
-  // const userId = userInfo?.id;
+  const { deleteUserItem } = useUserService();
+  const { userInfo } = props;
+  const userId = userInfo?.id;
 
   const openEditModal = () => {
     setIsOpen(true);
@@ -39,7 +41,7 @@ const DropdownUserFunc: React.FC<DropdownUserFuncProps> = () => {
                 <Link
                   rel="noopener noreferrer"
                   to="#"
-                  onClick={() => DeleteUserModal({})}
+                  onClick={() => DeleteUserModal({ deleteUserItem, userId })}
                 >
                   <DeleteOutlined className="pr-2" />
                   Xóa người dùng
