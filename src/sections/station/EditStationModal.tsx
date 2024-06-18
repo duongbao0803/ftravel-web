@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Row, Col, InputNumber } from "antd";
+import { Modal, Form, Input, Row, Col } from "antd";
 import {
-  UserOutlined,
-  PhoneOutlined,
-  StarOutlined,
-  AppstoreAddOutlined,
-  BarsOutlined,
-  PoundCircleOutlined,
+  EnvironmentOutlined,
+  CarOutlined,
 } from "@ant-design/icons";
+import { CommonStatusString } from "@/enums/enums";
+import { StationDetailInfo } from "@/types/station.types";
 
 export interface EditStationModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
+  stationInfo: StationDetailInfo;
 }
 
 const EditStationModal: React.FC<EditStationModalProps> = (props) => {
-  const { setIsOpen, isOpen } = props;
+  const { setIsOpen, isOpen, stationInfo } = props;
   const [fileChange] = useState<string>("");
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
@@ -62,6 +61,15 @@ const EditStationModal: React.FC<EditStationModalProps> = (props) => {
   //   setFileChange(newFileChange);
   // };
 
+  const getStatusText = (status: string) => {
+    if (status === CommonStatusString.ACTIVE) {
+      return "HOẠT ĐỘNG";
+    } else if (status === CommonStatusString.INACTIVE) {
+      return "TẠM DỪNG";
+    }
+    return "KHÔNG XÁC ĐỊNH";
+  };
+
   return (
     <Modal
       title={<p className="text-lg text-[red]">Chỉnh sửa trạm</p>}
@@ -70,153 +78,80 @@ const EditStationModal: React.FC<EditStationModalProps> = (props) => {
       confirmLoading={isConfirmLoading}
       onCancel={handleCancel}
     >
-      <Form name="normal_login" className="login-form" form={form}>
-        <Row gutter={16} className="relative mt-1">
-          <Col span={12}>
-            <Form.Item
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input name",
-                },
-                {
-                  min: 5,
-                  message: "Name must be at least 5 characters",
-                },
-              ]}
-              colon={true}
-              label="Name"
-              labelCol={{ span: 24 }}
-              className="formItem"
-            >
-              <Input
-                prefix={<UserOutlined className="site-form-item-icon mr-1" />}
-                placeholder="Name"
-                autoFocus
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="typeOfProduct"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input typeOfProduct",
-                },
-              ]}
-              colon={true}
-              label="Type Of Product"
-              labelCol={{ span: 24 }}
-              className="formItem"
-            >
-              <Input
-                prefix={
-                  <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
-                }
-                placeholder="Phone"
-                maxLength={10}
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row gutter={16} className="relative mt-1">
-          <Col span={12}>
-            <Form.Item
-              name="rating"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input rating",
-                },
-                {
-                  type: "number",
-                  min: 1,
-                  max: 5,
-                  message: "Rating must be at least 1 and most 5",
-                },
-              ]}
-              colon={true}
-              label="Rating"
-              labelCol={{ span: 24 }}
-              className="formItem"
-            >
-              <InputNumber
-                className="w-full"
-                prefix={<StarOutlined className="site-form-item-icon mr-1" />}
-                placeholder="Rating"
-              />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Form.Item
-              name="quantity"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input quantity",
-                },
-                {
-                  type: "number",
-                  min: 1,
-                  message: "Quantity must be at least 1",
-                },
-              ]}
-              colon={true}
-              label="Quantity"
-              labelCol={{ span: 24 }}
-              className="formItem"
-            >
-              <InputNumber
-                className="w-full"
-                prefix={
-                  <AppstoreAddOutlined className="site-form-item-icon mr-1" />
-                }
-                placeholder="Quantity"
-              />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item
-          name="description"
-          rules={[
-            {
-              required: true,
-              message: "Please input description",
-            },
-          ]}
-          label="Description"
-          labelCol={{ span: 24 }}
-          className="formItem"
-        >
-          <Input
-            prefix={<BarsOutlined className="site-form-item-icon mr-1" />}
-            placeholder="Description"
-          />
-        </Form.Item>
-        <Form.Item
-          name="price"
-          rules={[
-            {
-              required: true,
-              message: "Please input price",
-            },
-          ]}
-          colon={true}
-          label="Price"
-          labelCol={{ span: 24 }}
-          className="formItem"
-        >
-          <InputNumber
-            className="w-full"
-            prefix={
-              <PoundCircleOutlined className="site-form-item-icon mr-1" />
-            }
-            placeholder="Price"
-          />
-        </Form.Item>
-      </Form>
+      <Form name="normal_login" className="login-form">
+            <Row gutter={16} className="relative mt-1">
+              <Col span={12}>
+                <Form.Item
+                  label="Tên trạm"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <Input
+                    prefix={
+                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                    }
+                    className="p-2"
+                    defaultValue={stationInfo?.name}
+                    readOnly
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="Nhà xe quản lí"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <Input
+                    prefix={
+                      <CarOutlined className="site-form-item-icon mr-1" />
+                    }
+                    className="p-2"
+                    defaultValue={stationInfo?.["bus-company"]?.name}
+                    readOnly
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={16} className="relative mt-1">
+              <Col span={12}>
+                <Form.Item
+                  label="Trạng thái"
+                  labelCol={{ span: 24 }}
+                  className="formItem"
+                >
+                  <Input
+                    prefix={
+                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                    }
+                    className="p-2"
+                    defaultValue={getStatusText(stationInfo?.status)}
+                    readOnly
+                  />
+                  {/* <Select
+                    placeholder="Trạng thái"
+                    defaultValue={stationDetail?.status}
+                  >
+                    {Object.keys(CommonStatus).map((key: string) => {
+                      const roleValue =
+                        CommonStatus[key as keyof typeof CommonStatus];
+                      if (typeof roleValue === "number") {
+                        return (
+                          <Select.Option
+                            key={roleValue}
+                            value={roleValue.toString()}
+                          >
+                            {key}
+                          </Select.Option>
+                        );
+                      }
+                      return null;
+                    })}
+                  </Select> */}
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
     </Modal>
   );
 };

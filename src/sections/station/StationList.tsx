@@ -22,16 +22,7 @@ import useStationService from "@/services/stationService";
 import { StationDetailInfo } from "@/types/station.types";
 import { CommonStatusString } from "@/enums/enums";
 import AddStationModal from "./AddStationModal";
-
-export interface DataType {
-  id: number;
-  name: string;
-  "bus-company-name": string;
-  status: string;
-  "create-date": string | Date;
-  "update-date": string | Date;
-  "is-deleted": boolean;
-}
+import DropdownStationFunc from "./DropdownStationFunc";
 
 const StationList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -71,7 +62,7 @@ const StationList: React.FC = () => {
     await fetchData(record);
   };
 
-  const columns: TableProps<DataType>["columns"] = useMemo(
+  const columns: TableProps<StationDetailInfo>["columns"] = useMemo(
     () => [
       {
         title: "STT",
@@ -127,6 +118,15 @@ const StationList: React.FC = () => {
         },
         width: "10%",
       },
+      {
+        title: "",
+        dataIndex: "",
+        render: (_, record) => (
+          <>
+            <DropdownStationFunc stationInfo={record} />
+          </>
+        ),
+      }
     ],
     [],
   );

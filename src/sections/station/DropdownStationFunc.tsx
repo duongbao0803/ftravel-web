@@ -4,11 +4,11 @@ import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import DeleteRouteModal from "./DeleteStationModal";
 import useRouteService from "@/services/routeService";
-import { DataType } from "./StationList";
 import EditStationModal from "./EditStationModal";
+import { StationDetailInfo } from "@/types/station.types";
 
 export interface DropdownStationFuncProps {
-  stationInfo: DataType;
+  stationInfo: StationDetailInfo;
 }
 
 const DropdownStationFunc: React.FC<DropdownStationFuncProps> = (props) => {
@@ -63,7 +63,7 @@ const DropdownStationFunc: React.FC<DropdownStationFuncProps> = (props) => {
       <EditStationModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        // productInfo={productInfo}
+        stationInfo={stationInfo}
       />
     </>
   );

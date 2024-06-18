@@ -169,7 +169,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </Content>
         <Footer className="text-center">
-          Copyright @2024 Baobatluc. All right reserved
+          Copyright @2024 FTravel.inc. All right reserved
         </Footer>
         <FloatButton.BackTop />
       </Layout>
