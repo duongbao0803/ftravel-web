@@ -18,7 +18,6 @@ const DropdownCityFunc: React.FC<DropdownCityFuncProps> = React.memo(
     const { cityInfo } = props;
     const cityId = cityInfo?.id;
 
-
     return (
       <>
         <Dropdown
