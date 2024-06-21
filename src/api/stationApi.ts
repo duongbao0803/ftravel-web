@@ -22,16 +22,12 @@ const addStation = (formValues: CreateStationInfo) => {
 //   return axiosClient.post("/api/services", formValues);
 // };
 
-// const deleteService = (serviceId: number) => {
-//   return axiosClient.delete(`/api/services/${serviceId}`);
-// };
+const deleteStation = (stationId: number) => {
+  return axiosClient.delete(`/api/stations/${stationId}`);
+};
 
 // const editService = () => {
 //   return axiosClient.put("/api/services");
 // };
 
-export { 
-    getAllStation, 
-    getStationDetail, 
-    addStation 
-};
+export { getAllStation, getStationDetail, addStation, deleteStation };

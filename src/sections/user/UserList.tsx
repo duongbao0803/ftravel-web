@@ -10,7 +10,7 @@ import DropdownUserFunc from "./DropdownUserFunc";
 import { Roles } from "@/enums/enums";
 
 export interface DataType {
-  id: string;
+  id: number;
   key: string;
   name: string;
   image: string;
@@ -162,7 +162,7 @@ const UserList: React.FC = React.memo(() => {
         dataSource={users?.map((record: { id: unknown; dob: string }) => ({
           ...record,
           key: record.id,
-          dob: record.dob ? formatDate2(record.dob) : "N/A"
+          dob: record.dob ? formatDate2(record.dob) : "N/A",
         }))}
         pagination={{
           current: currentPage,

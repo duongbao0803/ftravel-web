@@ -10,10 +10,11 @@ import {
   ShareAltOutlined,
   SmileOutlined,
   TruckOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import useAuth from "@/hooks/useAuth";
 import useAuthService from "@/services/authService";
-import logo from '../assets/images/logo/FTravel.png';
+import logo from "../assets/images/logo/FTravel.png";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -53,6 +54,7 @@ const items: MenuItem[] = [
   getItem("Tuyến đường", "6", <ShareAltOutlined />, undefined, "/route"),
   getItem("Trạm xe", "7", <TruckOutlined />, undefined, "/station"),
   getItem("Thông tin", "8", <SmileOutlined />, undefined, "/personal"),
+  getItem("Thông báo", "9", <BellOutlined />, undefined, "/notification"),
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
@@ -169,7 +171,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </Content>
         <Footer className="text-center">
-          Copyright @2024 Baobatluc. All right reserved
+          Copyright @2024 FTravel.inc. All right reserved
         </Footer>
         <FloatButton.BackTop />
       </Layout>

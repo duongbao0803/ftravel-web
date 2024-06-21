@@ -2,20 +2,17 @@ import React, { useState } from "react";
 import { Dropdown } from "antd";
 import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { DataType } from "./UserList";
-import EditUserModal from "./EditUserModal";
-import DeleteUserModal from "./DeleteUserModal";
-import useUserService from "@/services/userService";
+import { DataType } from "./ServiceList";
+import EditServiceModal from "./EditServiceModal";
 
-export interface DropdownUserFuncProps {
+export interface DropdownServiceFuncProps {
   userInfo: DataType;
 }
 
-const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
+const DropdownServiceFunc: React.FC<DropdownServiceFuncProps> = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { deleteUserItem } = useUserService();
-  const { userInfo } = props;
-  const userId = userInfo?.id;
+  // const { productInfo } = props;
+  // const productId = productInfo?._id;
 
   const openEditModal = () => {
     setIsOpen(true);
@@ -31,7 +28,7 @@ const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
               label: (
                 <Link rel="noopener noreferrer" to="#" onClick={openEditModal}>
                   <EditOutlined className="pr-2" />
-                  Chỉnh sửa người dùng
+                  Sửa dịch vụ
                 </Link>
               ),
             },
@@ -41,10 +38,15 @@ const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
                 <Link
                   rel="noopener noreferrer"
                   to="#"
-                  onClick={() => DeleteUserModal({ deleteUserItem, userId })}
+                  // onClick={() =>
+                  //   DeleteProductModal({
+                  //     productId,
+                  //     deleteProductItem,
+                  //   })
+                  // }
                 >
                   <DeleteOutlined className="pr-2" />
-                  Xóa người dùng
+                  Xóa dịch vụ
                 </Link>
               ),
             },
@@ -55,7 +57,7 @@ const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
         <MoreOutlined className="rotate-90" />
       </Dropdown>
 
-      <EditUserModal
+      <EditServiceModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         // productInfo={productInfo}
@@ -64,4 +66,4 @@ const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
   );
 };
 
-export default DropdownUserFunc;
+export default DropdownServiceFunc;

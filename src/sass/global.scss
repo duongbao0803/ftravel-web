@@ -119,6 +119,12 @@ canvas {
   border-radius: 100% !important;
 }
 
+:where(
+    .css-dev-only-do-not-override-1okl62o
+  ).ant-select.ant-select-in-form-item {
+  margin-bottom: 8px !important;
+}
+
 @keyframes bounce {
   0% {
     transform: translateY(0);

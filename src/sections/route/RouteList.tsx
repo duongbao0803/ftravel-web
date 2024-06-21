@@ -15,7 +15,7 @@ import type { TablePaginationConfig, TableProps } from "antd";
 import {
   EnvironmentOutlined,
   FilterOutlined,
-  HomeOutlined,
+  PlusCircleOutlined,
 } from "@ant-design/icons";
 import ExportRoute from "./ExportRoute";
 import AddRouteModal from "./AddRouteModal";
@@ -163,7 +163,7 @@ const RouteList: React.FC = React.memo(() => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <HomeOutlined className="mr-1 text-lg" /> Thêm tuyến xe
+                <PlusCircleOutlined className="mr-1 text-lg" /> Thêm tuyến xe
               </div>
             </Button>
           </div>

@@ -1,5 +1,5 @@
 import axiosClient from "@/config/axiosClient";
-import { ServiceDetail } from "@/types/service.types";
+import { CreateService } from "@/types/service.types";
 
 const getAllService = (page: number) => {
   return axiosClient.get(`/api/services`, {
@@ -10,8 +10,12 @@ const getAllService = (page: number) => {
   });
 };
 
-const addService = (formValues: ServiceDetail) => {
+const addService = (formValues: CreateService) => {
   return axiosClient.post("/api/services", formValues);
+};
+
+const getServiceDetail = (serviceId: number) => {
+  return axiosClient.get(`/api/services/${serviceId}`);
 };
 
 const deleteService = (serviceId: number) => {
@@ -22,4 +26,4 @@ const editService = () => {
   return axiosClient.put("/api/services");
 };
 
-export { getAllService, addService, deleteService, editService };
+export { getAllService, getServiceDetail, addService, deleteService, editService };

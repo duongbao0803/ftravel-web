@@ -2,20 +2,20 @@ import React, { useState } from "react";
 import { Dropdown } from "antd";
 import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import DeleteRouteModal from "./DeleteStationModal";
-import useRouteService from "@/services/routeService";
-import { DataType } from "./StationList";
 import EditStationModal from "./EditStationModal";
+import { StationDetailInfo } from "@/types/station.types";
+import DeleteStationModal from "./DeleteStationModal";
+import useStationService from "@/services/stationService";
 
 export interface DropdownStationFuncProps {
-  stationInfo: DataType;
+  stationInfo: StationDetailInfo;
 }
 
 const DropdownStationFunc: React.FC<DropdownStationFuncProps> = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const { stationInfo } = props;
-  const { deleteRouteItem } = useRouteService();
-  const routeId = stationInfo?.id;
+  const { deleteStationItem } = useStationService();
+  const stationId = stationInfo?.id;
 
   const openEditModal = () => {
     setIsOpen(true);
@@ -42,9 +42,9 @@ const DropdownStationFunc: React.FC<DropdownStationFuncProps> = (props) => {
                   rel="noopener noreferrer"
                   to="#"
                   onClick={() =>
-                    DeleteRouteModal({
-                      routeId,
-                      deleteRouteItem,
+                    DeleteStationModal({
+                      stationId,
+                      deleteStationItem,
                     })
                   }
                 >
@@ -63,7 +63,7 @@ const DropdownStationFunc: React.FC<DropdownStationFuncProps> = (props) => {
       <EditStationModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        // productInfo={productInfo}
+        stationInfo={stationInfo}
       />
     </>
   );

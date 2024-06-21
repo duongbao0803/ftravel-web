@@ -14,11 +14,11 @@ export interface DataType {
   "create-date": string | Date;
   "update-date"?: string | Date;
   "is-deleted": boolean;
+  code: number;
 }
 
 const CityList: React.FC = React.memo(() => {
   const { cities, isFetching, totalCount } = useCityService();
-
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -109,8 +109,12 @@ const CityList: React.FC = React.memo(() => {
           }) => ({
             ...record,
             key: record.id,
-            "create-date": record["create-date"] ? formatDate2(record["create-date"]) : "N/A",
-            "update-date": record["update-date"] ? formatDate2(record["update-date"]) : "N/A",
+            "create-date": record["create-date"]
+              ? formatDate2(record["create-date"])
+              : "N/A",
+            "update-date": record["update-date"]
+              ? formatDate2(record["update-date"])
+              : "N/A",
           }),
         )}
         pagination={{
