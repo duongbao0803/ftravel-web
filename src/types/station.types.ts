@@ -20,6 +20,10 @@ export interface StationDetailInfo extends StationInfo {
   };
 }
 
+export interface RouteStationInfo {
+  
+}
+
 export interface CreateStationInfo {
   name: string;
   "bus-company-id": number;

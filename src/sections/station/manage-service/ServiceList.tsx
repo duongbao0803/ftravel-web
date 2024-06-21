@@ -16,7 +16,11 @@ export interface DataType {
   fullDescription: string;
 }
 
-const ServiceList: React.FC = () => {
+export interface ServiceListProps {
+  routeId: number;
+}
+
+const ServiceList: React.FC<ServiceListProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<number>(1);

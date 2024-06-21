@@ -1,18 +1,39 @@
 import { useCallback, useEffect, useState } from "react";
 import { Modal, Form, Input, Row, Col } from "antd";
 import { UploadImage } from "@/components";
+import useRouteService from "@/services/routeService";
+import { RouteDetailInfo } from "@/types/route.types";
 
 export interface AddServiceProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
+  routeId: number;
 }
 
 const AddServiceModal: React.FC<AddServiceProps> = (props) => {
-  const { setIsOpen, isOpen } = props;
+  const { setIsOpen, isOpen, routeId } = props;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const [fileChange, setFileChange] = useState<string>("");
   const [form] = Form.useForm();
   const { TextArea } = Input;
+
+  const {fetchRouteDetail} = useRouteService();
+  const [routeDetail, setRouteDetail] = useState<RouteDetailInfo>();
+
+  const fetchRouteDetailData = async (routeId: number) => {
+    try {
+      const res = await fetchRouteDetail(routeId);
+      if (res && res.status === 200) {
+        setRouteDetail(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching station detail:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchRouteDetailData(routeId);
+  }, [routeId])
 
   useEffect(() => {
     form.setFieldsValue({ "img-url": fileChange });
@@ -21,6 +42,10 @@ const AddServiceModal: React.FC<AddServiceProps> = (props) => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+      const updateValues = {
+        ...values,
+        "route-id": routeDetail?.id
+      }
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {

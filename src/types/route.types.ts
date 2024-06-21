@@ -1,3 +1,5 @@
+import { CompanyInfo } from "./company.types";
+
 export interface RouteInfo {
   id: number;
   "unsign-name": string;
@@ -26,3 +28,7 @@ export interface RouteStore {
   setRouteName: (name: string) => void;
   routeName: string;
 }
+
+ export interface RouteDetailInfo extends RouteInfo{
+  "bus-company": CompanyInfo
+ }

@@ -22,6 +22,9 @@ const useRouteService = () => {
     return res;
   };
 
+
+
+
   // const getInfoPostDetail = async (postId: string) => {
   //   const res = await getDetailPost(postId);
   //   return res.data.postInfo;

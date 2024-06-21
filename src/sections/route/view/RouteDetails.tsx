@@ -1,7 +1,8 @@
 import React from "react";
-import RouteInfo from "../RouteInfo";
-import ServiceList from "../manage-service/ServiceList";
 import { useParams } from "react-router-dom";
+import RouteInfoView from "../RouteInfoView";
+import ServiceList from "@/sections/manage-service/ServiceList";
+import RouteStationList from "../RouteStationList";
 
 const RouteDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,8 +13,8 @@ const RouteDetails: React.FC = () => {
         <p className="text-2xl font-bold text-[#000000]">Quản lý tuyến xe</p>
       </div>
       <div className="p-5">
-        <div className="mb-3">{<RouteInfo routeId={routeId} />}</div>
-        <div>{<ServiceList routeId={routeId} />}</div>
+        <div className="mb-3">{<RouteInfoView routeId={routeId} />}</div>
+        <div>{<RouteStationList routeId={routeId} />}</div>
       </div>
     </div>
   );

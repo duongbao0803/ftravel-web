@@ -41,3 +41,27 @@ export function formatDate2(dateString: string | number | Date) {
     return formattedDate;
   }
 }
+
+export function formatDate3(dateString: string | number | Date) {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return "Ngày không hợp lệ";
+  } else {
+    const timezoneOffset = date.getTimezoneOffset() * 60000;
+    const localTime = date.getTime() - timezoneOffset;
+    const localDate = new Date(localTime);
+
+    const year = localDate.getFullYear();
+    const month = (localDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = localDate.getDate().toString().padStart(2, "0");
+
+    const hours = localDate.getHours().toString().padStart(2, "0");
+    const minutes = localDate.getMinutes().toString().padStart(2, "0");
+    const seconds = localDate.getSeconds().toString().padStart(2, "0");
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    return formattedDate;
+  }
+}
+
+
