@@ -9,6 +9,7 @@ export interface StationInfo {
 }
 
 export interface StationDetailInfo extends StationInfo {
+  key: unknown;
   "bus-company-id"?: number;
   "bus-company": {
     id: number;
@@ -20,9 +21,7 @@ export interface StationDetailInfo extends StationInfo {
   };
 }
 
-export interface RouteStationInfo {
-  
-}
+export interface RouteStationInfo {}
 
 export interface CreateStationInfo {
   name: string;

@@ -28,6 +28,8 @@ export interface SignupValues {
 }
 
 export interface UserInfo {
+  id: number;
+  name?: string;
   address?: string;
   "avatar-url"?: string;
   dob?: Date | string;

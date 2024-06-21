@@ -29,6 +29,16 @@ export interface RouteStore {
   routeName: string;
 }
 
- export interface RouteDetailInfo extends RouteInfo{
-  "bus-company": CompanyInfo
- }
+export interface RouteDetailInfo extends RouteInfo {
+  "bus-company": CompanyInfo;
+}
+
+export interface RouteStation {
+  id: number;
+  station: {
+    "unsign-name": string;
+    name: string;
+    "bus-company-id": number;
+    status: string;
+  };
+}
