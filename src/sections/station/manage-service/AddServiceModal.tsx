@@ -17,8 +17,8 @@ const AddServiceModal: React.FC<AddServiceProps> = (props) => {
   const [form] = Form.useForm();
   const { TextArea } = Input;
 
-  const {fetchRouteDetail} = useRouteService();
-  const [routeDetail, setRouteDetail] = useState<RouteDetailInfo>();
+  const { fetchRouteDetail } = useRouteService();
+  const [, setRouteDetail] = useState<RouteDetailInfo>();
 
   const fetchRouteDetailData = async (routeId: number) => {
     try {
@@ -33,7 +33,7 @@ const AddServiceModal: React.FC<AddServiceProps> = (props) => {
 
   useEffect(() => {
     fetchRouteDetailData(routeId);
-  }, [routeId])
+  }, [routeId]);
 
   useEffect(() => {
     form.setFieldsValue({ "img-url": fileChange });
@@ -41,11 +41,11 @@ const AddServiceModal: React.FC<AddServiceProps> = (props) => {
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields();
-      const updateValues = {
-        ...values,
-        "route-id": routeDetail?.id
-      }
+      // const values = await form.validateFields();
+      // const updateValues = {
+      //   ...values,
+      //   "route-id": routeDetail?.id
+      // }
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {

@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { Button, Input, Table } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import AddServiceModal from "./AddServiceModal";
 import useServiceService from "@/services/serviceService";
 
 export interface DataType {
@@ -20,12 +19,12 @@ export interface ServiceListProps {
   routeId: number;
 }
 
-const ServiceList: React.FC<ServiceListProps> = (props) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+const ServiceList: React.FC<ServiceListProps> = () => {
+  const [, setIsOpen] = useState<boolean>(false);
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { services, totalCount, isFetching } = useServiceService();
+  const { services, totalCount } = useServiceService();
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
@@ -119,7 +118,7 @@ const ServiceList: React.FC<ServiceListProps> = (props) => {
         // loading={isFetching}
         rowKey={(record) => record._id}
       />
-      <AddServiceModal setIsOpen={setIsOpen} isOpen={isOpen} />
+      {/* <AddServiceModal setIsOpen={setIsOpen} isOpen={isOpen} /> */}
     </>
   );
 };

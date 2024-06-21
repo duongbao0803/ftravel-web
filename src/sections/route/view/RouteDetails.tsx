@@ -1,8 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import RouteInfoView from "../RouteInfoView";
-import ServiceList from "@/sections/manage-service/ServiceList";
-import RouteStationList from "../RouteStationList";
 
 const RouteDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +12,7 @@ const RouteDetails: React.FC = () => {
       </div>
       <div className="p-5">
         <div className="mb-3">{<RouteInfoView routeId={routeId} />}</div>
-        <div>{<RouteStationList routeId={routeId} />}</div>
+        {/* <div>{<RouteStationList routeId={routeId} />}</div> */}
       </div>
     </div>
   );
