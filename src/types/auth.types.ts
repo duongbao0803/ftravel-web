@@ -28,7 +28,18 @@ export interface SignupValues {
 }
 
 export interface UserInfo {
-  // id: number;
+  name?: string;
+  address?: string;
+  "avatar-url"?: string;
+  dob?: Date | string;
+  email: string;
+  role?: number;
+  "phone-number": string;
+  "full-name": string;
+}
+
+export interface UserInfoDetail {
+  id: number;
   name?: string;
   address?: string;
   "avatar-url"?: string;

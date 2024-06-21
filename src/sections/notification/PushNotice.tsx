@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col, Form, Input, Button, Select } from "antd";
 import { AuditOutlined, MailOutlined } from "@ant-design/icons";
 import useAuthService from "@/services/authService";
-import { UserInfo } from "@/types/auth.types";
+import { UserInfoDetail } from "@/types/auth.types";
 import useUserService from "@/services/userService";
 import { sendNotification } from "@/types/notification.types";
 import { sendNotice } from "@/api/noticeApi";
@@ -100,7 +100,7 @@ const PushNotice: React.FC = React.memo(() => {
                 placeholder="Chọn nhà xe"
                 optionFilterProp="children"
               >
-                {users.map((user: UserInfo, index: number) => (
+                {users.map((user: UserInfoDetail, index: number) => (
                   <Option key={index} value={`${user.id}`} label={user.email}>
                     {`${user.email}`}
                   </Option>
