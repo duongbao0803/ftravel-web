@@ -40,7 +40,7 @@ export interface RouteStation {
   "route-id": number;
   "station-id": number;
   "station-index": number;
-  "station": StationInfo;
+  station: StationInfo;
   "create-date": string | Date;
   "update-date"?: string | Date;
   "is-deleted": boolean;

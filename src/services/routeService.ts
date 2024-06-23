@@ -1,5 +1,11 @@
 import { editCity } from "@/api/cityApi";
-import { addRoute, getAllRoute, getRouteDetail, removeRoute } from "@/api/routeApi";
+import {
+  addRoute,
+  getAllRoute,
+  getRouteDetail,
+  removeRoute,
+} from "@/api/routeApi";
+import { getServiceByStation } from "@/api/serviceApi";
 import { CityInfo } from "@/types/city.types";
 import { CustomError } from "@/types/error.types";
 import { CreateRoute } from "@/types/route.types";
@@ -22,8 +28,10 @@ const useRouteService = () => {
     return res;
   };
 
-
-
+  const fetchServiceByStation = async (stationId: number) => {
+    const res = await getServiceByStation(stationId);
+    return res;
+  };
 
   // const getInfoPostDetail = async (postId: string) => {
   //   const res = await getDetailPost(postId);
@@ -129,6 +137,7 @@ const useRouteService = () => {
     updateCityItem,
     deleteRouteItem,
     fetchRouteDetail,
+    fetchServiceByStation,
   };
 };
 
