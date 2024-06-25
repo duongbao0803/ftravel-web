@@ -1,4 +1,5 @@
 import { CompanyInfo } from "./company.types";
+import { StationInfo } from "./station.types";
 
 export interface RouteInfo {
   id: number;
@@ -31,14 +32,16 @@ export interface RouteStore {
 
 export interface RouteDetailInfo extends RouteInfo {
   "bus-company": CompanyInfo;
+  "route-stations"?: [RouteStation];
 }
 
 export interface RouteStation {
   id: number;
-  station: {
-    "unsign-name": string;
-    name: string;
-    "bus-company-id": number;
-    status: string;
-  };
+  "route-id": number;
+  "station-id": number;
+  "station-index": number;
+  station: StationInfo;
+  "create-date": string | Date;
+  "update-date"?: string | Date;
+  "is-deleted": boolean;
 }

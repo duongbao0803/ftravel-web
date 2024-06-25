@@ -18,12 +18,23 @@ const getServiceDetail = (serviceId: number) => {
   return axiosClient.get(`/api/services/${serviceId}`);
 };
 
-const deleteService = (serviceId: number) => {
+const removeService = (serviceId: number) => {
   return axiosClient.delete(`/api/services/${serviceId}`);
 };
 
-const editService = () => {
-  return axiosClient.put("/api/services");
+const editService = (serviceId: number, formValues: CreateService) => {
+  return axiosClient.put(`/api/services/${serviceId}`, formValues);
 };
 
-export { getAllService, getServiceDetail, addService, deleteService, editService };
+const getServiceByStation = (stationId: number) => {
+  return axiosClient.get(`/api/services/by-station-id/${stationId}`);
+};
+
+export {
+  getAllService,
+  getServiceDetail,
+  addService,
+  removeService,
+  editService,
+  getServiceByStation,
+};

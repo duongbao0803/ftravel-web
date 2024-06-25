@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal, Form, Input, Row, Col } from "antd";
-import {
-  EnvironmentOutlined,
-  CarOutlined,
-} from "@ant-design/icons";
+import { EnvironmentOutlined, CarOutlined } from "@ant-design/icons";
 import { CommonStatusString } from "@/enums/enums";
 import { StationDetailInfo } from "@/types/station.types";
 
@@ -79,56 +76,54 @@ const EditStationModal: React.FC<EditStationModalProps> = (props) => {
       onCancel={handleCancel}
     >
       <Form name="normal_login" className="login-form">
-            <Row gutter={16} className="relative mt-1">
-              <Col span={12}>
-                <Form.Item
-                  label="Tên trạm"
-                  labelCol={{ span: 24 }}
-                  className="formItem"
-                >
-                  <Input
-                    prefix={
-                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
-                    }
-                    className="p-2"
-                    defaultValue={stationInfo?.name}
-                    readOnly
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={12}>
-                <Form.Item
-                  label="Nhà xe quản lí"
-                  labelCol={{ span: 24 }}
-                  className="formItem"
-                >
-                  <Input
-                    prefix={
-                      <CarOutlined className="site-form-item-icon mr-1" />
-                    }
-                    className="p-2"
-                    defaultValue={stationInfo?.["bus-company"]?.name}
-                    readOnly
-                  />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16} className="relative mt-1">
-              <Col span={12}>
-                <Form.Item
-                  label="Trạng thái"
-                  labelCol={{ span: 24 }}
-                  className="formItem"
-                >
-                  <Input
-                    prefix={
-                      <EnvironmentOutlined className="site-form-item-icon mr-1" />
-                    }
-                    className="p-2"
-                    defaultValue={getStatusText(stationInfo?.status)}
-                    readOnly
-                  />
-                  {/* <Select
+        <Row gutter={16} className="relative mt-1">
+          <Col span={12}>
+            <Form.Item
+              label="Tên trạm"
+              labelCol={{ span: 24 }}
+              className="formItem"
+            >
+              <Input
+                prefix={
+                  <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                }
+                className="p-2"
+                defaultValue={stationInfo?.name}
+                readOnly
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Nhà xe quản lí"
+              labelCol={{ span: 24 }}
+              className="formItem"
+            >
+              <Input
+                prefix={<CarOutlined className="site-form-item-icon mr-1" />}
+                className="p-2"
+                defaultValue={stationInfo?.["bus-company"]?.name}
+                readOnly
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16} className="relative mt-1">
+          <Col span={12}>
+            <Form.Item
+              label="Trạng thái"
+              labelCol={{ span: 24 }}
+              className="formItem"
+            >
+              <Input
+                prefix={
+                  <EnvironmentOutlined className="site-form-item-icon mr-1" />
+                }
+                className="p-2"
+                defaultValue={getStatusText(stationInfo?.status)}
+                readOnly
+              />
+              {/* <Select
                     placeholder="Trạng thái"
                     defaultValue={stationDetail?.status}
                   >
@@ -148,10 +143,10 @@ const EditStationModal: React.FC<EditStationModalProps> = (props) => {
                       return null;
                     })}
                   </Select> */}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
     </Modal>
   );
 };

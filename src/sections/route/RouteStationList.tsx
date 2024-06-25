@@ -1,10 +1,9 @@
-// import React, { useEffect, useMemo, useState } from "react";
-// import { Button, Input, Table, Tag } from "antd";
-// import type { TablePaginationConfig, TableProps } from "antd";
-// import { FilterOutlined, HomeOutlined } from "@ant-design/icons";
-// import useRouteService from "@/services/routeService";
-// import { StationDetailInfo } from "@/types/station.types";
-// import { CommonStatusString } from "@/enums/enums";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Card } from "antd";
+import useRouteService from "@/services/routeService";
+import { RouteDetailInfo } from "@/types/route.types";
+import AddRouteStationModal from "./AddRouteStationModal";
+import ServiceStationList from "./ServiceStationList";
 
 export interface DataType {
   _id: string;
@@ -21,132 +20,109 @@ export interface RouteStationListProps {
   routeId: number;
 }
 
-const RouteStationList: React.FC = () => {
-  return <div></div>;
-  // const [, setIsOpen] = useState<boolean>(false);
-  // const { routeId } = props;
-  // const [, setCurrentPage] = useState<number>(1);
-  // const handleTableChange = (pagination: TablePaginationConfig) => {
-  //   setCurrentPage(pagination.current || 1);
-  // };
-  // const [routeStationList, setRouteStationList] = useState<[]>();
-  // const { fetchRouteDetail } = useRouteService();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await fetchRouteDetail(routeId);
-  //     if (res && res.status === 200) {
-  //       setRouteStationList(res.data["route-stations"]);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [routeId]);
-  // // const routeStationName = routeStationList?.map(
-  // //   (routeStationDetail) => routeStationDetail?.station,
-  // // );
-  // console.log("check station", routeStationName);
-  // const columns: TableProps<StationDetailInfo>["columns"] = useMemo(
-  //   () => [
-  //     {
-  //       title: "STT",
-  //       dataIndex: "index",
-  //       key: "index",
-  //       render: (_, _record, index) => index + 1,
-  //     },
-  //     {
-  //       title: "Tên trạm",
-  //       dataIndex: "name",
-  //       className: "first-column",
-  //     },
-  //     {
-  //       title: "Tên nhà xe",
-  //       dataIndex: "bus-company.name",
-  //       render: (_text, record) => {
-  //         return record["bus-company"].name;
-  //       },
-  //     },
-  //     {
-  //       title: "Ngày tạo",
-  //       dataIndex: "create-date",
-  //     },
-  //     {
-  //       title: "Ngày chỉnh sửa",
-  //       dataIndex: "update-date",
-  //     },
-  //     {
-  //       title: "Trạng thái",
-  //       dataIndex: "status",
-  //       render: (status: string) => {
-  //         let statusText = "";
-  //         let tagColor = "";
-  //         switch (status) {
-  //           case CommonStatusString.ACTIVE.toString():
-  //             statusText = "ĐANG HOẠT ĐỘNG";
-  //             tagColor = "green";
-  //             break;
-  //           case CommonStatusString.INACTIVE.toString():
-  //             statusText = "KHÔNG HOẠT ĐỘNG";
-  //             tagColor = "pink";
-  //             break;
-  //           default:
-  //             statusText = "UNKNOWN";
-  //             tagColor = "gray";
-  //             break;
-  //         }
-  //         return <Tag color={tagColor}>{statusText}</Tag>;
-  //       },
-  //       width: "10%",
-  //     },
-  //     {
-  //       title: "",
-  //       dataIndex: "",
-  //     },
-  //   ],
-  //   [],
-  // );
-  // return (
-  //   <>
-  //     <div className="flex justify-between">
-  //       <div className="flex gap-x-2">
-  //         <Input
-  //           placeholder="Tìm kiếm..."
-  //           className="h-8 max-w-lg rounded-lg sm:mb-5 sm:w-[300px]"
-  //         />
-  //         <Button className="flex items-center" type="primary">
-  //           <FilterOutlined className="align-middle" />
-  //           Sắp xếp
-  //         </Button>
-  //       </div>
-  //       <div className="flex gap-x-2">
-  //         <div>{/* <ExportService /> */}</div>
-  //         <div>
-  //           <Button type="primary" onClick={() => setIsOpen(true)}>
-  //             <div className="flex justify-center">
-  //               <HomeOutlined className="mr-1 text-lg" /> Thêm dịch vụ
-  //             </div>
-  //           </Button>
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <Table
-  //       className="pagination"
-  //       id="myTable"
-  //       columns={columns}
-  //       dataSource={routeStationName?.map((record: { id: unknown }) => ({
-  //         ...record,
-  //         key: record.id,
-  //       }))}
-  //       // pagination={{
-  //       //   current: currentPage,
-  //       //   total: totalCount || 0,
-  //       //   pageSize: 5,
-  //       // }}
-  //       onChange={handleTableChange}
-  //       // loading={isFetching}
-  //       // rowKey={(record) => record.id}
-  //     />
-  //     {/* <AddServiceModal setIsOpen={setIsOpen} isOpen={isOpen} /> */}
-  //   </>
-  // );
+const RouteStationList: React.FC<RouteStationListProps> = (props) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { routeId } = props;
+  const [fileChange] = useState<string>("");
+  const [form] = Form.useForm();
+  const [routeDetail, setRouteDetail] = useState<RouteDetailInfo | undefined>(
+    undefined,
+  );
+  const { fetchRouteDetail, fetchServiceByStation } = useRouteService();
+  const [, setServiceByStation] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetchRouteDetail(routeId);
+      if (res && res.status === 200) {
+        setRouteDetail(res.data);
+      }
+    };
+
+    fetchData();
+  }, [routeId]);
+
+  useEffect(() => {
+    const routeStationsDetail = routeDetail?.["route-stations"]?.map(
+      (routeStationDetail) => routeStationDetail?.station,
+    );
+
+    const fetchServiceStation = async (stationId: number) => {
+      try {
+        const res = await fetchServiceByStation(stationId);
+        if (res && res.status === 200) {
+          setServiceByStation(res.data);
+        }
+      } catch (error) {
+        console.error(`Error fetching data for stationId ${stationId}:`, error);
+      }
+    };
+
+    if (routeStationsDetail) {
+      const routeStationIds = routeStationsDetail.map(
+        (routeStation) => routeStation.id,
+      );
+
+      const fetchAllData = async () => {
+        const fetchPromises = routeStationIds.map((routeStationId) =>
+          fetchServiceStation(routeStationId),
+        );
+        await Promise.all(fetchPromises);
+      };
+
+      fetchAllData();
+    }
+  }, [routeDetail]);
+
+  const routeStations = routeDetail?.["route-stations"]?.map(
+    (routeStationDetail) => routeStationDetail,
+  );
+
+  useEffect(() => {
+    form.setFieldsValue({ "img-url": fileChange });
+  }, [fileChange, form]);
+
+  return (
+    <>
+      <AddRouteStationModal setIsOpen={setIsOpen} isOpen={isOpen} />
+
+      <>
+        {routeStations &&
+          routeStations.length > 0 &&
+          routeStations.map((routeStation, stationIndex) => (
+            <div
+              style={{
+                display: "flex",
+                rowGap: 16,
+                flexDirection: "column",
+                marginBottom: "30px",
+              }}
+              key={stationIndex}
+            >
+              <Card
+                size="small"
+                title={`Trạm ${routeStation["station-index"]}: ${routeStation?.station.name || ""}`}
+              >
+                <div>
+                  <ServiceStationList routeStation={routeStation} />
+                </div>
+              </Card>
+            </div>
+          ))}
+        <Button type="dashed" onClick={() => setIsOpen(true)} block>
+          + Thêm trạm
+        </Button>
+      </>
+
+      {/* <Form.Item noStyle shouldUpdate>
+        {() => (
+          <Typography>
+            <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
+          </Typography>
+        )}
+      </Form.Item> */}
+    </>
+  );
 };
 
 export default RouteStationList;

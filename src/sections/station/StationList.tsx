@@ -12,7 +12,12 @@ import {
   Tag,
 } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
-import { CarOutlined, EnvironmentOutlined, FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import {
+  CarOutlined,
+  EnvironmentOutlined,
+  FilterOutlined,
+  PlusCircleOutlined,
+} from "@ant-design/icons";
 // import ExportRoute from "./ExportRoute";
 // import AddRouteModal from "./AddRouteModal";
 import { formatDate2 } from "@/util/validate";
@@ -126,7 +131,7 @@ const StationList: React.FC = () => {
             <DropdownStationFunc stationInfo={record} />
           </>
         ),
-      }
+      },
     ],
     [],
   );

@@ -3,9 +3,9 @@ export interface StationInfo {
   name?: string;
   "bus-company-name"?: string;
   status: string;
-  "create-date": string | Date;
-  "update-date": string | Date;
-  "is-deleted": boolean;
+  "create-date"?: string | Date;
+  "update-date"?: string | Date;
+  "is-deleted"?: boolean;
 }
 
 export interface StationDetailInfo extends StationInfo {

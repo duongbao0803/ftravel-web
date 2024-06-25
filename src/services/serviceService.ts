@@ -1,4 +1,11 @@
-import { addService, getAllService, getServiceDetail } from "@/api/serviceApi";
+import {
+  addService,
+  editService,
+  getAllService,
+  getServiceByStation,
+  getServiceDetail,
+  removeService,
+} from "@/api/serviceApi";
 import { CustomError } from "@/types/error.types";
 import { CreateService } from "@/types/service.types";
 import { notification } from "antd";
@@ -15,8 +22,13 @@ const useServiceService = () => {
     return { data, totalCount };
   };
 
-  const fetchServiceDetail = async (ServiceId: number) => {
-    const res = await getServiceDetail(ServiceId);
+  const fetchServiceDetail = async (serviceId: number) => {
+    const res = await getServiceDetail(serviceId);
+    return res;
+  };
+
+  const fetchServiceStation = async (stationId: number) => {
+    const res = await getServiceByStation(stationId);
     return res;
   };
 
@@ -25,18 +37,24 @@ const useServiceService = () => {
   //   return res.data.postInfo;
   // };
 
-  // const deleteService = async (ServiceId: number) => {
-  //   await removeService(ServiceId);
-  //   return ServiceId;
-  // };
+  const deleteService = async (serviceId: number) => {
+    await removeService(serviceId);
+    return serviceId;
+  };
 
   const addNewService = async (formValues: CreateService) => {
     await addService(formValues);
   };
 
-//   const updateService = async (formValues: ServiceInfo) => {
-//     await editService(formValues);
-//   };
+  const updateService = async ({
+    serviceId,
+    formValues,
+  }: {
+    serviceId: number;
+    formValues: CreateService;
+  }) => {
+    await editService(serviceId, formValues);
+  };
 
   const { data: servicesData, isLoading: isFetching } = useQuery(
     ["services", 1],
@@ -54,7 +72,7 @@ const useServiceService = () => {
         description: "Tạo dịch vụ thành công",
         duration: 2,
       });
-      queryClient.invalidateQueries("Services");
+      queryClient.invalidateQueries("services");
     },
     onError: (err: CustomError) => {
       notification.error({
@@ -65,53 +83,56 @@ const useServiceService = () => {
     },
   });
 
-  // const deleteServiceMutation = useMutation(deleteService, {
-  //   onSuccess: () => {
-  //     notification.success({
-  //       message: "Xóa thành công",
-  //       description: "Xóa tuyến đường thành công",
-  //       duration: 2,
-  //     });
-  //     queryClient.invalidateQueries("cities");
-  //   },
-  //   onError: (err: CustomError) => {
-  //     notification.error({
-  //       message: "Xóa thất bại",
-  //       description: `${err?.response?.data?.message}`,
-  //       duration: 2,
-  //     });
-  //   },
-  // });
+  const deleteServiceMutation = useMutation(deleteService, {
+    onSuccess: () => {
+      notification.success({
+        message: "Xóa thành công",
+        description: "Xóa dịch vụ thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("services");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Xóa thất bại",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
 
-//   const updateServiceMutation = useMutation(updateService, {
-//     onSuccess: () => {
-//       notification.success({
-//         message: "Chỉnh sửa thành công",
-//         description: "Chỉnh sửa tuyến đường thành công",
-//         duration: 2,
-//       });
-//       queryClient.invalidateQueries("cities");
-//     },
-//     onError: (err: CustomError) => {
-//       notification.error({
-//         message: "Lỗi khi chỉnh sửa",
-//         description: `${err?.response?.data?.message}`,
-//         duration: 2,
-//       });
-//     },
-//   });
+  const updateServiceMutation = useMutation(updateService, {
+    onSuccess: () => {
+      notification.success({
+        message: "Chỉnh sửa thành công",
+        description: "Chỉnh sửa dịch vụ thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("services");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Lỗi khi chỉnh sửa",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
 
   const addNewServiceItem = async (formValues: CreateService) => {
     await addNewServiceMutation.mutateAsync(formValues);
   };
 
-  // const deleteServiceItem = async (ServiceId: number) => {
-  //   await deleteServiceMutation.mutateAsync(ServiceId);
-  // };
+  const deleteServiceItem = async (serviceId: number) => {
+    await deleteServiceMutation.mutateAsync(serviceId);
+  };
 
-//   const updateServiceItem = async (formValues: ServiceInfo) => {
-//     await updateServiceMutation.mutateAsync(formValues);
-//   };
+  const updateServiceItem = async (
+    serviceId: number,
+    formValues: CreateService,
+  ) => {
+    await updateServiceMutation.mutateAsync({ serviceId, formValues });
+  };
 
   const services = servicesData?.data || [];
   const totalCount = servicesData?.totalCount || 0;
@@ -120,10 +141,11 @@ const useServiceService = () => {
     isFetching,
     services,
     totalCount,
+    deleteServiceItem,
     addNewServiceItem,
-    // updateServiceItem,
-    // deleteServiceItem,
     fetchServiceDetail,
+    fetchServiceStation,
+    updateServiceItem,
   };
 };
 
