@@ -16,7 +16,7 @@ const GeneralInfo: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <>
       <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
         <div className="col-span-3 rounded-3xl border border-gray-100 p-5 shadow-md md:col-span-1">
           <div className="flex flex-col items-center">
@@ -53,7 +53,7 @@ const GeneralInfo: React.FC = () => {
           <AccountInfo />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

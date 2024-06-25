@@ -47,14 +47,6 @@ const AddStationModal: React.FC<AddStationProps> = (props) => {
     setIsOpen(false);
   };
 
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
-  const onSearch = (value: string) => {
-    console.log("search:", value);
-  };
-
   const filterOption = (
     input: string,
     option?: { label: string; value: string },
@@ -109,16 +101,10 @@ const AddStationModal: React.FC<AddStationProps> = (props) => {
             showSearch
             placeholder="Chọn nhà xe"
             optionFilterProp="children"
-            onChange={onChange}
-            onSearch={onSearch}
             filterOption={filterOption}
           >
-            {companys.map((company : CompanyInfo, index: number) => (
-              <Option
-                key={index}
-                value={`${company.id}`}
-                label={company.name}
-              >
+            {companys.map((company: CompanyInfo, index: number) => (
+              <Option key={index} value={`${company.id}`} label={company.name}>
                 {`${company.name}`}
               </Option>
             ))}

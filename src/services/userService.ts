@@ -1,4 +1,4 @@
-import { addUser, getAllUser } from "@/api/userApi";
+import { addUser, getAllUser, deleteUser } from "@/api/userApi";
 import { UserInfo } from "@/types/auth.types";
 import { CustomError } from "@/types/error.types";
 import { notification } from "antd";
@@ -20,10 +20,10 @@ const useUserService = () => {
   //   return res.data.postInfo;
   // };
 
-  // const deletePost = async (postId: string) => {
-  //   await removePost(postId);
-  //   return postId;
-  // };
+  const removeUser = async (userId: number) => {
+    await deleteUser(userId);
+    return userId;
+  };
 
   const addNewUser = async (formValues: UserInfo) => {
     const res = await addUser(formValues);
@@ -67,8 +67,30 @@ const useUserService = () => {
     },
   });
 
+  const deleteUserMutation = useMutation(removeUser, {
+    onSuccess: () => {
+      notification.success({
+        message: "Xóa thành công",
+        description: "Xóa người dùng thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("users");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Xóa thất bại",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
   const addNewUserItem = async (formValues: UserInfo) => {
     await addNewUserMutation.mutateAsync(formValues);
+  };
+
+  const deleteUserItem = async (userId: number) => {
+    await deleteUserMutation.mutateAsync(userId);
   };
 
   const users = userData?.data || [];
@@ -79,6 +101,7 @@ const useUserService = () => {
     users,
     totalCount,
     addNewUserItem,
+    deleteUserItem,
   };
 };
 

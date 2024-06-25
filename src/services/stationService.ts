@@ -1,11 +1,16 @@
-import { addStation, getAllStation, getStationDetail } from "@/api/stationApi";
+import {
+  addStation,
+  deleteStation,
+  getAllStation,
+  getStationDetail,
+} from "@/api/stationApi";
 import { CustomError } from "@/types/error.types";
 import { CreateStationInfo } from "@/types/station.types";
 import { notification } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const useStationService = () => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const fetchStations = async (page: number) => {
     const res = await getAllStation(page);
@@ -22,6 +27,11 @@ const useStationService = () => {
 
   const addNewStation = async (formValues: CreateStationInfo) => {
     await addStation(formValues);
+  };
+
+  const removeStation = async (stationId: number) => {
+    const res = await deleteStation(stationId);
+    console.log("check res", res);
   };
 
   const { data: stationsData, isLoading: isFetching } = useQuery(
@@ -51,8 +61,30 @@ const useStationService = () => {
     },
   });
 
+  const deleteStationMutation = useMutation(removeStation, {
+    onSuccess: () => {
+      notification.success({
+        message: "Xóa thành công",
+        description: "Xóa trạm thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("stations");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Xóa thất bại",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
   const addNewStationItem = async (formValues: CreateStationInfo) => {
     await addNewStationMutation.mutateAsync(formValues);
+  };
+
+  const deleteStationItem = async (stationId: number) => {
+    await deleteStationMutation.mutateAsync(stationId);
   };
 
   const stations = stationsData?.data || [];
@@ -63,7 +95,8 @@ const useStationService = () => {
     stations,
     totalCount,
     fetchStationDetail,
-    addNewStationItem
+    addNewStationItem,
+    deleteStationItem,
     // updateCityItem,
     // deleteRouteItem,
   };

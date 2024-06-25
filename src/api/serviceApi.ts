@@ -1,5 +1,5 @@
 import axiosClient from "@/config/axiosClient";
-import { ServiceDetail } from "@/types/service.types";
+import { CreateService } from "@/types/service.types";
 
 const getAllService = (page: number) => {
   return axiosClient.get(`/api/services`, {
@@ -10,16 +10,31 @@ const getAllService = (page: number) => {
   });
 };
 
-const addService = (formValues: ServiceDetail) => {
+const addService = (formValues: CreateService) => {
   return axiosClient.post("/api/services", formValues);
 };
 
-const deleteService = (serviceId: number) => {
+const getServiceDetail = (serviceId: number) => {
+  return axiosClient.get(`/api/services/${serviceId}`);
+};
+
+const removeService = (serviceId: number) => {
   return axiosClient.delete(`/api/services/${serviceId}`);
 };
 
-const editService = () => {
-  return axiosClient.put("/api/services");
+const editService = (serviceId: number, formValues: CreateService) => {
+  return axiosClient.put(`/api/services/${serviceId}`, formValues);
 };
 
-export { getAllService, addService, deleteService, editService };
+const getServiceByStation = (stationId: number) => {
+  return axiosClient.get(`/api/services/by-station-id/${stationId}`);
+};
+
+export {
+  getAllService,
+  getServiceDetail,
+  addService,
+  removeService,
+  editService,
+  getServiceByStation,
+};

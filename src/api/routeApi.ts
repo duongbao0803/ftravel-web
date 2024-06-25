@@ -1,5 +1,5 @@
 import axiosClient from "@/config/axiosClient";
-import { CompanyInfo } from "@/types/company.types";
+import { CreateRoute } from "@/types/route.types";
 
 const getAllRoute = (page: number) => {
   return axiosClient.get(`/api/routes`, {
@@ -14,8 +14,8 @@ const getRouteDetail = (routeId: number) => {
   return axiosClient.get(`/api/routes/${routeId}`);
 };
 
-const addCompany = (formValues: CompanyInfo) => {
-  return axiosClient.post("/api/buscompany", formValues);
+const addRoute = (formValues: CreateRoute) => {
+  return axiosClient.post("/api/routes", formValues);
 };
 
 const removeRoute = (routeId: number) => {
@@ -26,4 +26,4 @@ const editService = () => {
   return axiosClient.put("/api/services");
 };
 
-export { getAllRoute, addCompany, removeRoute, getRouteDetail, editService };
+export { getAllRoute, addRoute, removeRoute, getRouteDetail, editService };
