@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Button, Form, Input, Space, Card, Row, Col } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Card } from "antd";
 import useRouteService from "@/services/routeService";
 import { RouteDetailInfo } from "@/types/route.types";
-import { UploadImage } from "@/components";
 import AddRouteStationModal from "./AddRouteStationModal";
-import ServiceList from "../manage-service/ServiceList";
 import ServiceStationList from "./ServiceStationList";
 
 export interface DataType {
@@ -26,14 +23,13 @@ export interface RouteStationListProps {
 const RouteStationList: React.FC<RouteStationListProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { routeId } = props;
-  const [fileChange, setFileChange] = useState<string>("");
+  const [fileChange] = useState<string>("");
   const [form] = Form.useForm();
-  const { TextArea } = Input;
   const [routeDetail, setRouteDetail] = useState<RouteDetailInfo | undefined>(
     undefined,
   );
   const { fetchRouteDetail, fetchServiceByStation } = useRouteService();
-  const [serviceByStation, setServiceByStation] = useState();
+  const [, setServiceByStation] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,6 +73,7 @@ const RouteStationList: React.FC<RouteStationListProps> = (props) => {
       fetchAllData();
     }
   }, [routeDetail]);
+
   const routeStations = routeDetail?.["route-stations"]?.map(
     (routeStationDetail) => routeStationDetail,
   );
@@ -84,19 +81,6 @@ const RouteStationList: React.FC<RouteStationListProps> = (props) => {
   useEffect(() => {
     form.setFieldsValue({ "img-url": fileChange });
   }, [fileChange, form]);
-
-  const saveService = () => {
-    console.log("aaaaa");
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleFileChange = useCallback((newFileChange: string) => {
-    setFileChange(newFileChange);
-  }, []);
-
-  function remove(name: string | undefined) {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <>
@@ -107,31 +91,27 @@ const RouteStationList: React.FC<RouteStationListProps> = (props) => {
           routeStations.length > 0 &&
           routeStations.map((routeStation, stationIndex) => (
             <div
-              style={{ display: "flex", rowGap: 16, flexDirection: "column" }}
+              style={{
+                display: "flex",
+                rowGap: 16,
+                flexDirection: "column",
+                marginBottom: "30px",
+              }}
               key={stationIndex}
             >
               <Card
                 size="small"
                 title={`Trạm ${routeStation["station-index"]}: ${routeStation?.station.name || ""}`}
-                extra={
-                  <CloseOutlined
-                    onClick={() => {
-                      remove(routeStation?.station.name);
-                    }}
-                  />
-                }
               >
                 <div>
-                  <ServiceStationList routeStation={routeStation} routeId={props.routeId}/>
+                  <ServiceStationList routeStation={routeStation} />
                 </div>
               </Card>
-              
             </div>
-            
           ))}
-          <Button type="dashed" onClick={() => setIsOpen(true)} block>
-              + Thêm trạm
-            </Button>
+        <Button type="dashed" onClick={() => setIsOpen(true)} block>
+          + Thêm trạm
+        </Button>
       </>
 
       {/* <Form.Item noStyle shouldUpdate>

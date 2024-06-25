@@ -2,7 +2,7 @@ export interface StationInfo {
   id: number;
   name?: string;
   "bus-company-name"?: string;
-  status?: string;
+  status: string;
   "create-date"?: string | Date;
   "update-date"?: string | Date;
   "is-deleted"?: boolean;

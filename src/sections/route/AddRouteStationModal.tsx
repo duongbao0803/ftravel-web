@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Select, Input } from "antd";
+import { Modal, Form, Select } from "antd";
 import useCityService from "@/services/cityService";
 import { CityInfo } from "@/types/city.types";
-import useCompanyService from "@/services/companyService";
-import { CompanyInfo } from "@/types/company.types";
 import useRouteService from "@/services/routeService";
 import useRoute from "@/hooks/useRoute";
-import { ShareAltOutlined } from "@ant-design/icons";
 
 export interface AddRouteStationProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,18 +15,10 @@ const AddRouteStationModal: React.FC<AddRouteStationProps> = (props) => {
   const { setIsOpen, isOpen } = props;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const { cities } = useCityService();
-  const { companys } = useCompanyService();
   const { addNewRouteItem } = useRouteService();
   const [form] = Form.useForm();
 
-  const {
-    startName,
-    endName,
-    setStartName,
-    setEndName,
-    setRouteName,
-    routeName,
-  } = useRoute();
+  const { startName, endName, setRouteName, routeName } = useRoute();
 
   useEffect(() => {
     if (startName && endName) setRouteName(`${startName} - ${endName}`);
@@ -44,7 +33,6 @@ const AddRouteStationModal: React.FC<AddRouteStationProps> = (props) => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      console.log("chjeck valuies", values);
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
@@ -83,7 +71,10 @@ const AddRouteStationModal: React.FC<AddRouteStationProps> = (props) => {
       cancelText="Hủy"
     >
       <div>
-        <p>Tuyến đường áp dụng: <span className="font-bold">TP.HCM - Cần Thơ</span></p>
+        <p>
+          Tuyến đường áp dụng:{" "}
+          <span className="font-bold">TP.HCM - Cần Thơ</span>
+        </p>
       </div>
       <Form name="normal_login" className="login-form" form={form}>
         <Form.Item
@@ -92,7 +83,7 @@ const AddRouteStationModal: React.FC<AddRouteStationProps> = (props) => {
             {
               required: true,
               message: "Vui lòng chọn trạm",
-            }
+            },
           ]}
           colon={true}
           label="Tên trạm"
@@ -122,22 +113,19 @@ const AddRouteStationModal: React.FC<AddRouteStationProps> = (props) => {
             {
               required: true,
               message: "Vui lòng chọn trạm",
-            }
+            },
           ]}
           colon={true}
           label="Thứ tự trạm"
           labelCol={{ span: 24 }}
           className="formItem"
         >
-          <Select
-            placeholder="Số thứ tự"
-            optionFilterProp="children"
-          >
-              <Option value={1}>Trạm 1</Option>
-              <Option value={2}>Trạm 2</Option>
-              <Option value={3}>Trạm 3</Option>
-              <Option value={4}>Trạm 4</Option>
-              <Option value={5}>Trạm 5</Option>
+          <Select placeholder="Số thứ tự" optionFilterProp="children">
+            <Option value={1}>Trạm 1</Option>
+            <Option value={2}>Trạm 2</Option>
+            <Option value={3}>Trạm 3</Option>
+            <Option value={4}>Trạm 4</Option>
+            <Option value={5}>Trạm 5</Option>
           </Select>
         </Form.Item>
       </Form>

@@ -4,7 +4,9 @@ export interface ServiceDetail {
   stationId: number;
   name: string;
   defaultPrice: number;
-  imgUrl: string;
+  "img-url": string;
+  "route-name"?: string;
+  "station-name"?: string;
   shortDescription: string;
   fullDescription: string;
 }

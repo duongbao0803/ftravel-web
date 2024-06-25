@@ -1,41 +1,33 @@
 import { useEffect, useState } from "react";
 import { Modal, Form, Input, Row, Col } from "antd";
 import { UploadImage } from "@/components";
-import useRouteService from "@/services/routeService";
-import { RouteDetailInfo, RouteStation } from "@/types/route.types";
+import { ServiceDetail } from "@/types/service.types";
 import useServiceService from "@/services/serviceService";
+import { RouteStation } from "@/types/route.types";
 
 export interface AddServiceStationProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
+  serviceDetail: ServiceDetail;
   routeStation: RouteStation;
   // stationName: string;
 }
 
-const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
-  const { setIsOpen, isOpen, routeStation } = props;
+const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
+  const { setIsOpen, isOpen, serviceDetail, routeStation } = props;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
+  const { updateServiceItem } = useServiceService();
   const [fileChange, setFileChange] = useState<string>("");
   const [form] = Form.useForm();
   const { TextArea } = Input;
-  const { fetchRouteDetail } = useRouteService();
-  const { addNewServiceItem } = useServiceService();
-  const [routeDetail, setRouteDetail] = useState<RouteDetailInfo>();
 
-  const fetchData = async (routeId: number) => {
-    try {
-      const res = await fetchRouteDetail(routeId);
-      if (res && res.status === 200) {
-        setRouteDetail(res.data);
-      }
-    } catch (error) {
-      console.error("Error fetching route detail:", error);
-    }
-  };
+  console.log("check route", routeStation);
 
   useEffect(() => {
-    fetchData(routeStation["route-id"]);
-  }, [routeStation["route-id"]]);
+    if (isOpen) {
+      form.setFieldsValue(serviceDetail);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     form.setFieldsValue({ "img-url": fileChange });
@@ -46,14 +38,13 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
       const values = await form.validateFields();
       const updateValues = {
         ...values,
-        "route-id": routeStation["route-id"],
-        "station-id": routeStation?.station?.id,
+        "station-id": routeStation["station-id"],
       };
-      console.log("check update", updateValues);
+      console.log("check updateValues", updateValues);
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          await addNewServiceItem(updateValues);
+          await updateServiceItem(serviceDetail.id, updateValues);
           form.resetFields();
           setIsConfirmLoading(false);
           setIsOpen(false);
@@ -79,7 +70,7 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
 
   return (
     <Modal
-      title={<p className="text-lg text-[red]">Thêm dịch vụ</p>}
+      title={<p className="text-lg text-[red] ">Chỉnh sửa dịch vụ</p>}
       open={isOpen}
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
@@ -90,13 +81,13 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
           <p className="mb-3 font-bold">Tuyến đường:</p>
         </Col>
         <Col span={18}>
-          <p>{routeDetail?.name}</p>
+          <p>{serviceDetail?.["route-name"]}</p>
         </Col>
         <Col span={6}>
           <p className="mb-3 font-bold">Trạm:</p>
         </Col>
         <Col span={18}>
-          <p>{routeStation?.station?.name}</p>
+          <p>{serviceDetail?.["station-name"]}</p>
         </Col>
       </Row>
       <Form name="normal_login" className="login-form" form={form}>
@@ -115,7 +106,10 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
                 },
               ]}
             >
-              <UploadImage onFileChange={handleFileChange} initialImage={""} />
+              <UploadImage
+                onFileChange={handleFileChange}
+                initialImage={serviceDetail["img-url"]}
+              />
             </Form.Item>
           </Col>
           <Col span={18}>
@@ -151,8 +145,8 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
                     },
                     {
                       min: 1,
-                      max: 999,
-                      message: "Giá phải trong khoảng 1 đến 999",
+                      max: 100,
+                      message: "Giá phải trong khoảng 1 đến 100",
                     },
                   ]}
                 >
@@ -183,4 +177,4 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
   );
 };
 
-export default AddServiceStationModal;
+export default EditServiceModal;
