@@ -1,4 +1,5 @@
 export interface ServiceDetail {
+  id: number;
   routeId: number;
   stationId: number;
   name: string;

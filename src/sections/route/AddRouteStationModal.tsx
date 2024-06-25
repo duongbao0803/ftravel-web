@@ -97,7 +97,7 @@ const AddRouteStationModal: React.FC<AddRouteStationProps> = (props) => {
           colon={true}
           label="Tên trạm"
           labelCol={{ span: 24 }}
-          className="formItem"
+          // className="formItem"
         >
           <Select
             showSearch

@@ -5,6 +5,8 @@ import useRouteService from "@/services/routeService";
 import { RouteDetailInfo } from "@/types/route.types";
 import { UploadImage } from "@/components";
 import AddRouteStationModal from "./AddRouteStationModal";
+import ServiceList from "../manage-service/ServiceList";
+import ServiceStationList from "./ServiceStationList";
 
 export interface DataType {
   _id: string;
@@ -103,192 +105,33 @@ const RouteStationList: React.FC<RouteStationListProps> = (props) => {
       <>
         {routeStations &&
           routeStations.length > 0 &&
-          routeStations.map((station, stationIndex) => (
+          routeStations.map((routeStation, stationIndex) => (
             <div
               style={{ display: "flex", rowGap: 16, flexDirection: "column" }}
               key={stationIndex}
             >
               <Card
                 size="small"
-                title={`Trạm ${station["station-index"]}: ${station?.station.name || ""}`}
+                title={`Trạm ${routeStation["station-index"]}: ${routeStation?.station.name || ""}`}
                 extra={
                   <CloseOutlined
                     onClick={() => {
-                      remove(station?.station.name);
+                      remove(routeStation?.station.name);
                     }}
                   />
                 }
               >
-                <Form
-                  form={form}
-                  name={`dynamic_form_complex_${stationIndex}`}
-                  style={{ maxWidth: 600 }}
-                  autoComplete="off"
-                  initialValues={{ items: [{}] }}
-                >
-                  <Form.Item>
-                    <Form.List name={[stationIndex, "list"]}>
-                      {(subFields, subOpt) => (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            rowGap: 16,
-                          }}
-                        >
-                          {subFields.map((subField) => (
-                            <Space key={subField.key}>
-                              <Row gutter={24}>
-                                <Col span={6}>
-                                  <Form.Item
-                                    name={[subField.name, "img-url"]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: "Vui lòng chọn hình ảnh",
-                                      },
-                                    ]}
-                                    colon={true}
-                                    label="Hình ảnh"
-                                    labelCol={{ span: 24 }}
-                                    className="formItem"
-                                  >
-                                    <UploadImage
-                                      onFileChange={(file) =>
-                                        handleFileChange(file)
-                                      }
-                                      initialImage={
-                                        serviceByStation?.[stationIndex]?.[
-                                          "img-url"
-                                        ] || ""
-                                      }
-                                    />
-                                  </Form.Item>
-                                </Col>
-                                <Col span={18}>
-                                  <Row gutter={24}>
-                                    <Col span={12}>
-                                      <Form.Item
-                                        noStyle
-                                        name={[subField.name, "name"]}
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message:
-                                              "Vui lòng nhập tên dịch vụ",
-                                          },
-                                          {
-                                            min: 5,
-                                            message:
-                                              "Tên phải có ít nhất 5 kí tự",
-                                          },
-                                        ]}
-                                      >
-                                        <Input
-                                          placeholder="Tên dịch vụ"
-                                          className="mb-3"
-                                          defaultValue={
-                                            serviceByStation?.[stationIndex]
-                                              ?.name || ""
-                                          }
-                                        />
-                                      </Form.Item>
-                                    </Col>
-                                    <Col span={12}>
-                                      <Form.Item
-                                        noStyle
-                                        name={[subField.name, "default-price"]}
-                                        rules={[
-                                          {
-                                            required: true,
-                                            message:
-                                              "Vui lòng nhập giá dịch vụ",
-                                          },
-                                          {
-                                            type: "number",
-                                            min: 1,
-                                            max: 999,
-                                            message:
-                                              "Giá phải trong khoảng 1 đến 999",
-                                          },
-                                        ]}
-                                      >
-                                        <Input
-                                          placeholder="Giá mặc định"
-                                          type="number"
-                                          className="mb-3"
-                                          defaultValue={
-                                            serviceByStation?.[stationIndex]?.[
-                                              "default-price"
-                                            ] || ""
-                                          }
-                                        />
-                                      </Form.Item>
-                                    </Col>
-                                  </Row>
-
-                                  <Form.Item
-                                    noStyle
-                                    name={[subField.name, "short-description"]}
-                                  >
-                                    <Input
-                                      className="mb-3"
-                                      placeholder="Mô tả ngắn"
-                                      defaultValue={
-                                        serviceByStation?.[stationIndex]?.[
-                                          "short-description"
-                                        ] || ""
-                                      }
-                                    />
-                                  </Form.Item>
-                                  <Form.Item
-                                    noStyle
-                                    name={[subField.name, "full-description"]}
-                                  >
-                                    <TextArea
-                                      className="mb-3"
-                                      placeholder="Mô tả"
-                                      defaultValue={
-                                        serviceByStation?.[stationIndex]?.[
-                                          "full-description"
-                                        ] || ""
-                                      }
-                                    />
-                                  </Form.Item>
-                                </Col>
-                                <Col span={24} className="text-right">
-                                  <Form.Item>
-                                    <Button
-                                      type="primary"
-                                      onClick={() => saveService()}
-                                    >
-                                      Lưu
-                                    </Button>
-                                  </Form.Item>
-                                </Col>
-                              </Row>
-                              <CloseOutlined
-                                onClick={() => {
-                                  subOpt.remove(subField.name);
-                                }}
-                              />
-                            </Space>
-                          ))}
-                          <Button
-                            type="dashed"
-                            onClick={() => subOpt.add()}
-                            block
-                          >
-                            + Add Sub Item
-                          </Button>
-                        </div>
-                      )}
-                    </Form.List>
-                  </Form.Item>
-                </Form>
+                <div>
+                  <ServiceStationList routeStation={routeStation} routeId={props.routeId}/>
+                </div>
               </Card>
+              
             </div>
+            
           ))}
+          <Button type="dashed" onClick={() => setIsOpen(true)} block>
+              + Thêm trạm
+            </Button>
       </>
 
       {/* <Form.Item noStyle shouldUpdate>

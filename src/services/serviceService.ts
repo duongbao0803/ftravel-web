@@ -59,7 +59,7 @@ const useServiceService = () => {
         description: "Tạo dịch vụ thành công",
         duration: 2,
       });
-      queryClient.invalidateQueries("Services");
+      queryClient.invalidateQueries("services");
     },
     onError: (err: CustomError) => {
       notification.error({
@@ -118,6 +118,11 @@ const useServiceService = () => {
   //     await updateServiceMutation.mutateAsync(formValues);
   //   };
 
+  const fetchServiceStation = async (stationId: number) => {
+    const res = await getServiceByStation(stationId);
+    return res;
+  };
+
   const services = servicesData?.data || [];
   const totalCount = servicesData?.totalCount || 0;
 
@@ -129,6 +134,7 @@ const useServiceService = () => {
     // updateServiceItem,
     // deleteServiceItem,
     fetchServiceDetail,
+    fetchServiceStation
   };
 };
 
