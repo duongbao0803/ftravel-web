@@ -34,6 +34,10 @@ export const PersonalInformationPage = lazy(
 );
 
 export const PushNoticePage = lazy(() => import("@/pages/PushNoticePage"));
+export const TripManagementPage = lazy(() => import("@/pages/TripManagementPage"));
+export const TripDetailsPage = lazy(() => import("@/pages/TripDetailsPage"));
+
+
 
 const checkAccessAdmin = (role: string) => {
   return role === ROLE.ADMIN;
@@ -148,6 +152,33 @@ const Router: React.FC = () => {
               <ForBidden />
             ),
           path: "/notification",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <PushNoticePage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/notification",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <TripManagementPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/trip",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <TripDetailsPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/trip/:id",
         },
 
         { element: <Error />, path: "*" },

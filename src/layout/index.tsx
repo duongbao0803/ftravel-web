@@ -15,6 +15,7 @@ import {
 import useAuth from "@/hooks/useAuth";
 import useAuthService from "@/services/authService";
 import logo from "../assets/images/logo/FTravel.png";
+import { IoBusOutline } from "react-icons/io5";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -53,8 +54,10 @@ const items: MenuItem[] = [
   getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
   getItem("Tuyến đường", "6", <ShareAltOutlined />, undefined, "/route"),
   getItem("Trạm xe", "7", <TruckOutlined />, undefined, "/station"),
-  getItem("Thông tin", "8", <SmileOutlined />, undefined, "/personal"),
+  getItem("Chuyến xe ", "8", <IoBusOutline />, undefined, "/trip"),
   getItem("Thông báo", "9", <BellOutlined />, undefined, "/notification"),
+  getItem("Thông tin", "10", <SmileOutlined />, undefined, "/personal"),
+
 ];
 
 const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
