@@ -84,7 +84,7 @@ const RouteStationList: React.FC<RouteStationListProps> = (props) => {
 
   return (
     <>
-      <AddRouteStationModal setIsOpen={setIsOpen} isOpen={isOpen} />
+      <AddRouteStationModal setIsOpen={setIsOpen} isOpen={isOpen} buscompanyId={routeDetail?.["bus-company"].id} route={routeDetail} />
 
       <>
         {routeStations &&

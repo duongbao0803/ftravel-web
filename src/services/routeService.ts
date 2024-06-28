@@ -1,6 +1,7 @@
 import { editCity } from "@/api/cityApi";
 import {
   addRoute,
+  addRouteStation,
   getAllRoute,
   getRouteDetail,
   removeRoute,
@@ -9,6 +10,7 @@ import { getServiceByStation } from "@/api/serviceApi";
 import { CityInfo } from "@/types/city.types";
 import { CustomError } from "@/types/error.types";
 import { CreateRoute } from "@/types/route.types";
+import { AddStationRouteInfo } from "@/types/station.types";
 import { notification } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
@@ -47,6 +49,10 @@ const useRouteService = () => {
     await addRoute(formValues);
   };
 
+  const addNewRouteStation = async (formValues: AddStationRouteInfo) => {
+    await addRouteStation(formValues);
+  }
+
   const updateCity = async (formValues: CityInfo) => {
     await editCity(formValues);
   };
@@ -72,6 +78,24 @@ const useRouteService = () => {
     onError: (err: CustomError) => {
       notification.error({
         message: "Tạo thất bại",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
+  const addNewRouteStationMutation = useMutation(addNewRouteStation, {
+    onSuccess: () => {
+      notification.success({
+        message: "Thêm trạm thành công",
+        description: "Thêm trạm cho tuyến đường thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("routes");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Thêm trạm thất bại",
         description: `${err?.response?.data?.message}`,
         duration: 2,
       });
@@ -118,6 +142,10 @@ const useRouteService = () => {
     await addNewRouteMutation.mutateAsync(formValues);
   };
 
+  const addNewRouteStationItem = async (formValues: AddStationRouteInfo) => {
+    await addNewRouteStationMutation.mutateAsync(formValues);
+  };
+
   const deleteRouteItem = async (routeId: number) => {
     await deleteRouteMutation.mutateAsync(routeId);
   };
@@ -138,6 +166,7 @@ const useRouteService = () => {
     deleteRouteItem,
     fetchRouteDetail,
     fetchServiceByStation,
+    addNewRouteStationItem
   };
 };
 

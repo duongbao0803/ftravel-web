@@ -44,7 +44,6 @@ const AddRouteModal: React.FC<AddRouteProps> = (props) => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      console.log("chjeck valuies", values);
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {

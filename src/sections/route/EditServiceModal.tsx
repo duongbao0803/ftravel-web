@@ -21,8 +21,6 @@ const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
   const [form] = Form.useForm();
   const { TextArea } = Input;
 
-  console.log("check route", routeStation);
-
   useEffect(() => {
     if (isOpen) {
       form.setFieldsValue(serviceDetail);
@@ -40,7 +38,6 @@ const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
         ...values,
         "station-id": routeStation["station-id"],
       };
-      console.log("check updateValues", updateValues);
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {

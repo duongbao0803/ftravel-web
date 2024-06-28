@@ -2,6 +2,7 @@ import {
   addStation,
   deleteStation,
   getAllStation,
+  getStataionByBuscompany,
   getStationDetail,
 } from "@/api/stationApi";
 import { CustomError } from "@/types/error.types";
@@ -18,6 +19,11 @@ const useStationService = () => {
     const pagination = JSON.parse(headers["x-pagination"]);
     const totalCount = pagination.TotalCount;
     return { data, totalCount };
+  };
+
+  const fetchStationByBuscompany = async (buscompanyId: number) => {
+    const res = await getStataionByBuscompany(buscompanyId);
+    return res;
   };
 
   const fetchStationDetail = async (stationId: number) => {
@@ -97,6 +103,7 @@ const useStationService = () => {
     fetchStationDetail,
     addNewStationItem,
     deleteStationItem,
+    fetchStationByBuscompany
     // updateCityItem,
     // deleteRouteItem,
   };

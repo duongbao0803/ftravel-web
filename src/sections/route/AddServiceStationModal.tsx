@@ -49,7 +49,6 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
         "route-id": routeStation["route-id"],
         "station-id": routeStation?.station?.id,
       };
-      console.log("check update", updateValues);
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
