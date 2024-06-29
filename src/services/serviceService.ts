@@ -134,7 +134,11 @@ const useServiceService = () => {
     await updateServiceMutation.mutateAsync({ serviceId, formValues });
   };
 
-  const services = servicesData?.data || [];
+  // const services = servicesData?.data || [];
+  const services =
+    servicesData?.data.filter(
+      (service: { [x: string]: boolean }) => service["is-deleted"] === false,
+    ) || [];
   const totalCount = servicesData?.totalCount || 0;
 
   return {

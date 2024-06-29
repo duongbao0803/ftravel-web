@@ -30,10 +30,7 @@ const TripList: React.FC = () => {
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
   };
-
-  console.log("check trip", trips);
   
-
   const columns: TableProps<TripInfo>["columns"] = useMemo(
     () => [
     {
@@ -74,17 +71,10 @@ const TripList: React.FC = () => {
       title: "Loại",
       dataIndex: "is-template",
       width: "30%",
-      render: (text, record) => (
+      render: (_text, record) => (
         <span>{record["is-template"] ? "Mẫu" : "Thương mại"}</span>
       )
-    },
-    {
-      title: "",
-      dataIndex: "",
-      // render: (_, record) => (
-      //   <>{/* <DropdownFunction productInfo={record} /> */}</>
-      // ),
-    },
+    }
   ],[]);
 
 

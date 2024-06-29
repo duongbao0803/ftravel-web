@@ -1,22 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dropdown } from "antd";
-import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
+import { DeleteOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { DataType } from "./TripList";
-import EditServiceModal from "./EditTripModal";
+import DeleteTripModal from "./DeleteTripModal";
+import useTripService from "@/services/tripService";
 
-export interface DropdownServiceFuncProps {
-  userInfo: DataType;
+export interface DropdownTripFuncProps {
+  tripId: number;
 }
 
-const DropdownServiceFunc: React.FC<DropdownServiceFuncProps> = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  // const { productInfo } = props;
-  // const productId = productInfo?._id;
-
-  const openEditModal = () => {
-    setIsOpen(true);
-  };
+const DropdownTripFunc: React.FC<DropdownTripFuncProps> = (props) => {
+  const { tripId } = props;
+  const { deleteTripItem } = useTripService();
 
   return (
     <>
@@ -26,24 +21,15 @@ const DropdownServiceFunc: React.FC<DropdownServiceFuncProps> = () => {
             {
               key: "1",
               label: (
-                <Link rel="noopener noreferrer" to="#" onClick={openEditModal}>
-                  <EditOutlined className="pr-2" />
-                  Sửa dịch vụ
-                </Link>
-              ),
-            },
-            {
-              key: "2",
-              label: (
                 <Link
                   rel="noopener noreferrer"
                   to="#"
-                  // onClick={() =>
-                  //   DeleteProductModal({
-                  //     productId,
-                  //     deleteProductItem,
-                  //   })
-                  // }
+                  onClick={() =>
+                    DeleteTripModal({
+                      tripId,
+                      deleteTripItem
+                    })
+                  }
                 >
                   <DeleteOutlined className="pr-2" />
                   Xóa dịch vụ
@@ -56,14 +42,8 @@ const DropdownServiceFunc: React.FC<DropdownServiceFuncProps> = () => {
       >
         <MoreOutlined className="rotate-90" />
       </Dropdown>
-
-      <EditServiceModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        // productInfo={productInfo}
-      />
     </>
   );
 };
 
-export default DropdownServiceFunc;
+export default DropdownTripFunc;

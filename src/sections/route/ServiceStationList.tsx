@@ -21,7 +21,7 @@ const ServiceStationList: React.FC<ServiceStationListProps> = React.memo(
     const { fetchServiceStation } = useServiceService();
 
     const { data } = useQuery(["serviceStation", routeStation.id], () =>
-      fetchServiceStation(routeStation.id),
+      fetchServiceStation(routeStation.station.id),
     );
 
     const handleTableChange = (pagination: TablePaginationConfig) => {
