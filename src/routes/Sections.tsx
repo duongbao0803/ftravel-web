@@ -6,6 +6,7 @@ import { useAnimation } from "@/hooks/useAnimation";
 import AuthenPage from "@/pages/AuthenPage";
 import useAuth from "@/hooks/useAuth";
 import { ROLE } from "@/constants";
+import TripCreatePage from "@/pages/TripCreatePage";
 
 export const ChartPage = lazy(() => import("@/pages/ChartPage"));
 export const CityManagementPage = lazy(
@@ -179,6 +180,15 @@ const Router: React.FC = () => {
               <ForBidden />
             ),
           path: "/trip/:id",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <TripCreatePage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/trip/:id/clone",
         },
 
         { element: <Error />, path: "*" },

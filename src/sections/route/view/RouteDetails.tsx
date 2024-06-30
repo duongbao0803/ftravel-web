@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import RouteInfoView from "../RouteInfoView";
 import RouteStationList from "../RouteStationList";
+import RouteTicketTypeList from "../RouteTicketTypeList";
 
 const RouteDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +14,7 @@ const RouteDetails: React.FC = () => {
       </div>
       <div className="p-5">
         <div className="mb-3">{<RouteInfoView routeId={routeId} />}</div>
+        <div className="mb-3">{<RouteTicketTypeList routeId={routeId} />}</div>
         <div>{<RouteStationList routeId={routeId} />}</div>
       </div>
     </div>

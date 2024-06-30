@@ -72,7 +72,7 @@ const TripTicketList: React.FC<TripTicketListProps> = React.memo((props) => {
     <>
         <div className="my-2 flex justify-between">
           <div className="flex gap-x-2">
-            <p className="font-bold">Danh sách dịch vụ</p>
+            <p className="font-bold">Danh sách vé</p>
           </div>
           <div className="flex gap-x-2">
             {/* <div>

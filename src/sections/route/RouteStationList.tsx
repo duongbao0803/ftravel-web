@@ -96,6 +96,9 @@ const RouteStationList: React.FC<RouteStationListProps> = React.memo(
         />
 
         <>
+        <div>
+          <p className="font-bold text-[1.2rem] mb-3">Danh sách các trạm</p>
+        </div>
           {routeStations &&
             routeStations.length > 0 &&
             routeStations.map((routeStation, stationIndex) => (
@@ -122,14 +125,6 @@ const RouteStationList: React.FC<RouteStationListProps> = React.memo(
             + Thêm trạm
           </Button>
         </>
-
-        {/* <Form.Item noStyle shouldUpdate>
-        {() => (
-          <Typography>
-            <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
-          </Typography>
-        )}
-      </Form.Item> */}
       </>
     );
   },
