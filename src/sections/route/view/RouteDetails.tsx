@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import RouteInfoView from "../RouteInfoView";
 import RouteStationList from "../RouteStationList";
-import RouteTicketTypeList from "../RouteTicketTypeList";
+import RouteTicketTypeList from "../ticket-type/RouteTicketTypeList";
 
 const RouteDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();

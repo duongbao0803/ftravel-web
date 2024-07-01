@@ -47,10 +47,8 @@ const TripList: React.FC = () => {
     },
     {
       title: "Nhà xe",
-      // dataIndex: "name",
+      dataIndex: "bus-company-name",
       width: "15%",
-      className: "first-column",
-      render: () => (<span>Bảo bất lực</span>)
     },
     {
       title: "Ngày mở bán",

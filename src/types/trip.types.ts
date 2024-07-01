@@ -4,7 +4,10 @@ export interface TripInfo {
     key: string;
     id: number;
     name: string;
+    "route-id"?: number;
     "route-name": string;
+    "bus-company-id"?: number;
+    "bus-company-name"?: string;
     "open-ticket-date"?: string | Date;
     "estimated-start-date"?: string | Date;
     "estimated-end-date"?: string | Date;

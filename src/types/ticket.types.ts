@@ -17,3 +17,9 @@ export interface TicketTypeInfo {
   "update-date"?: string | Date;
   "is-deleted": boolean;
 }
+
+export interface CreateTicketTypeInfo {
+  "route-id": number;
+  "name": string;
+  "price": number;
+}
