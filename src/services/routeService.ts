@@ -3,6 +3,7 @@ import {
   addRoute,
   addRouteStation,
   getAllRoute,
+  getAllRouteBuscompany,
   getRouteDetail,
   removeRoute,
 } from "@/api/routeApi";
@@ -23,6 +24,15 @@ const useRouteService = () => {
     const pagination = JSON.parse(headers["x-pagination"]);
     const totalCount = pagination.TotalCount;
     return { data, totalCount };
+  };
+
+  const fetchRoutesBuscompany = async (page: number, buscompanyId: number) => {
+    const res = await getAllRouteBuscompany(page, buscompanyId);
+    return res;
+    // const { data, headers } = res;
+    // const pagination = JSON.parse(headers["x-pagination"]);
+    // const totalCount = pagination.TotalCount;
+    // return { data, totalCount };
   };
 
   const fetchRouteDetail = async (routeId: number) => {
@@ -166,7 +176,8 @@ const useRouteService = () => {
     deleteRouteItem,
     fetchRouteDetail,
     fetchServiceByStation,
-    addNewRouteStationItem
+    addNewRouteStationItem,
+    fetchRoutesBuscompany
   };
 };
 

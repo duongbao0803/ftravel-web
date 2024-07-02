@@ -1,45 +1,69 @@
-import useTripService from "@/services/tripService";
-import { TripDetailInfo } from "@/types/trip.types";
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Cascader,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Mentions,
-  Select,
-  TreeSelect,
-} from "antd";
+import React, { useState } from "react";
+import { Button, DatePicker, Form, Input, Select } from "antd";
+import useCompanyService from "@/services/companyService";
+import { CompanyInfo } from "@/types/company.types";
+import useRouteService from "@/services/routeService";
+import { RouteInfo } from "@/types/route.types";
+import useUserService from "@/services/userService";
+import { UserInfoDetail } from "@/types/auth.types";
+import useTicketService from "@/services/ticketService";
+import { TicketTypeInfo } from "@/types/ticket.types";
 
 export interface CreateTripInfoProps {
   tripId: number;
 }
 
-const CreateTripInfoView: React.FC<CreateTripInfoProps> = (props) => {
-  const { tripId } = props;
+const CreateTripInfoView: React.FC<CreateTripInfoProps> = () => {
 
-  const [tripDetail, setTripDetail] = useState<TripDetailInfo>();
+  const { Option } = Select;
 
-  const { fetchTripDetail } = useTripService();
+  // const [tripDetail, setTripDetail] = useState<TripDetailInfo>();
 
-  const fetchData = async (routeId: number) => {
-    try {
-      const res = await fetchTripDetail(routeId);
-      if (res && res.status === 200) {
-        setTripDetail(res.data);
-      }
-    } catch (error) {
-      console.error("Error fetching station detail:", error);
+  const [routes, setRoutes] = useState<RouteInfo[]>();
+  const [ticketTypes, setTicketTypes] = useState<TicketTypeInfo[]>();
+
+  const { companys } = useCompanyService();
+
+  const { fetchRoutesBuscompany } = useRouteService();
+
+  const { users } = useUserService();
+
+  const { fetchTicketTypeRoute } = useTicketService();
+
+  // const fetchData = async (routeId: number) => {
+  //   try {
+  //     const res = await fetchTripDetail(routeId);
+  //     if (res && res.status === 200) {
+  //       setTripDetail(res.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching station detail:", error);
+  //   }
+  // };
+
+  const fetchDataTicketTypeRoute = async (routeId: number) => {
+    const res = await fetchTicketTypeRoute(routeId);
+    if (res && res.status === 200) {
+      setTicketTypes(res.data);
     }
   };
 
-  useEffect(() => {
-    fetchData(tripId);
-  }, [tripId]);
+  const fetchDataRoute = async (page: number, buscompanyId: number) => {
+    try {
+      const res = await fetchRoutesBuscompany(page, buscompanyId);
+      if (res && res.status === 200) {
+        setRoutes(res.data);
+      }
+    } catch (error) {
+      console.error("Error fetching list buscompany:", error);
+    }
+  };
 
-  const { RangePicker } = DatePicker;
+  // useEffect(() => {
+  //   fetchData(tripId);
+  // }, [tripId]);
+
+  // const { RangePicker } = DatePicker;
 
   const formItemLayout = {
     labelCol: {
@@ -52,103 +76,133 @@ const CreateTripInfoView: React.FC<CreateTripInfoProps> = (props) => {
     },
   };
 
+  const filterOption = (
+    input: string,
+    option?: { label: string; value: string },
+  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
+
+  const handleChangeBuscompany = (buscompanyId: number) => {
+    fetchDataRoute(1, buscompanyId);
+  };
+
+  const handleChooseRoute = (routeId: number) => {
+    fetchDataTicketTypeRoute(routeId);
+  };
+
   return (
     <>
-      <Form {...formItemLayout} style={{ maxWidth: 600 }}>
+      <Form {...formItemLayout} style={{ maxWidth: 1000 }}>
         <Form.Item
-          label="Tên chuyến xe"
-          name="name"
-          rules={[{ required: true, message: "Please input!" }]}
+          name="bus-company-id"
+          rules={[
+            {
+              required: true,
+              message: "Hãy chọn nhà xe",
+            },
+          ]}
+          label="Nhà xe"
+          className="formItem"
         >
-          <Input />
+          <Select
+            showSearch
+            placeholder="Chọn nhà xe"
+            optionFilterProp="children"
+            filterOption={filterOption}
+            onChange={(value) => handleChangeBuscompany(value)}
+          >
+            {companys.map((company: CompanyInfo, index: number) => (
+              <Option key={index} value={`${company.id}`} label={company.name}>
+                {`${company.name}`}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item
           label="Tuyến đường"
           name="route-id"
-          rules={[{ required: true, message: "Please input!" }]}
+          rules={[{ required: true, message: "Vui lòng chọn tuyến đường" }]}
         >
-          <Input style={{ width: "100%" }} />
+          <Select
+            placeholder="Chọn tuyến đường"
+            onChange={(value) => handleChooseRoute(value)}
+          >
+            {routes?.map((route, index) => (
+              <Option key={index} value={route.id}>
+                {route.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Tên chuyến xe"
+          name="name"
+          rules={[{ required: true, message: "Vui lòng nhập chuyến xe" }]}
+        >
+          <Input />
         </Form.Item>
 
         <Form.Item
           label="Ngày bán vé"
           name="open-ticket-date"
-          rules={[{ required: true, message: "Please input!" }]}
+          rules={[{ required: true, message: "Hãy chọn ngày bán vé" }]}
         >
-          <DatePicker />
+          <DatePicker style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item
           label="Ngày xuất phát (dự kiến)"
           name="estimated-start-date"
-          rules={[{ required: true, message: "Please input!" }]}
+          rules={[{ required: true, message: "Hãy chọn ngày xuất phát" }]}
         >
-          <DatePicker />
+          <DatePicker style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item
           label="Ngày hoàn thành chuyến (dự kiến)"
           name="estimated-end-date"
-          rules={[{ required: true, message: "Please input!" }]}
+          rules={[{ required: true, message: "Hãy chọn ngày hoàn thành" }]}
         >
-          <DatePicker />
+          <DatePicker style={{ width: "100%" }} />
         </Form.Item>
 
         <Form.Item
           label="Tài xế"
           name="driver-id"
-          rules={[{ required: true, message: "Please input!" }]}
+          rules={[{ required: true, message: "Hãy chọn tài xế" }]}
         >
-          <InputNumber />
+          <Select
+            showSearch
+            placeholder="Chọn tài xế"
+            optionFilterProp="children"
+          >
+            {users.map((user: UserInfoDetail, index: number) => (
+              <Option key={index} value={`${user.id}`} label={user.email}>
+                {`${user.email}`}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item
-          label="Mentions"
-          name="Mentions"
-          rules={[{ required: true, message: "Please input!" }]}
+          name="select-multiple"
+          label="Loại vé"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn loại vé cho chuyến",
+              type: "array",
+            },
+          ]}
         >
-          <Mentions />
-        </Form.Item>
-
-        <Form.Item
-          label="Select"
-          name="Select"
-          rules={[{ required: true, message: "Please input!" }]}
-        >
-          <Select />
-        </Form.Item>
-
-        <Form.Item
-          label="Cascader"
-          name="Cascader"
-          rules={[{ required: true, message: "Please input!" }]}
-        >
-          <Cascader />
-        </Form.Item>
-
-        <Form.Item
-          label="TreeSelect"
-          name="TreeSelect"
-          rules={[{ required: true, message: "Please input!" }]}
-        >
-          <TreeSelect />
-        </Form.Item>
-
-        <Form.Item
-          label="DatePicker"
-          name="DatePicker"
-          rules={[{ required: true, message: "Please input!" }]}
-        >
-          <DatePicker />
-        </Form.Item>
-
-        <Form.Item
-          label="RangePicker"
-          name="RangePicker"
-          rules={[{ required: true, message: "Please input!" }]}
-        >
-          <RangePicker />
+          <Select mode="multiple" placeholder="Chọn loại vé">
+            {ticketTypes?.map((ticketType, index) => (
+              <Option key={index} value={ticketType.id}>
+                {ticketType.name}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 6, span: 16 }}>
