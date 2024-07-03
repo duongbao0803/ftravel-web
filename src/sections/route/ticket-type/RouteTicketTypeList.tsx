@@ -19,6 +19,9 @@ const RouteTicketTypeList: React.FC<RouteTicketTypeListProps> = (props) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [ticketTypes, setTicketTypes] = useState<TicketTypeInfo[]>();
 
+  const ticketTypeNames = ticketTypes?.map((ticketName) => ticketName?.name);
+  const ticketTypeName = ticketTypeNames;
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetchTicketTypeRoute(routeId);
@@ -64,7 +67,10 @@ const RouteTicketTypeList: React.FC<RouteTicketTypeListProps> = (props) => {
       render: (_, record) => (
         <>
           {" "}
-          <DropdownTicketTypeFunc ticketTypeInfo={record} />{" "}
+          <DropdownTicketTypeFunc
+            ticketTypeInfo={record}
+            ticketTypeName={ticketTypeName}
+          />
         </>
       ),
     },
@@ -75,6 +81,7 @@ const RouteTicketTypeList: React.FC<RouteTicketTypeListProps> = (props) => {
         setIsOpen={setIsOpen}
         isOpen={isOpen}
         routeId={routeId}
+        ticketTypeName={ticketTypeName}
       />
       <div className="my-2 flex justify-between">
         <div className="flex gap-x-2">

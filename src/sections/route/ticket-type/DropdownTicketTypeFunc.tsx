@@ -7,11 +7,14 @@ import EditTicketTypeModal from "./EditTicketTypeModal";
 
 export interface DropdownTicketTypeFuncProps {
   ticketTypeInfo: TicketTypeInfo;
+  ticketTypeName: string[] | undefined;
 }
 
-const DropdownTicketTypeFunc: React.FC<DropdownTicketTypeFuncProps> = (props) => {
+const DropdownTicketTypeFunc: React.FC<DropdownTicketTypeFuncProps> = (
+  props,
+) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { ticketTypeInfo } = props;
+  const { ticketTypeInfo, ticketTypeName } = props;
   // const { deleteRouteItem } = useRouteService();
   // const routeId = routeInfo?.id;
 
@@ -62,6 +65,7 @@ const DropdownTicketTypeFunc: React.FC<DropdownTicketTypeFuncProps> = (props) =>
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         ticketTypeInfo={ticketTypeInfo}
+        ticketTypeName={ticketTypeName}
       />
     </>
   );

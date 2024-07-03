@@ -3,7 +3,6 @@ import {
   addRoute,
   addRouteStation,
   getAllRoute,
-  getAllRouteBuscompany,
   getRouteDetail,
   removeRoute,
 } from "@/api/routeApi";
@@ -18,22 +17,22 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 const useRouteService = () => {
   const queryClient = useQueryClient();
 
-  const fetchRoutes = async (page: number) => {
-    const res = await getAllRoute(page);
+  const fetchRoutes = async (page: number, buscompanyId: number) => {
+    const res = await getAllRoute(page, buscompanyId);
     const { data, headers } = res;
     const pagination = JSON.parse(headers["x-pagination"]);
     const totalCount = pagination.TotalCount;
     return { data, totalCount };
   };
 
-  const fetchRoutesBuscompany = async (page: number, buscompanyId: number) => {
-    const res = await getAllRouteBuscompany(page, buscompanyId);
-    return res;
-    // const { data, headers } = res;
-    // const pagination = JSON.parse(headers["x-pagination"]);
-    // const totalCount = pagination.TotalCount;
-    // return { data, totalCount };
-  };
+  // const fetchRoutesBuscompany = async (page: number, buscompanyId: number) => {
+  //   const res = await getAllRouteBuscompany(page, buscompanyId);
+  //   return res;
+  //   // const { data, headers } = res;
+  //   // const pagination = JSON.parse(headers["x-pagination"]);
+  //   // const totalCount = pagination.TotalCount;
+  //   // return { data, totalCount };
+  // };
 
   const fetchRouteDetail = async (routeId: number) => {
     const res = await getRouteDetail(routeId);
@@ -61,7 +60,7 @@ const useRouteService = () => {
 
   const addNewRouteStation = async (formValues: AddStationRouteInfo) => {
     await addRouteStation(formValues);
-  }
+  };
 
   const updateCity = async (formValues: CityInfo) => {
     await editCity(formValues);
@@ -177,7 +176,7 @@ const useRouteService = () => {
     fetchRouteDetail,
     fetchServiceByStation,
     addNewRouteStationItem,
-    fetchRoutesBuscompany
+    fetchRoutes,
   };
 };
 

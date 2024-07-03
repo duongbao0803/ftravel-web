@@ -14,7 +14,6 @@ export interface CreateTripInfoProps {
 }
 
 const CreateTripInfoView: React.FC<CreateTripInfoProps> = () => {
-
   const { Option } = Select;
 
   // const [tripDetail, setTripDetail] = useState<TripDetailInfo>();
@@ -24,7 +23,7 @@ const CreateTripInfoView: React.FC<CreateTripInfoProps> = () => {
 
   const { companys } = useCompanyService();
 
-  const { fetchRoutesBuscompany } = useRouteService();
+  const { fetchRoutes } = useRouteService();
 
   const { users } = useUserService();
 
@@ -48,12 +47,16 @@ const CreateTripInfoView: React.FC<CreateTripInfoProps> = () => {
     }
   };
 
-  const fetchDataRoute = async (page: number, buscompanyId: number) => {
+  const fetchDataRoute = async (
+    page: number | undefined,
+    buscompanyId: number,
+  ) => {
     try {
-      const res = await fetchRoutesBuscompany(page, buscompanyId);
-      if (res && res.status === 200) {
-        setRoutes(res.data);
+      const res = await fetchRoutes(page, buscompanyId);
+      if (res) {
+        setRoutes(res?.data);
       }
+      console.log("check routes", routes);
     } catch (error) {
       console.error("Error fetching list buscompany:", error);
     }
@@ -82,7 +85,7 @@ const CreateTripInfoView: React.FC<CreateTripInfoProps> = () => {
   ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   const handleChangeBuscompany = (buscompanyId: number) => {
-    fetchDataRoute(1, buscompanyId);
+    fetchDataRoute(undefined, buscompanyId);
   };
 
   const handleChooseRoute = (routeId: number) => {
@@ -129,7 +132,7 @@ const CreateTripInfoView: React.FC<CreateTripInfoProps> = () => {
           >
             {routes?.map((route, index) => (
               <Option key={index} value={route.id}>
-                {route.name}
+                {route?.name}
               </Option>
             ))}
           </Select>
