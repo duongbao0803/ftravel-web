@@ -6,7 +6,8 @@ import AddServiceModal from "./AddTripModal";
 import { useNavigate } from "react-router-dom";
 import useTripService from "@/services/tripService";
 import { TripInfo } from "@/types/trip.types";
-import { formatDate3 } from "@/util/validate";
+import { formatDate4 } from "@/util/validate";
+import { TripStatus } from "@/enums/enums";
 
 // export interface DataType {
 //   id: string;
@@ -30,59 +31,97 @@ const TripList: React.FC = () => {
   const handleTableChange = (pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
   };
-  
+
+  const [isTemplate, setIsTemplate] = useState(true);
+
+  const filterTrips = trips.filter((trip: TripInfo) => trip?.["is-template"]);
+  const filterTripsTemplate = trips.filter((trip: TripInfo) => !trip?.["is-template"]);
+
+
+  const handleFilter = () => {
+    setIsTemplate((prev) => !prev);
+  };
+
+  const renderStatusTrip = (status: string) => {
+    switch (status) {
+        case TripStatus.OPENING:
+            return "ĐANG BÁN VÉ";
+        case TripStatus.PENDING:
+            return "ĐANG CHỜ";
+        case TripStatus.DEPARTED:
+            return "ĐÃ KHỞI HÀNH";
+        case TripStatus.COMPLETED:
+            return "ĐÃ HOÀN THÀNH";
+        case TripStatus.CANCELED:
+            return "ĐÃ HỦY";
+        default:
+            return "N/A";
+    }
+}
+
+
   const columns: TableProps<TripInfo>["columns"] = useMemo(
     () => [
-    {
-      title: "STT",
-      dataIndex: "index",
-      key: "index",
-      render: (_, _record, index) => index + 1,
-    },
-    {
-      title: "Tên chuyến",
-      dataIndex: "name",
-      width: "20%",
-      className: "first-column",
-    },
-    {
-      title: "Nhà xe",
-      dataIndex: "bus-company-name",
-      width: "15%",
-    },
-    {
-      title: "Ngày mở bán",
-      dataIndex: "open-ticket-date",
-      width: "15%",
-    },
-    {
-      title: "Thời gian xuất phát (dự kiến)",
-      dataIndex: "estimated-start-date",
-      width: "15%",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      width: "15%",
-    },
-    {
-      title: "Loại",
-      dataIndex: "is-template",
-      width: "30%",
-      render: (_text, record) => (
-        <span>{record["is-template"] ? "Mẫu" : "Thương mại"}</span>
-      )
-    }
-  ],[]);
-
+      {
+        title: "STT",
+        dataIndex: "index",
+        key: "index",
+        render: (_, _record, index) => index + 1,
+      },
+      {
+        title: "Tên chuyến",
+        dataIndex: "name",
+        width: "20%",
+        className: "first-column",
+      },
+      {
+        title: "Nhà xe",
+        dataIndex: "bus-company-name",
+        width: "15%",
+      },
+      {
+        title: "Ngày mở bán",
+        dataIndex: "open-ticket-date",
+        width: "15%",
+      },
+      {
+        title: "Thời gian xuất phát (dự kiến)",
+        dataIndex: "estimated-start-date",
+        width: "15%",
+      },
+      {
+        title: "Trạng thái",
+        dataIndex: "status",
+        width: "15%",
+        render: (status: string) => renderStatusTrip(status)
+      },
+      {
+        title: "Loại",
+        dataIndex: "is-template",
+        width: "30%",
+        render: (_text, record) => (
+          <span>{record["is-template"] ? "Mẫu" : "Thương mại"}</span>
+        ),
+      },
+    ],
+    [],
+  );
 
   const handleRowClick = (record: number) => {
     setTripId(record);
     navigate(`/trip/${record}`);
   };
 
-
-
+  const dataSource = (isTemplate ? filterTripsTemplate : filterTrips).map((record: TripInfo) => ({
+    ...record,
+    key: record.id,
+    "open-ticket-date": record["open-ticket-date"]
+      ? formatDate4(record["open-ticket-date"])
+      : "N/A",
+    "estimated-start-date": record["estimated-start-date"]
+      ? formatDate4(record["estimated-start-date"])
+      : "N/A",
+  }));
 
   return (
     <>
@@ -95,6 +134,14 @@ const TripList: React.FC = () => {
           <Button className="flex items-center" type="primary">
             <FilterOutlined className="align-middle" />
             Sắp xếp
+          </Button>
+          <Button
+            className="flex items-center"
+            type="primary"
+            onClick={handleFilter}
+          >
+            <FilterOutlined className="align-middle" />
+            Dùng mẫu
           </Button>
         </div>
         <div className="flex gap-x-2">
@@ -114,19 +161,8 @@ const TripList: React.FC = () => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={trips?.map((record: { id: unknown, "open-ticket-date": Date, "estimated-start-date": Date }) => ({
-          ...record,
-          key: record.id,
-          "open-ticket-date": record["open-ticket-date"] ? formatDate3(record["open-ticket-date"]) : "N/A",
-          "estimated-start-date": record["estimated-start-date"] ? formatDate3(record["estimated-start-date"]) : "N/A",
-        }))}
-        // pagination={{
-        //   current: currentPage,
-        //   total: totalCount || 0,
-        //   pageSize: 5,
-        // }}
+        dataSource={dataSource}
         onChange={handleTableChange}
-        // loading={isFetching}
         rowKey={(record) => record.id}
         onRow={(record) => ({
           onClick: () => handleRowClick(record.id),

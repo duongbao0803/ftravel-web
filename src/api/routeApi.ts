@@ -2,7 +2,7 @@ import axiosClient from "@/config/axiosClient";
 import { CreateRoute } from "@/types/route.types";
 import { AddStationRouteInfo } from "@/types/station.types";
 
-const getAllRoute = (page: number, buscompanyId: number) => {
+const getAllRoute = (page: number, buscompanyId?: number) => {
   return axiosClient.get(`/api/routes`, {
     params: {
       "page-index": page,

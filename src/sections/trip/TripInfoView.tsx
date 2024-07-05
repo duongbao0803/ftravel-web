@@ -36,9 +36,7 @@ const TripInfoView: React.FC<TripInfoProps> = (props) => {
 
   const handleCreateTrip = () => {
     navigate(`/trip/${tripId}/clone`);
-  }
-
-  
+  };
 
   return (
     <>
@@ -85,9 +83,18 @@ const TripInfoView: React.FC<TripInfoProps> = (props) => {
           </div>
         </Col>
         <Col span={12}>
-          <Button type="primary" icon={<DownloadOutlined />} size='middle' onClick={() => handleCreateTrip()}>
-            Dùng mẫu này
-          </Button>
+          {tripDetail?.["is-template"] === true ? (
+            <Button
+              type="primary"
+              icon={<DownloadOutlined />}
+              size="middle"
+              onClick={() => handleCreateTrip()}
+            >
+              Dùng mẫu này
+            </Button>
+          ) : (
+            ""
+          )}
         </Col>
       </Row>
     </>

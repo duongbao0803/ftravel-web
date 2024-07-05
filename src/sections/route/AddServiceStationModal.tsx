@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Row, Col } from "antd";
+import { Modal, Form, Input, Row, Col, InputNumber } from "antd";
 import { UploadImage } from "@/components";
 import useRouteService from "@/services/routeService";
 import { RouteDetailInfo, RouteStation } from "@/types/route.types";
@@ -149,16 +149,10 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
                     {
                       required: true,
                       message: "Vui lòng nhập giá dịch vụ",
-                    },
-                    {
-                      type: 'number',
-                      min: 1,
-                      max: 999,
-                      message: "Giá phải trong khoảng 1 đến 999 FToken",
-                    },
+                    }
                   ]}
                 >
-                  <Input placeholder="Giá mặc định" type="number" min={1} max={999} />
+                  <InputNumber className="w-full" placeholder="Giá mặc định" type="number" min={1} max={999} />
                 </Form.Item>
               </Col>
               <Col span={24}>

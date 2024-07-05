@@ -17,7 +17,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 const useRouteService = () => {
   const queryClient = useQueryClient();
 
-  const fetchRoutes = async (page: number, buscompanyId: number) => {
+  const fetchRoutes = async (page: number, buscompanyId?: number) => {
     const res = await getAllRoute(page, buscompanyId);
     const { data, headers } = res;
     const pagination = JSON.parse(headers["x-pagination"]);

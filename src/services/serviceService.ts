@@ -2,6 +2,7 @@ import {
   addService,
   editService,
   getAllService,
+  getServiceByRoute,
   getServiceByStation,
   getServiceDetail,
   removeService,
@@ -29,6 +30,11 @@ const useServiceService = () => {
 
   const fetchServiceStation = async (stationId: number) => {
     const res = await getServiceByStation(stationId);
+    return res;
+  };
+
+  const fetchServiceRoute = async (routeId: number) => {
+    const res = await getServiceByRoute(routeId);
     return res;
   };
 
@@ -150,6 +156,7 @@ const useServiceService = () => {
     fetchServiceDetail,
     fetchServiceStation,
     updateServiceItem,
+    fetchServiceRoute
   };
 };
 
