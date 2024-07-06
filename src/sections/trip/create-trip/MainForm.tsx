@@ -11,6 +11,7 @@ import { UserInfoDetail } from "@/types/auth.types";
 import useUserService from "@/services/userService";
 import useCreateTrip from "@/hooks/useCreateTrip";
 import ServiceForm from "./ServiceForm";
+import moment from "moment";
 
 export interface MainFormProps {
   onFormSubmit: any;
@@ -77,9 +78,24 @@ const MainForm: React.FC<MainFormProps> = (props) => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // const handleSubmit = async (values: any) => {
+  //   await onFinish(values);
+  //   setIsSubmitted(true);
+  // };
   const handleSubmit = async (values: any) => {
-    await onFinish(values);
-    setIsSubmitted(true);
+    // Format the DatePicker value
+    const formattedValues = {
+      ...values,
+      'open-ticket-date': values['open-ticket-date'].format('YYYY-MM-DDTHH:mm:ss'),
+      'estimated-start-date': values['estimated-start-date'].format('YYYY-MM-DDTHH:mm:ss'),
+      'estimated-end-date': values['estimated-end-date'].format('YYYY-MM-DDTHH:mm:ss'),
+    };
+    await onFinish(formattedValues);
+    setIsSubmitted(false);
+  };
+
+  const disabledDate = (current: object) => {
+    return current && current < moment().startOf("day");
   };
 
   return (
@@ -152,11 +168,18 @@ const MainForm: React.FC<MainFormProps> = (props) => {
               name="open-ticket-date"
               rules={[{ required: true, message: "Hãy chọn ngày bán vé" }]}
             >
-              <DatePicker
+              {/* <DatePicker
                 showTime
                 format="YYYY-MM-DDTHH:mm"
                 style={{ width: "100%" }}
                 readOnly={isSubmitted}
+              /> */}
+              <DatePicker
+                showTime
+                format="DD/MM/YYYY HH:mm"
+                className="formItem w-full p-2"
+                readOnly={isSubmitted}
+                disabledDate={disabledDate}
               />
             </Form.Item>
           </Col>
@@ -168,9 +191,10 @@ const MainForm: React.FC<MainFormProps> = (props) => {
             >
               <DatePicker
                 showTime
-                format="YYYY-MM-DDTHH:mm"
+                format="DD/MM/YYYY HH:mm"
                 style={{ width: "100%" }}
                 readOnly={isSubmitted}
+                disabledDate={disabledDate}
               />
             </Form.Item>
           </Col>
@@ -182,9 +206,10 @@ const MainForm: React.FC<MainFormProps> = (props) => {
             >
               <DatePicker
                 showTime
-                format="YYYY-MM-DDTHH:mm"
+                format="DD/MM/YYYY HH:mm"
                 style={{ width: "100%" }}
                 readOnly={isSubmitted}
+                disabledDate={disabledDate}
               />
             </Form.Item>
           </Col>
@@ -210,7 +235,7 @@ const MainForm: React.FC<MainFormProps> = (props) => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="select-multiple"
+              name="ticket-type-ids"
               label="Loại vé"
               rules={[
                 {

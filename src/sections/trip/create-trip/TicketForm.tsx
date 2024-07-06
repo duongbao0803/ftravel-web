@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import { Form, Input, Select, Button, InputNumber } from "antd";
 import { TripDetailInfo } from "@/types/trip.types";
@@ -21,7 +22,9 @@ const TicketForm: React.FC<TicketFormProps> = (props) => {
 
   const [tripDetail2, setTripDetail2] = useState<TripDetailInfo>();
 
-  const onFinish = (values: any) => {
+  const handleSubmit = (values: any) => {
+    console.log("check list ticket", values);
+    
     onFormSubmit("ticket", values);
   };
 
@@ -53,6 +56,7 @@ const TicketForm: React.FC<TicketFormProps> = (props) => {
     <Form
       layout="vertical"
       initialValues={{ "trip-tickets": tripDetail2.tickets }}
+      onFinish={handleSubmit}
     >
       <Form.List name="trip-tickets">
         {(fields) => (
@@ -88,6 +92,7 @@ const TicketForm: React.FC<TicketFormProps> = (props) => {
                 </Form.Item>
                 <Form.Item
                   {...restField}
+                  // name="ticket-type-id"
                   rules={[
                     { required: true, message: "Ticket Type ID is required" },
                   ]}

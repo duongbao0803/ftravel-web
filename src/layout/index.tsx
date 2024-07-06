@@ -6,7 +6,6 @@ import {
   UserOutlined,
   HomeOutlined,
   PushpinOutlined,
-  ShoppingOutlined,
   ShareAltOutlined,
   SmileOutlined,
   TruckOutlined,
@@ -48,13 +47,13 @@ function getItem(
 
 const items: MenuItem[] = [
   getItem("Dashboard", "1", <PieChartOutlined />, undefined, "/chart"),
-  getItem("Người dùng", "2", <UserOutlined />, undefined, "/user"),
-  getItem("Thành phố", "3", <PushpinOutlined />, undefined, "/city"),
-  getItem("Nhà xe", "4", <HomeOutlined />, undefined, "/company"),
-  getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
-  getItem("Tuyến đường", "6", <ShareAltOutlined />, undefined, "/route"),
-  getItem("Trạm xe", "7", <TruckOutlined />, undefined, "/station"),
-  getItem("Chuyến xe ", "8", <IoBusOutline />, undefined, "/trip"),
+  getItem("Thành phố", "2", <PushpinOutlined />, undefined, "/city"),
+  getItem("Nhà xe", "3", <HomeOutlined />, undefined, "/company"),
+  // getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
+  getItem("Tuyến đường", "5", <ShareAltOutlined />, undefined, "/route"),
+  getItem("Trạm xe", "6", <TruckOutlined />, undefined, "/station"),
+  getItem("Chuyến xe ", "7", <IoBusOutline />, undefined, "/trip"),
+  getItem("Người dùng", "8", <UserOutlined />, undefined, "/user"),
   getItem("Thông báo", "9", <BellOutlined />, undefined, "/notification"),
   getItem("Thông tin", "10", <SmileOutlined />, undefined, "/personal"),
 
@@ -174,7 +173,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </Content>
         <Footer className="text-center">
-          Copyright @2024 FTravel.inc. All right reserved
+          Copyright &copy;2024 FTravel.inc. All right reserved
         </Footer>
         <FloatButton.BackTop />
       </Layout>

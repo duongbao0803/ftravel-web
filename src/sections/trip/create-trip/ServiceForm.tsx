@@ -14,7 +14,7 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
   const { onFormSubmit, routeId } = props;
   const [routeServices, setRouteServices] = useState<ServiceDetail[]>();
   const { Option } = Select;
-  const [selectedServices, setSelectedServices] = useState<ServiceDetail[]>();
+  const [selectedServices, setSelectedServices] = useState<ServiceDetail[]>([]);
 
   // use service
   const { fetchServiceRoute } = useServiceService();
@@ -56,26 +56,25 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
       title: "Giá (FToken)",
       dataIndex: "default-price",
       width: "20%",
-      render: (text, record, index) => (
-        <InputNumber
-          type="number"
-          required
-          value={text !== undefined ? text : 0}
-          onChange={(value) => {
-            const newData = [...selectedServices];
-            if (value && value !== undefined) {
-              newData[index]["default-price"] = value;
-            }
-            setSelectedServices(newData);
-          }}
-          min={1}
-          max={999}
-        />
-      ),
+      render: (text, record, index) =>
+        text && (
+          <InputNumber
+            type="number"
+            required
+            value={text !== undefined ? text : 0}
+            onChange={(value) => {
+              const newData = [...selectedServices];
+              if (value && value !== undefined) {
+                newData[index]["default-price"] = value;
+              }
+              setSelectedServices(newData);
+            }}
+            min={1}
+            max={999}
+          />
+        ),
     },
   ];
-
-  console.log("check data", selectedServices);
 
   const fetchServiceRouteData = async (routeId: number) => {
     try {
@@ -96,31 +95,35 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
     fetchServiceRouteData(routeId);
   }, [routeId]);
 
-  const handleTicketTypeChange = (value: any) => {
-    const selectedServicesData = value.map((id: number) => {
-      const service = routeServices?.find((service) => service?.id == id);
-      return service;
-    });
-    setSelectedServices(selectedServicesData);
-    const selectedService = [];
-    selectedService.push(selectedServicesData);
+  const handleServiceChange = (value: any) => {
+    if (value) {
+      const selectedServicesData = value.map((id: number) => {
+        const service = routeServices?.find((service) => service?.id == id);
+        return service;
+      });
+      setSelectedServices(selectedServicesData);
+      const selectedService = [];
+      selectedService.push(selectedServicesData);
+    }
   };
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = async () => {
-    const convertedObject = {
-      "trip-services": selectedServices?.map((service) => ({
-        "service-id": service.id,
-        price: service.defaultPrice,
-      })),
-    };
-
-    console.log("check service", convertedObject);
-
-    await onFinish(convertedObject);
-    setIsSubmitted(false);
+    if (selectedServices) {
+      const convertedObject = {
+        "trip-services": selectedServices.map((service: ServiceDetail) => {
+          return {
+            "service-id": service.id,
+            price: service["default-price"] !== undefined ? service["default-price"] : 0,
+          };
+        }),
+      };
+      await onFinish(convertedObject);
+      setIsSubmitted(false);
+    }
   };
+
 
   return (
     <Form onFinish={handleSubmit} layout="vertical">
@@ -138,7 +141,7 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
         <Select
           mode="multiple"
           placeholder="Chọn dịch vụ"
-          onChange={handleTicketTypeChange}
+          onChange={handleServiceChange}
         >
           {routeServices?.map((routeService, index) => (
             <Option key={index} value={`${routeService.id}`}>
@@ -148,13 +151,13 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
         </Select>
       </Form.Item>
 
-      {selectedServices ? (
+      {selectedServices && selectedServices.length > 0 ? (
         <Table
           id="myTable"
           columns={columns}
           dataSource={
             selectedServices &&
-            selectedServices?.map((record: ServiceDetail) => ({
+            selectedServices.map((record: ServiceDetail) => ({
               ...record,
               key: record.id,
             }))
