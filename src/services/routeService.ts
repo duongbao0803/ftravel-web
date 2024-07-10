@@ -1,6 +1,7 @@
 import { editCity } from "@/api/cityApi";
 import {
   addRoute,
+  addRouteStation,
   getAllRoute,
   getRouteDetail,
   removeRoute,
@@ -9,19 +10,29 @@ import { getServiceByStation } from "@/api/serviceApi";
 import { CityInfo } from "@/types/city.types";
 import { CustomError } from "@/types/error.types";
 import { CreateRoute } from "@/types/route.types";
+import { AddStationRouteInfo } from "@/types/station.types";
 import { notification } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const useRouteService = () => {
   const queryClient = useQueryClient();
 
-  const fetchRoutes = async (page: number) => {
-    const res = await getAllRoute(page);
+  const fetchRoutes = async (page: number, buscompanyId?: number) => {
+    const res = await getAllRoute(page, buscompanyId);
     const { data, headers } = res;
     const pagination = JSON.parse(headers["x-pagination"]);
     const totalCount = pagination.TotalCount;
     return { data, totalCount };
   };
+
+  // const fetchRoutesBuscompany = async (page: number, buscompanyId: number) => {
+  //   const res = await getAllRouteBuscompany(page, buscompanyId);
+  //   return res;
+  //   // const { data, headers } = res;
+  //   // const pagination = JSON.parse(headers["x-pagination"]);
+  //   // const totalCount = pagination.TotalCount;
+  //   // return { data, totalCount };
+  // };
 
   const fetchRouteDetail = async (routeId: number) => {
     const res = await getRouteDetail(routeId);
@@ -45,6 +56,10 @@ const useRouteService = () => {
 
   const addNewRoute = async (formValues: CreateRoute) => {
     await addRoute(formValues);
+  };
+
+  const addNewRouteStation = async (formValues: AddStationRouteInfo) => {
+    await addRouteStation(formValues);
   };
 
   const updateCity = async (formValues: CityInfo) => {
@@ -72,6 +87,24 @@ const useRouteService = () => {
     onError: (err: CustomError) => {
       notification.error({
         message: "Tạo thất bại",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
+  const addNewRouteStationMutation = useMutation(addNewRouteStation, {
+    onSuccess: () => {
+      notification.success({
+        message: "Thêm trạm thành công",
+        description: "Thêm trạm cho tuyến đường thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("routes");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Thêm trạm thất bại",
         description: `${err?.response?.data?.message}`,
         duration: 2,
       });
@@ -118,6 +151,10 @@ const useRouteService = () => {
     await addNewRouteMutation.mutateAsync(formValues);
   };
 
+  const addNewRouteStationItem = async (formValues: AddStationRouteInfo) => {
+    await addNewRouteStationMutation.mutateAsync(formValues);
+  };
+
   const deleteRouteItem = async (routeId: number) => {
     await deleteRouteMutation.mutateAsync(routeId);
   };
@@ -138,6 +175,8 @@ const useRouteService = () => {
     deleteRouteItem,
     fetchRouteDetail,
     fetchServiceByStation,
+    addNewRouteStationItem,
+    fetchRoutes,
   };
 };
 

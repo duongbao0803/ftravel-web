@@ -21,8 +21,6 @@ const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
   const [form] = Form.useForm();
   const { TextArea } = Input;
 
-  console.log("check route", routeStation);
-
   useEffect(() => {
     if (isOpen) {
       form.setFieldsValue(serviceDetail);
@@ -40,7 +38,6 @@ const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
         ...values,
         "station-id": routeStation["station-id"],
       };
-      console.log("check updateValues", updateValues);
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
@@ -75,6 +72,8 @@ const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
       onCancel={handleCancel}
+      okText="Cập nhật"
+      cancelText="Hủy"
     >
       <Row gutter={24}>
         <Col span={6}>
@@ -135,7 +134,14 @@ const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  label="Giá mặc định (FToken)"
+                  label={
+                    <span>
+                      Giá mặc định (FToken) <br />{" "}
+                      <span className="italic text-[#757575]">
+                        (1 FToken = 1.000 VNĐ)
+                      </span>
+                    </span>
+                  }
                   labelCol={{ span: 24 }}
                   name="default-price"
                   rules={[
@@ -144,13 +150,19 @@ const EditServiceModal: React.FC<AddServiceStationProps> = (props) => {
                       message: "Vui lòng nhập giá dịch vụ",
                     },
                     {
+                      type: "number",
                       min: 1,
                       max: 100,
-                      message: "Giá phải trong khoảng 1 đến 100",
+                      message: "Giá phải trong khoảng 1 đến 999",
                     },
                   ]}
                 >
-                  <Input placeholder="Giá mặc định" type="number" />
+                  <Input
+                    placeholder="Giá mặc định"
+                    type="number"
+                    min={1}
+                    max={999}
+                  />
                 </Form.Item>
               </Col>
               <Col span={24}>

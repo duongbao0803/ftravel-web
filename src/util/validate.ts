@@ -64,4 +64,14 @@ export function formatDate3(dateString: string | number | Date) {
   }
 }
 
+export function formatDate4(dateStr: string | number | Date): string {
+  const date = new Date(dateStr);
+
+  const pad = (n: number) => n < 10 ? '0' + n : n;
+
+  const formattedDate = `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+
+  return formattedDate;
+}
+
 

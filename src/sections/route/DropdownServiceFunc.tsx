@@ -20,8 +20,6 @@ const DropdownServiceFunc: React.FC<DropdownServiceFuncProps> = React.memo(
     const { deleteServiceItem } = useServiceService();
     const serviceId = serviceDetail?.id;
 
-    console.log("chjec", serviceDetail);
-
     const openEditModal = () => {
       setIsOpen(true);
     };

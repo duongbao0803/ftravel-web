@@ -15,15 +15,23 @@ export enum CreateRoles {
   CUSTOMER,
   DRIVER,
   BUSCOMPANY,
-  ADMIN
+  ADMIN,
 }
 
 export enum CommonStatus {
   ACTIVE,
-  INACTIVE
+  INACTIVE,
 }
 
 export enum CommonStatusString {
   ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE"
+  INACTIVE = "INACTIVE",
+}
+
+export enum TripStatus {
+  PENDING = "PENDING",
+  OPENING = "OPENING",
+  DEPARTED = "DEPARTED",
+  COMPLETED = "COMPLETED",
+  CANCELED = "CANCELED"
 }

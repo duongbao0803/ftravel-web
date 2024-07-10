@@ -30,6 +30,10 @@ const getServiceByStation = (stationId: number) => {
   return axiosClient.get(`/api/services/by-station-id/${stationId}`);
 };
 
+const getServiceByRoute = (routeId: number) => {
+  return axiosClient.get(`/api/services/by-route-id/${routeId}`);
+};
+
 export {
   getAllService,
   getServiceDetail,
@@ -37,4 +41,5 @@ export {
   removeService,
   editService,
   getServiceByStation,
+  getServiceByRoute
 };

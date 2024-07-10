@@ -20,109 +20,114 @@ export interface RouteStationListProps {
   routeId: number;
 }
 
-const RouteStationList: React.FC<RouteStationListProps> = (props) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const { routeId } = props;
-  const [fileChange] = useState<string>("");
-  const [form] = Form.useForm();
-  const [routeDetail, setRouteDetail] = useState<RouteDetailInfo | undefined>(
-    undefined,
-  );
-  const { fetchRouteDetail, fetchServiceByStation } = useRouteService();
-  const [, setServiceByStation] = useState();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetchRouteDetail(routeId);
-      if (res && res.status === 200) {
-        setRouteDetail(res.data);
-      }
-    };
-
-    fetchData();
-  }, [routeId]);
-
-  useEffect(() => {
-    const routeStationsDetail = routeDetail?.["route-stations"]?.map(
-      (routeStationDetail) => routeStationDetail?.station,
+const RouteStationList: React.FC<RouteStationListProps> = React.memo(
+  (props) => {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const { routeId } = props;
+    const [fileChange] = useState<string>("");
+    const [form] = Form.useForm();
+    const [routeDetail, setRouteDetail] = useState<RouteDetailInfo | undefined>(
+      undefined,
     );
+    const { fetchRouteDetail, fetchServiceByStation } = useRouteService();
+    const [, setServiceByStation] = useState();
 
-    const fetchServiceStation = async (stationId: number) => {
-      try {
-        const res = await fetchServiceByStation(stationId);
+    useEffect(() => {
+      const fetchData = async () => {
+        const res = await fetchRouteDetail(routeId);
         if (res && res.status === 200) {
-          setServiceByStation(res.data);
+          setRouteDetail(res.data);
         }
-      } catch (error) {
-        console.error(`Error fetching data for stationId ${stationId}:`, error);
-      }
-    };
-
-    if (routeStationsDetail) {
-      const routeStationIds = routeStationsDetail.map(
-        (routeStation) => routeStation.id,
-      );
-
-      const fetchAllData = async () => {
-        const fetchPromises = routeStationIds.map((routeStationId) =>
-          fetchServiceStation(routeStationId),
-        );
-        await Promise.all(fetchPromises);
       };
 
-      fetchAllData();
-    }
-  }, [routeDetail]);
+      fetchData();
+    }, [routeId]);
 
-  const routeStations = routeDetail?.["route-stations"]?.map(
-    (routeStationDetail) => routeStationDetail,
-  );
+    useEffect(() => {
+      const routeStationsDetail = routeDetail?.["route-stations"]?.map(
+        (routeStationDetail) => routeStationDetail?.station,
+      );
 
-  useEffect(() => {
-    form.setFieldsValue({ "img-url": fileChange });
-  }, [fileChange, form]);
+      const fetchServiceStation = async (stationId: number) => {
+        try {
+          const res = await fetchServiceByStation(stationId);
+          if (res && res.status === 200) {
+            setServiceByStation(res.data);
+          }
+        } catch (error) {
+          console.error(
+            `Error fetching data for stationId ${stationId}:`,
+            error,
+          );
+        }
+      };
 
-  return (
-    <>
-      <AddRouteStationModal setIsOpen={setIsOpen} isOpen={isOpen} />
+      if (routeStationsDetail) {
+        const routeStationIds = routeStationsDetail.map(
+          (routeStation) => routeStation.id,
+        );
 
+        const fetchAllData = async () => {
+          const fetchPromises = routeStationIds.map((routeStationId) =>
+            fetchServiceStation(routeStationId),
+          );
+          await Promise.all(fetchPromises);
+        };
+
+        fetchAllData();
+      }
+    }, [routeDetail]);
+
+    const routeStations = routeDetail?.["route-stations"]?.map(
+      (routeStationDetail) => routeStationDetail,
+    );
+
+    useEffect(() => {
+      form.setFieldsValue({ "img-url": fileChange });
+    }, [fileChange, form]);
+
+    return (
       <>
-        {routeStations &&
-          routeStations.length > 0 &&
-          routeStations.map((routeStation, stationIndex) => (
-            <div
-              style={{
-                display: "flex",
-                rowGap: 16,
-                flexDirection: "column",
-                marginBottom: "30px",
-              }}
-              key={stationIndex}
-            >
-              <Card
-                size="small"
-                title={`Trạm ${routeStation["station-index"]}: ${routeStation?.station.name || ""}`}
-              >
-                <div>
-                  <ServiceStationList routeStation={routeStation} />
-                </div>
-              </Card>
-            </div>
-          ))}
-        <Button type="dashed" onClick={() => setIsOpen(true)} block>
-          + Thêm trạm
-        </Button>
-      </>
+        <AddRouteStationModal
+          setIsOpen={setIsOpen}
+          isOpen={isOpen}
+          buscompanyId={routeDetail?.["bus-company"].id}
+          route={routeDetail}
+        />
 
-      {/* <Form.Item noStyle shouldUpdate>
-        {() => (
-          <Typography>
-            <pre>{JSON.stringify(form.getFieldsValue(), null, 2)}</pre>
-          </Typography>
-        )}
-      </Form.Item> */}
-    </>
-  );
-};
+        <>
+        <div>
+          <p className="font-bold text-[1.2rem] mb-3">Danh sách các trạm</p>
+        </div>
+          {routeStations &&
+            routeStations.length > 0 &&
+            routeStations.map((routeStation, stationIndex) => (
+              <div
+                style={{
+                  display: "flex",
+                  rowGap: 16,
+                  flexDirection: "column",
+                  marginBottom: "30px",
+                }}
+                key={stationIndex}
+              >
+                <Card
+                  size="small"
+                  title={`Trạm ${routeStation["station-index"]}: ${routeStation?.station.name || ""}`}
+                >
+                  <div>
+                    <ServiceStationList routeStation={routeStation} />
+                  </div>
+                </Card>
+              </div>
+            ))}
+          <Button type="dashed" onClick={() => setIsOpen(true)} block>
+            + Thêm trạm
+          </Button>
+        </>
+      </>
+    );
+  },
+);
 
 export default RouteStationList;
