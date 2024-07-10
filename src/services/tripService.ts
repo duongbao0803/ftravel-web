@@ -1,5 +1,6 @@
 import { addTrip, getAllTrip, getTripDetail, removeTrip } from "@/api/tripApi";
 import { CustomError } from "@/types/error.types";
+import { CreateTripForm } from "@/types/trip.types";
 import { notification } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
@@ -29,7 +30,7 @@ const useTripService = () => {
     return tripId;
   };
 
-  const addNewTrip = async (formValues) => {
+  const addNewTrip = async (formValues: CreateTripForm) => {
     const res = await addTrip(formValues);
     return res;
   };
@@ -107,7 +108,7 @@ const useTripService = () => {
   //   },
   // });
 
-  const addNewTripItem = async (formValues) => {
+  const addNewTripItem = async (formValues: CreateTripForm) => {
     await addNewTripMutation.mutateAsync(formValues);
   };
 

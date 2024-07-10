@@ -1,4 +1,5 @@
 import axiosClient from "@/config/axiosClient";
+import { CreateTripForm } from "@/types/trip.types";
 
 const getAllTrip = (page: number) => {
   return axiosClient.get(`/api/trips`, {
@@ -9,7 +10,7 @@ const getAllTrip = (page: number) => {
   });
 };
 
-const addTrip = (formValues) => {
+const addTrip = (formValues: CreateTripForm) => {
   return axiosClient.post("/api/trips", formValues);
 };
 

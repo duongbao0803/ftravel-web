@@ -14,7 +14,7 @@ const EditTicketTypeModal: React.FC<EditTicketTypeModalProps> = (props) => {
   const { setIsOpen, isOpen, ticketTypeInfo, ticketTypeName } = props;
   const { Option } = Select;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
-  const { updateTicketTypeItem, fetchTicketTypeRoute } = useTicketService();
+  const { updateTicketTypeItem } = useTicketService();
 
   const [form] = Form.useForm();
 
