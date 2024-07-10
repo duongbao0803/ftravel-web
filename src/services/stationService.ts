@@ -36,8 +36,7 @@ const useStationService = () => {
   };
 
   const removeStation = async (stationId: number) => {
-    const res = await deleteStation(stationId);
-    console.log("check res", res);
+    await deleteStation(stationId);
   };
 
   const { data: stationsData, isLoading: isFetching } = useQuery(
@@ -103,7 +102,7 @@ const useStationService = () => {
     fetchStationDetail,
     addNewStationItem,
     deleteStationItem,
-    fetchStationByBuscompany
+    fetchStationByBuscompany,
     // updateCityItem,
     // deleteRouteItem,
   };

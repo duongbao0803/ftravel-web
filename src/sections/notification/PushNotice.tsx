@@ -1,24 +1,86 @@
-import React from "react";
-import { Row, Col, Form, Input, Button, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Row,
+  Col,
+  Form,
+  Input,
+  Button,
+  Select,
+  TableProps,
+  Table,
+  TablePaginationConfig,
+} from "antd";
 import { AuditOutlined, MailOutlined } from "@ant-design/icons";
 import useAuthService from "@/services/authService";
 import { UserInfoDetail } from "@/types/auth.types";
 import useUserService from "@/services/userService";
 import { sendNotification } from "@/types/notification.types";
-import { sendNotice } from "@/api/noticeApi";
+import useNoticeService from "@/services/notificationService";
+import { formatDate4 } from "@/util/validate";
+
+export interface DataType {
+  id: number;
+  "user-id": number;
+  title: string;
+  message: string;
+  "create-date": string | Date;
+  "update-date"?: string | Date;
+}
 
 const PushNotice: React.FC = React.memo(() => {
   const [form] = Form.useForm();
   const { userInfo } = useAuthService();
   const { users } = useUserService();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const { isFetching, addNewNoticeItem, refetch, noticeData } =
+    useNoticeService(currentPage);
+  const notices = noticeData?.data;
+  const totalCount = noticeData?.totalCount;
+
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    setCurrentPage(pagination.current || 1);
+  };
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage, refetch]);
 
   const { Option } = Select;
+
+  const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "STT",
+      dataIndex: "index",
+      key: "index",
+      render: (_, _record, index) => index + 1,
+    },
+    {
+      title: "Tiêu đề",
+      dataIndex: "title",
+      width: "25%",
+    },
+    {
+      title: "Lời nhắn",
+      dataIndex: "message",
+      width: "35%",
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "create-date",
+      width: "25%",
+    },
+    {
+      title: "Ngày thay đổi",
+      dataIndex: "update-date",
+      width: "25%",
+    },
+  ];
 
   const onFinish = (values: sendNotification) => {
     const id = values["user-ids"];
     const updateId = [Number(id)];
     const updateValues = { ...values, "user-ids": updateId };
-    console.log("check ", updateValues);
     if (updateValues) {
       handleSendNotice(updateValues);
     }
@@ -26,14 +88,14 @@ const PushNotice: React.FC = React.memo(() => {
 
   const handleSendNotice = async (noticeInfo: sendNotification) => {
     try {
-      await sendNotice(noticeInfo);
+      await addNewNoticeItem(noticeInfo);
     } catch (err) {
       console.error("Err receiving notice", err);
     }
   };
 
   return (
-    <div>
+    <>
       <Form name="normal_login" form={form} onFinish={onFinish}>
         <Row gutter={16} className="relative">
           <Col span={12}>
@@ -120,7 +182,36 @@ const PushNotice: React.FC = React.memo(() => {
           </Button>
         </Form.Item>
       </Form>
-    </div>
+      <Table
+        className="pagination"
+        id="myTable"
+        columns={columns}
+        dataSource={notices?.map(
+          (record: {
+            id: unknown;
+            "create-date": string | Date;
+            "update-date": string | Date;
+          }) => ({
+            ...record,
+            key: record.id,
+            "create-date": record["create-date"]
+              ? formatDate4(record["create-date"])
+              : "N/A",
+            "update-date": record["update-date"]
+              ? formatDate4(record["update-date"])
+              : "N/A",
+          }),
+        )}
+        pagination={{
+          current: currentPage,
+          total: totalCount,
+          pageSize: 50,
+        }}
+        onChange={handleTableChange}
+        loading={isFetching}
+        rowKey={(record) => record.id}
+      />
+    </>
   );
 });
 

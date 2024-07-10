@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Form, Input, DatePicker, Select, Button, Row, Col } from "antd";
 import useCompanyService from "@/services/companyService";
 import useRouteService from "@/services/routeService";
@@ -13,12 +13,7 @@ import useCreateTrip from "@/hooks/useCreateTrip";
 import ServiceForm from "./ServiceForm";
 import moment from "moment";
 
-export interface MainFormProps {
-  onFormSubmit: any;
-}
-
-const MainForm: React.FC<MainFormProps> = (props) => {
-  const { onFormSubmit } = props;
+const MainForm: React.FC = React.memo(() => {
   const [routes, setRoutes] = useState<RouteInfo[]>();
   const [ticketTypes, setTicketTypes] = useState<TicketTypeInfo[]>();
   const { Option } = Select;
@@ -29,70 +24,88 @@ const MainForm: React.FC<MainFormProps> = (props) => {
   const { fetchRoutes } = useRouteService();
   const { fetchTicketTypeRoute } = useTicketService();
   const { users } = useUserService();
-  const { setListTicketChoose } = useCreateTrip();
+  const { setListTicketChoose, setCreateTripForm, createTripForm } =
+    useCreateTrip();
+  const [form] = Form.useForm();
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const onFinish = (values: any) => {
-    onFormSubmit("main", values);
-  };
-
-  const fetchDataRoute = async (page: number, buscompanyId: number) => {
-    try {
-      const res = await fetchRoutes(page, buscompanyId);
-      if (res) {
-        setRoutes(res?.data);
-      }
-      console.log("check routes", routes);
-    } catch (error) {
-      console.error("Error fetching list buscompany:", error);
+  useEffect(() => {
+    if (createTripForm && Object.keys(createTripForm).length > 0) {
+      form.setFieldsValue({ createTripForm });
     }
-  };
+  }, [createTripForm, form]);
 
-  const handleChangeBuscompany = (buscompanyId: number) => {
-    fetchDataRoute(1, buscompanyId);
-  };
+  const fetchDataRoute = useCallback(
+    async (page: number, buscompanyId: number) => {
+      try {
+        const res = await fetchRoutes(page, buscompanyId);
+        if (res) {
+          setRoutes(res?.data);
+        }
+      } catch (error) {
+        console.error("Error fetching list buscompany:", error);
+      }
+    },
+    [fetchRoutes, routes],
+  );
+
+  const handleChangeBuscompany = useCallback(
+    (buscompanyId: number) => {
+      fetchDataRoute(1, buscompanyId);
+    },
+    [fetchDataRoute],
+  );
 
   const filterOption = (
     input: string,
     option?: { label: string; value: string },
   ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
-  const fetchDataTicketTypeRoute = async (routeId: number) => {
-    const res = await fetchTicketTypeRoute(routeId);
-    if (res && res.status === 200) {
-      setTicketTypes(res.data);
-    }
-  };
+  const fetchDataTicketTypeRoute = useCallback(
+    async (routeId: number) => {
+      const res = await fetchTicketTypeRoute(routeId);
+      if (res && res.status === 200) {
+        setTicketTypes(res.data);
+      }
+    },
+    [fetchTicketTypeRoute],
+  );
 
-  const handleChooseRoute = (routeId: number) => {
+  const handleChooseRoute = useCallback((routeId: number) => {
     setChooseRoute(routeId);
     fetchDataTicketTypeRoute(routeId);
-  };
+  }, []);
 
-  const handleTicketTypeChange = (selectedValues: any) => {
-    const selectedTicketNames = selectedValues?.map((id: number) => {
-      const ticket = ticketTypes?.find((ticketType) => ticketType?.id == id);
-      return ticket ? ticket : null;
-    });
-    setListTicketChoose(selectedTicketNames);
-  };
+  const handleTicketTypeChange = useCallback(
+    (selectedValues: any) => {
+      const selectedTicketNames = selectedValues?.map((id: number) => {
+        const ticket = ticketTypes?.find((ticketType) => ticketType?.id == id);
+        return ticket ? ticket : null;
+      });
+      setListTicketChoose(selectedTicketNames);
+    },
+    [setListTicketChoose, ticketTypes],
+  );
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  // const handleSubmit = async (values: any) => {
-  //   await onFinish(values);
-  //   setIsSubmitted(true);
-  // };
-  const handleSubmit = async (values: any) => {
-    // Format the DatePicker value
-    const formattedValues = {
-      ...values,
-      'open-ticket-date': values['open-ticket-date'].format('YYYY-MM-DDTHH:mm:ss'),
-      'estimated-start-date': values['estimated-start-date'].format('YYYY-MM-DDTHH:mm:ss'),
-      'estimated-end-date': values['estimated-end-date'].format('YYYY-MM-DDTHH:mm:ss'),
-    };
-    await onFinish(formattedValues);
-    setIsSubmitted(false);
-  };
+  const handleSubmit = useCallback(
+    async (values: any) => {
+      const formattedValues = {
+        ...values,
+        "open-ticket-date": values["open-ticket-date"].format(
+          "YYYY-MM-DDTHH:mm:ss",
+        ),
+        "estimated-start-date": values["estimated-start-date"].format(
+          "YYYY-MM-DDTHH:mm:ss",
+        ),
+        "estimated-end-date": values["estimated-end-date"].format(
+          "YYYY-MM-DDTHH:mm:ss",
+        ),
+      };
+      setCreateTripForm(formattedValues);
+      setIsSubmitted(true);
+    },
+    [setCreateTripForm],
+  );
 
   const disabledDate = (current: object) => {
     return current && current < moment().startOf("day");
@@ -100,7 +113,7 @@ const MainForm: React.FC<MainFormProps> = (props) => {
 
   return (
     <>
-      <Form onFinish={handleSubmit} layout="vertical">
+      <Form onFinish={handleSubmit} layout="vertical" form={form}>
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
@@ -159,7 +172,7 @@ const MainForm: React.FC<MainFormProps> = (props) => {
               name="name"
               rules={[{ required: true, message: "Vui lòng nhập chuyến xe" }]}
             >
-              <Input readOnly={isSubmitted} />
+              <Input placeholder="Chuyến xe" readOnly={isSubmitted} />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -168,17 +181,11 @@ const MainForm: React.FC<MainFormProps> = (props) => {
               name="open-ticket-date"
               rules={[{ required: true, message: "Hãy chọn ngày bán vé" }]}
             >
-              {/* <DatePicker
-                showTime
-                format="YYYY-MM-DDTHH:mm"
-                style={{ width: "100%" }}
-                readOnly={isSubmitted}
-              /> */}
               <DatePicker
                 showTime
                 format="DD/MM/YYYY HH:mm"
-                className="formItem w-full p-2"
-                readOnly={isSubmitted}
+                className="w-full"
+                disabled={isSubmitted}
                 disabledDate={disabledDate}
               />
             </Form.Item>
@@ -192,8 +199,8 @@ const MainForm: React.FC<MainFormProps> = (props) => {
               <DatePicker
                 showTime
                 format="DD/MM/YYYY HH:mm"
-                style={{ width: "100%" }}
-                readOnly={isSubmitted}
+                className="w-full"
+                disabled={isSubmitted}
                 disabledDate={disabledDate}
               />
             </Form.Item>
@@ -207,8 +214,8 @@ const MainForm: React.FC<MainFormProps> = (props) => {
               <DatePicker
                 showTime
                 format="DD/MM/YYYY HH:mm"
-                style={{ width: "100%" }}
-                readOnly={isSubmitted}
+                className="w-full"
+                disabled={isSubmitted}
                 disabledDate={disabledDate}
               />
             </Form.Item>
@@ -262,14 +269,26 @@ const MainForm: React.FC<MainFormProps> = (props) => {
         </Row>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={isSubmitted}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={isSubmitted}
+            className="mr-3"
+          >
             {isSubmitted ? "Đã xác nhận" : "Xác nhận thông tin chuyến"}
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => setIsSubmitted(false)}
+            disabled={!isSubmitted}
+          >
+            {isSubmitted ? "Chỉnh sửa" : "Chỉnh sửa"}
           </Button>
         </Form.Item>
       </Form>
-      <ServiceForm onFormSubmit={onFormSubmit} routeId={chooseRoute} />
+      <ServiceForm routeId={chooseRoute} />
     </>
   );
-};
+});
 
 export default MainForm;

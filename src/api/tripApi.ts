@@ -9,9 +9,9 @@ const getAllTrip = (page: number) => {
   });
 };
 
-// const addTrip = (formValues: CreateTrip) => {
-//   return axiosClient.post("/api/trips", formValues);
-// };
+const addTrip = (formValues) => {
+  return axiosClient.post("/api/trips", formValues);
+};
 
 const getTripDetail = (tripId: number) => {
   return axiosClient.get(`/api/trips/${tripId}`);
@@ -32,8 +32,9 @@ const removeTrip = (tripId: number) => {
 export {
   getAllTrip,
   getTripDetail,
-//   addTrip,
+  //   addTrip,
   removeTrip,
-//   editTrip,
-//   getTripByStation,
+  addTrip,
+  //   editTrip,
+  //   getTripByStation,
 };

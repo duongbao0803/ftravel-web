@@ -25,7 +25,7 @@ const TripList: React.FC = () => {
 
   const [, setCurrentPage] = useState<number>(1);
   const [, setTripId] = useState<number>();
-  const { trips } = useTripService();
+  const { trips, isFetching } = useTripService();
   const navigate = useNavigate();
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
@@ -35,8 +35,9 @@ const TripList: React.FC = () => {
   const [isTemplate, setIsTemplate] = useState(true);
 
   const filterTrips = trips.filter((trip: TripInfo) => trip?.["is-template"]);
-  const filterTripsTemplate = trips.filter((trip: TripInfo) => !trip?.["is-template"]);
-
+  const filterTripsTemplate = trips.filter(
+    (trip: TripInfo) => !trip?.["is-template"],
+  );
 
   const handleFilter = () => {
     setIsTemplate((prev) => !prev);
@@ -44,21 +45,20 @@ const TripList: React.FC = () => {
 
   const renderStatusTrip = (status: string) => {
     switch (status) {
-        case TripStatus.OPENING:
-            return "ĐANG BÁN VÉ";
-        case TripStatus.PENDING:
-            return "ĐANG CHỜ";
-        case TripStatus.DEPARTED:
-            return "ĐÃ KHỞI HÀNH";
-        case TripStatus.COMPLETED:
-            return "ĐÃ HOÀN THÀNH";
-        case TripStatus.CANCELED:
-            return "ĐÃ HỦY";
-        default:
-            return "N/A";
+      case TripStatus.OPENING:
+        return "ĐANG BÁN VÉ";
+      case TripStatus.PENDING:
+        return "ĐANG CHỜ";
+      case TripStatus.DEPARTED:
+        return "ĐÃ KHỞI HÀNH";
+      case TripStatus.COMPLETED:
+        return "ĐÃ HOÀN THÀNH";
+      case TripStatus.CANCELED:
+        return "ĐÃ HỦY";
+      default:
+        return "N/A";
     }
-}
-
+  };
 
   const columns: TableProps<TripInfo>["columns"] = useMemo(
     () => [
@@ -93,7 +93,7 @@ const TripList: React.FC = () => {
         title: "Trạng thái",
         dataIndex: "status",
         width: "15%",
-        render: (status: string) => renderStatusTrip(status)
+        render: (status: string) => renderStatusTrip(status),
       },
       {
         title: "Loại",
@@ -112,16 +112,18 @@ const TripList: React.FC = () => {
     navigate(`/trip/${record}`);
   };
 
-  const dataSource = (isTemplate ? filterTripsTemplate : filterTrips).map((record: TripInfo) => ({
-    ...record,
-    key: record.id,
-    "open-ticket-date": record["open-ticket-date"]
-      ? formatDate4(record["open-ticket-date"])
-      : "N/A",
-    "estimated-start-date": record["estimated-start-date"]
-      ? formatDate4(record["estimated-start-date"])
-      : "N/A",
-  }));
+  const dataSource = (isTemplate ? filterTripsTemplate : filterTrips).map(
+    (record: TripInfo) => ({
+      ...record,
+      key: record.id,
+      "open-ticket-date": record["open-ticket-date"]
+        ? formatDate4(record["open-ticket-date"])
+        : "N/A",
+      "estimated-start-date": record["estimated-start-date"]
+        ? formatDate4(record["estimated-start-date"])
+        : "N/A",
+    }),
+  );
 
   return (
     <>
@@ -162,6 +164,7 @@ const TripList: React.FC = () => {
         id="myTable"
         columns={columns}
         dataSource={dataSource}
+        loading={isFetching}
         onChange={handleTableChange}
         rowKey={(record) => record.id}
         onRow={(record) => ({

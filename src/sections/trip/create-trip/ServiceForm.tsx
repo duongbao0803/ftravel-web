@@ -1,20 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Form, InputNumber, Button, Select, Table, TableProps } from "antd";
 import useServiceService from "@/services/serviceService";
 import { ServiceDetail } from "@/types/service.types";
+import useCreateTrip from "@/hooks/useCreateTrip";
 
 export interface ServiceFormProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onFormSubmit: any;
   routeId: number;
 }
 
-const ServiceForm: React.FC<ServiceFormProps> = (props) => {
-  const { onFormSubmit, routeId } = props;
+const ServiceForm: React.FC<ServiceFormProps> = React.memo((props) => {
+  const { routeId } = props;
   const [routeServices, setRouteServices] = useState<ServiceDetail[]>();
   const { Option } = Select;
   const [selectedServices, setSelectedServices] = useState<ServiceDetail[]>([]);
+  const { setCreateTripForm, createTripForm } = useCreateTrip();
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   // use service
   const { fetchServiceRoute } = useServiceService();
@@ -56,9 +58,10 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
       title: "Giá (FToken)",
       dataIndex: "default-price",
       width: "20%",
-      render: (text, record, index) =>
+      render: (text, _record, index) =>
         text && (
           <InputNumber
+            readOnly={isSubmitted}
             type="number"
             required
             value={text !== undefined ? text : 0}
@@ -76,54 +79,59 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
     },
   ];
 
-  const fetchServiceRouteData = async (routeId: number) => {
-    try {
-      const res = await fetchServiceRoute(routeId);
-      if (res) {
-        setRouteServices(res?.data);
+  const fetchServiceRouteData = useCallback(
+    async (routeId: number) => {
+      try {
+        const res = await fetchServiceRoute(routeId);
+        if (res) {
+          setRouteServices(res?.data);
+        }
+      } catch (error) {
+        console.error("Error fetching list buscompany:", error);
       }
-    } catch (error) {
-      console.error("Error fetching list buscompany:", error);
-    }
-  };
-
-  const onFinish = (values: any) => {
-    onFormSubmit("service", values);
-  };
+    },
+    [fetchServiceRoute],
+  );
 
   useEffect(() => {
     fetchServiceRouteData(routeId);
   }, [routeId]);
 
-  const handleServiceChange = (value: any) => {
-    if (value) {
-      const selectedServicesData = value.map((id: number) => {
-        const service = routeServices?.find((service) => service?.id == id);
-        return service;
-      });
-      setSelectedServices(selectedServicesData);
-      const selectedService = [];
-      selectedService.push(selectedServicesData);
-    }
-  };
+  const handleServiceChange = useCallback(
+    (value: any) => {
+      if (value) {
+        const selectedServicesData = value.map((id: number) => {
+          const service = routeServices?.find((service) => service?.id == id);
+          return service;
+        });
+        setSelectedServices(selectedServicesData);
+        const selectedService = [];
+        selectedService.push(selectedServicesData);
+      }
+    },
+    [routeServices],
+  );
 
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (selectedServices) {
       const convertedObject = {
         "trip-services": selectedServices.map((service: ServiceDetail) => {
           return {
             "service-id": service.id,
-            price: service["default-price"] !== undefined ? service["default-price"] : 0,
+            price:
+              service["default-price"] !== undefined
+                ? service["default-price"]
+                : 0,
           };
         }),
       };
-      await onFinish(convertedObject);
-      setIsSubmitted(false);
+      setCreateTripForm({
+        ...createTripForm,
+        "trip-services": convertedObject["trip-services"],
+      });
+      setIsSubmitted(true);
     }
-  };
-
+  }, [createTripForm, selectedServices, setCreateTripForm]);
 
   return (
     <Form onFinish={handleSubmit} layout="vertical">
@@ -142,6 +150,7 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
           mode="multiple"
           placeholder="Chọn dịch vụ"
           onChange={handleServiceChange}
+          disabled={isSubmitted}
         >
           {routeServices?.map((routeService, index) => (
             <Option key={index} value={`${routeService.id}`}>
@@ -171,12 +180,24 @@ const ServiceForm: React.FC<ServiceFormProps> = (props) => {
       )}
 
       <Form.Item>
-        <Button type="primary" htmlType="submit" disabled={isSubmitted}>
-          {isSubmitted ? "Đã xác nhận" : "Xác nhận thông tin dịch vụ"}
+        <Button
+          type="primary"
+          htmlType="submit"
+          disabled={isSubmitted}
+          className="mr-3"
+        >
+          {isSubmitted ? "Đã xác nhận" : "Xác nhận thông tin chuyến"}
+        </Button>
+        <Button
+          type="primary"
+          onClick={() => setIsSubmitted(false)}
+          disabled={!isSubmitted}
+        >
+          {isSubmitted ? "Chỉnh sửa" : "Chỉnh sửa"}
         </Button>
       </Form.Item>
     </Form>
   );
-};
+});
 
 export default ServiceForm;

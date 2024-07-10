@@ -16,8 +16,7 @@ const AddTicketTypeModal: React.FC<AddTicketTypeProps> = React.memo((props) => {
   const { setIsOpen, isOpen, routeId, ticketTypeName } = props;
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const { fetchRouteDetail } = useRouteService();
-  const { addNewTicketTypeItem, fetchTicketTypeRoute } =
-    useTicketService(routeId);
+  const { addNewTicketTypeItem, fetchTicketTypeRoute } = useTicketService();
   const [form] = Form.useForm();
   const [routeDetail, setRouteDetail] = useState<RouteDetailInfo>();
 
@@ -46,9 +45,7 @@ const AddTicketTypeModal: React.FC<AddTicketTypeProps> = React.memo((props) => {
 
   const handleOk = async () => {
     try {
-      console.log("check ticketTypeName", ticketTypeName);
       const values = await form.validateFields();
-      console.log(values.name);
       if (ticketTypeName) {
         const nameExists = Array.isArray(ticketTypeName)
           ? ticketTypeName.includes(values?.name)
@@ -75,7 +72,6 @@ const AddTicketTypeModal: React.FC<AddTicketTypeProps> = React.memo((props) => {
           setIsOpen(true);
         }
       }, 1500);
-      console.log("chjeck routeId", routeId);
       await fetchTicketTypeRoute(routeId);
     } catch (errorInfo) {
       console.error("Validation failed:", errorInfo);

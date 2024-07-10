@@ -13,21 +13,25 @@ const TripTicketList: React.FC<TripTicketListProps> = React.memo((props) => {
   const [tripTickets, setTripTickets] = useState<TicketTripInfo[]>();
 
   const { fetchTripDetail } = useTripService();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchData = async (routeId: number) => {
     try {
+      setIsLoading(true);
       const res = await fetchTripDetail(routeId);
       if (res && res.status === 200) {
         setTripTickets(res.data.tickets);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching station detail:", error);
     }
   };
 
   useEffect(() => {
     fetchData(tripId);
-  },[tripId]);
+  }, [tripId]);
 
   const columns: TableProps<TicketTripInfo>["columns"] = [
     {
@@ -68,47 +72,46 @@ const TripTicketList: React.FC<TripTicketListProps> = React.memo((props) => {
   ];
 
   return (
-
     <>
-        <div className="my-2 flex justify-between">
-          <div className="flex gap-x-2">
-            <p className="font-bold">Danh sách vé</p>
-          </div>
-          <div className="flex gap-x-2">
-            {/* <div>
+      <div className="my-2 flex justify-between">
+        <div className="flex gap-x-2">
+          <p className="font-bold">Danh sách vé</p>
+        </div>
+        <div className="flex gap-x-2">
+          {/* <div>
             <ExportService />
           </div> */}
-            {/* <div>
+          {/* <div>
               <Button type="primary" onClick={() => setIsOpen(true)}>
                 <div className="flex justify-center">
                   <PlusCircleOutlined className="mr-1 text-lg" /> Thêm dịch vụ
                 </div>
               </Button>
             </div> */}
-          </div>
         </div>
-        <Table
-          id="myTable"
-          columns={columns}
-          dataSource={
-            tripTickets &&
-            tripTickets?.map((record: TicketTripInfo) => ({
-              ...record,
-              key: record.id,
-            }))
-          }
+      </div>
+      <Table
+        id="myTable"
+        columns={columns}
+        dataSource={
+          tripTickets &&
+          tripTickets?.map((record: TicketTripInfo) => ({
+            ...record,
+            key: record.id,
+          }))
+        }
         //   onChange={handleTableChange}
-          // loading={isFetching}
-          rowKey={(record) => record.id}
-          pagination={false}
-          className="my-2"
-        />
-        {/* <AddServiceStationModal
+        loading={isLoading}
+        rowKey={(record) => record.id}
+        pagination={false}
+        className="my-2"
+      />
+      {/* <AddServiceStationModal
           setIsOpen={setIsOpen}
           isOpen={isOpen}
           routeStation={routeStation}
         /> */}
-      </>
+    </>
   );
 });
 
