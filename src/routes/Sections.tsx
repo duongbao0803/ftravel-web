@@ -6,6 +6,7 @@ import { useAnimation } from "@/hooks/useAnimation";
 import AuthenPage from "@/pages/AuthenPage";
 import useAuth from "@/hooks/useAuth";
 import { ROLE } from "@/constants";
+import TripCreatePage from "@/pages/TripCreatePage";
 
 export const ChartPage = lazy(() => import("@/pages/ChartPage"));
 export const CityManagementPage = lazy(
@@ -34,6 +35,10 @@ export const PersonalInformationPage = lazy(
 );
 
 export const PushNoticePage = lazy(() => import("@/pages/PushNoticePage"));
+export const TripManagementPage = lazy(() => import("@/pages/TripManagementPage"));
+export const TripDetailsPage = lazy(() => import("@/pages/TripDetailsPage"));
+
+
 
 const checkAccessAdmin = (role: string) => {
   return role === ROLE.ADMIN;
@@ -148,6 +153,42 @@ const Router: React.FC = () => {
               <ForBidden />
             ),
           path: "/notification",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <PushNoticePage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/notification",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <TripManagementPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/trip",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <TripDetailsPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/trip/:id",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <TripCreatePage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/trip/:id/clone",
         },
 
         { element: <Error />, path: "*" },

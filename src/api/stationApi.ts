@@ -14,6 +14,10 @@ const getStationDetail = (stationId: number) => {
   return axiosClient.get(`/api/stations/${stationId}`);
 };
 
+const getStataionByBuscompany = (buscompanyId: number) => {
+  return axiosClient.get(`/api/stations/get-station-by-bus-company/${buscompanyId}`);
+}
+
 const addStation = (formValues: CreateStationInfo) => {
   return axiosClient.post("/api/stations", formValues);
 };
@@ -30,4 +34,4 @@ const deleteStation = (stationId: number) => {
 //   return axiosClient.put("/api/services");
 // };
 
-export { getAllStation, getStationDetail, addStation, deleteStation };
+export { getAllStation, getStationDetail, addStation, deleteStation, getStataionByBuscompany };

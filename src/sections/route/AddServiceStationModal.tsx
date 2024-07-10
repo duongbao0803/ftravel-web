@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Row, Col } from "antd";
+import { Modal, Form, Input, Row, Col, InputNumber } from "antd";
 import { UploadImage } from "@/components";
 import useRouteService from "@/services/routeService";
 import { RouteDetailInfo, RouteStation } from "@/types/route.types";
@@ -49,7 +49,6 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
         "route-id": routeStation["route-id"],
         "station-id": routeStation?.station?.id,
       };
-      console.log("check update", updateValues);
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
@@ -84,6 +83,8 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
       onOk={handleOk}
       confirmLoading={isConfirmLoading}
       onCancel={handleCancel}
+      okText="Tạo dịch vụ"
+      cancelText="Hủy"
     >
       <Row gutter={24}>
         <Col span={6}>
@@ -141,22 +142,17 @@ const AddServiceStationModal: React.FC<AddServiceStationProps> = (props) => {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  label="Giá mặc định (FToken)"
+                  label={<span>Giá mặc định (FToken) <br/> <span className="italic text-[#757575]">(1 FToken = 1.000 VNĐ)</span></span>}
                   labelCol={{ span: 24 }}
                   name="default-price"
                   rules={[
                     {
                       required: true,
                       message: "Vui lòng nhập giá dịch vụ",
-                    },
-                    {
-                      min: 1,
-                      max: 999,
-                      message: "Giá phải trong khoảng 1 đến 999",
-                    },
+                    }
                   ]}
                 >
-                  <Input placeholder="Giá mặc định" type="number" />
+                  <InputNumber className="w-full" placeholder="Giá mặc định" type="number" min={1} max={999} />
                 </Form.Item>
               </Col>
               <Col span={24}>

@@ -2,6 +2,7 @@ import {
   addStation,
   deleteStation,
   getAllStation,
+  getStataionByBuscompany,
   getStationDetail,
 } from "@/api/stationApi";
 import { CustomError } from "@/types/error.types";
@@ -20,6 +21,11 @@ const useStationService = () => {
     return { data, totalCount };
   };
 
+  const fetchStationByBuscompany = async (buscompanyId: number) => {
+    const res = await getStataionByBuscompany(buscompanyId);
+    return res;
+  };
+
   const fetchStationDetail = async (stationId: number) => {
     const res = await getStationDetail(stationId);
     return res;
@@ -30,8 +36,7 @@ const useStationService = () => {
   };
 
   const removeStation = async (stationId: number) => {
-    const res = await deleteStation(stationId);
-    console.log("check res", res);
+    await deleteStation(stationId);
   };
 
   const { data: stationsData, isLoading: isFetching } = useQuery(
@@ -97,6 +102,7 @@ const useStationService = () => {
     fetchStationDetail,
     addNewStationItem,
     deleteStationItem,
+    fetchStationByBuscompany,
     // updateCityItem,
     // deleteRouteItem,
   };

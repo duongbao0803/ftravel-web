@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Select, Input } from "antd";
+import { Modal, Form, Select, Input, notification } from "antd";
 import useCityService from "@/services/cityService";
 import { CityInfo } from "@/types/city.types";
 import useCompanyService from "@/services/companyService";
@@ -44,11 +44,27 @@ const AddRouteModal: React.FC<AddRouteProps> = (props) => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      console.log("chjeck valuies", values);
+      const startPoint = values["start-point"].split(";")[0];
+      const endPoint = values["end-point"].split(";")[0];
+      if (startPoint === endPoint) {
+        notification.warning({
+          message: "Thêm không thành công",
+          description: "Điểm đi và điểm đến không được trùng nhau",
+          duration: 2,
+        });
+        return;
+      }
+
+      const updateValues = {
+        ...values,
+        "start-point": startPoint,
+        "end-point": endPoint,
+      };
+
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          await addNewRouteItem(values);
+          await addNewRouteItem(updateValues);
           form.resetFields();
           setIsConfirmLoading(false);
           setIsOpen(false);

@@ -27,3 +27,9 @@ export interface CreateStationInfo {
   name: string;
   "bus-company-id": number;
 }
+
+export interface AddStationRouteInfo {
+  "station-id": number;
+  "route-id": number;
+  "station-index": number;
+}
