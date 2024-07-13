@@ -37,6 +37,9 @@ export const PersonalInformationPage = lazy(
 export const PushNoticePage = lazy(() => import("@/pages/PushNoticePage"));
 export const TripManagementPage = lazy(() => import("@/pages/TripManagementPage"));
 export const TripDetailsPage = lazy(() => import("@/pages/TripDetailsPage"));
+export const OrderManagementPage = lazy(
+  () => import("@/pages/OrderManagementPage"),
+);
 
 
 
@@ -189,6 +192,15 @@ const Router: React.FC = () => {
               <ForBidden />
             ),
           path: "/trip/:id/clone",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <OrderManagementPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/order",
         },
 
         { element: <Error />, path: "*" },
