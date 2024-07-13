@@ -42,6 +42,18 @@ export interface UserInfo {
   gender?: number;
 }
 
+export interface AccountData {
+  name?: string;
+  address?: string;
+  "avatar-url"?: string;
+  dob?: Date | string | Dayjs;
+  email: string;
+  role?: number;
+  "phone-number"?: string;
+  "full-name"?: string;
+  gender?: number;
+}
+
 export interface UserInfoDetail {
   id: number;
   name?: string;

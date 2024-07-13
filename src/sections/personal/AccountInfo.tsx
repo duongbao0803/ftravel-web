@@ -11,12 +11,12 @@ import moment from "moment";
 import useAuthService from "@/services/authService";
 import dayjs from "dayjs";
 import { Gender } from "@/enums/enums";
-import { UserInfo } from "@/types/auth.types";
+import { AccountData } from "@/types/auth.types";
 
 const AccountInfo: React.FC = () => {
   const [form] = Form.useForm();
   const { userInfo } = useAuthService();
-  const [, setValues] = useState<UserInfo>({
+  const [, setValues] = useState<AccountData>({
     address: "",
     "avatar-url": "",
     dob: "",
@@ -26,7 +26,7 @@ const AccountInfo: React.FC = () => {
     "full-name": "",
   });
 
-  const onFinish = (values: UserInfo) => {
+  const onFinish = (values: AccountData) => {
     setValues(values);
   };
 
