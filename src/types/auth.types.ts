@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export interface SigninValues {
   email: string;
   password: string;
@@ -28,14 +30,16 @@ export interface SignupValues {
 }
 
 export interface UserInfo {
+  id: number;
   name?: string;
   address?: string;
   "avatar-url"?: string;
-  dob?: Date | string;
+  dob?: Date | string | Dayjs;
   email: string;
   role?: number;
-  "phone-number": string;
-  "full-name": string;
+  "phone-number"?: string;
+  "full-name"?: string;
+  gender?: number;
 }
 
 export interface UserInfoDetail {

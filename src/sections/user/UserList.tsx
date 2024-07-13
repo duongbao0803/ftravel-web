@@ -8,17 +8,18 @@ import useUserService from "@/services/userService";
 import { formatDate2 } from "@/util/validate";
 import DropdownUserFunc from "./DropdownUserFunc";
 import { Roles } from "@/enums/enums";
+import { UserInfo } from "@/types/auth.types";
 
-export interface DataType {
-  id: number;
-  key: string;
-  name: string;
-  image: string;
-  description: string;
-  gender: number;
-  dob: string | Date;
-  "role-id": number;
-}
+// export interface DataType {
+//   id: number;
+//   key: string;
+//   name: string;
+//   image: string;
+//   description: string;
+//   gender: number;
+//   dob: string | Date;
+//   "role-id": number;
+// }
 
 const UserList: React.FC = React.memo(() => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -30,7 +31,7 @@ const UserList: React.FC = React.memo(() => {
     setCurrentPage(pagination.current || 1);
   };
 
-  const columns: TableProps<DataType>["columns"] = [
+  const columns: TableProps<UserInfo>["columns"] = [
     {
       title: "STT",
       dataIndex: "index",
@@ -159,10 +160,12 @@ const UserList: React.FC = React.memo(() => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={users?.map((record: { id: unknown; dob: string }) => ({
+        dataSource={users?.map((record: { id: unknown; dob: string, ["address"]:string, ["phone-number"]:string }) => ({
           ...record,
           key: record.id,
           dob: record.dob ? formatDate2(record.dob) : "N/A",
+          ["address"]: record.address ? record.address : "N/A",
+          ["phone-number"]: record["phone-number"] ? record["phone-number"] : "N/A"
         }))}
         pagination={{
           current: currentPage,

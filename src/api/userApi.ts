@@ -10,12 +10,20 @@ const getAllUser = (page: number) => {
   });
 };
 
+const getUserInfoDetail = (userId: number) => {
+  return axiosClient.get(`/api/accounts/${userId}`);
+};
+
 const addUser = (formValues: UserInfo) => {
   return axiosClient.post(`/api/accounts`, formValues);
 };
+
+const editUser = (formValues: UserInfo) => {
+  return axiosClient.put(`/api/accounts`, formValues);
+}
 
 const deleteUser = (userId: number) => {
   return axiosClient.delete(`/api/accounts/${userId}`);
 };
 
-export { getAllUser, addUser, deleteUser };
+export { getAllUser, addUser, deleteUser, editUser, getUserInfoDetail };

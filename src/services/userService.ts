@@ -1,4 +1,4 @@
-import { addUser, getAllUser, deleteUser } from "@/api/userApi";
+import { addUser, getAllUser, deleteUser, editUser, getUserInfoDetail } from "@/api/userApi";
 import { UserInfo } from "@/types/auth.types";
 import { CustomError } from "@/types/error.types";
 import { notification } from "antd";
@@ -15,10 +15,10 @@ const useUserService = () => {
     return { data, totalCount };
   };
 
-  // const getInfoPostDetail = async (postId: string) => {
-  //   const res = await getDetailPost(postId);
-  //   return res.data.postInfo;
-  // };
+  const getUserDetail = async (userId: number) => {
+    const res = await getUserInfoDetail(userId);
+    return res;
+  };
 
   const removeUser = async (userId: number) => {
     await deleteUser(userId);
@@ -28,6 +28,10 @@ const useUserService = () => {
   const addNewUser = async (formValues: UserInfo) => {
     const res = await addUser(formValues);
     return res;
+  };
+
+  const updateUser = async (formValues: UserInfo) => {
+    await editUser(formValues);
   };
 
   // const updatePostInfo = async ({
@@ -85,8 +89,30 @@ const useUserService = () => {
     },
   });
 
+  const updateUserMutation = useMutation(updateUser, {
+    onSuccess: () => {
+      notification.success({
+        message: "Chỉnh sửa thành công",
+        description: "Chỉnh sửa người dùng thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("users");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Lỗi khi chỉnh sửa",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
   const addNewUserItem = async (formValues: UserInfo) => {
     await addNewUserMutation.mutateAsync(formValues);
+  };
+
+  const updateUserItem = async (formValues: UserInfo) => {
+    await updateUserMutation.mutateAsync(formValues);
   };
 
   const deleteUserItem = async (userId: number) => {
@@ -102,6 +128,8 @@ const useUserService = () => {
     totalCount,
     addNewUserItem,
     deleteUserItem,
+    updateUserItem,
+    getUserDetail
   };
 };
 
