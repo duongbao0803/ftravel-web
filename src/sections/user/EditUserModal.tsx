@@ -1,17 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  Modal,
-  Form,
-  Input,
-  Row,
-  Col,
-  DatePicker,
-  Select,
-} from "antd";
-import {
-  UserOutlined,
-  PhoneOutlined,
-} from "@ant-design/icons";
+import { Modal, Form, Input, Row, Col, DatePicker, Select } from "antd";
+import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
 import { FaRegAddressCard } from "react-icons/fa6";
 import moment from "moment";
 import { UploadImage } from "@/components";
@@ -22,7 +11,7 @@ import useUserService from "@/services/userService";
 export interface EditUserModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
-  userInfo: UserInfo
+  userInfo: UserInfo;
 }
 
 const EditUserModal: React.FC<EditUserModalProps> = (props) => {
@@ -37,7 +26,7 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
   useEffect(() => {
     fetchUserData();
     if (isOpen) {
-      const updateUserInfo = {...userData}
+      const updateUserInfo = { ...userData };
       if (userData && userData.dob) {
         updateUserInfo.dob = dayjs(updateUserInfo.dob);
       }
@@ -49,22 +38,18 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
     form.setFieldsValue({ "avatar-url": fileChange });
   }, [fileChange, form]);
 
-  // console.log("check user", userData);
-
   const fetchUserData = async () => {
     try {
       const res = await getUserDetail(userInfo.id);
       if (res && res.status === 200) {
         console.log("Check data", res);
-        
+
         setUserData(res.data);
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.log("Error fetching user data", err);
     }
-  }
-  
+  };
 
   const handleOk = async () => {
     try {
