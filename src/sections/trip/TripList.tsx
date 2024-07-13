@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
-import { Button, Input, Table } from "antd";
+import { Button, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
-import { FilterOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { FilterOutlined } from "@ant-design/icons";
 import AddServiceModal from "./AddTripModal";
 import { useNavigate } from "react-router-dom";
 import useTripService from "@/services/tripService";
@@ -46,17 +46,17 @@ const TripList: React.FC = () => {
   const renderStatusTrip = (status: string) => {
     switch (status) {
       case TripStatus.OPENING:
-        return "ĐANG BÁN VÉ";
+        return <Tag color="green">ĐANG BÁN VÉ</Tag>;
       case TripStatus.PENDING:
-        return "ĐANG CHỜ";
+        return <Tag color="orange">ĐANG CHỜ</Tag>;
       case TripStatus.DEPARTED:
-        return "ĐÃ KHỞI HÀNH";
+        return <Tag color="blue">ĐÃ KHỞI HÀNH</Tag>;
       case TripStatus.COMPLETED:
-        return "ĐÃ HOÀN THÀNH";
+        return <Tag color="cyan">ĐÃ HOÀN THÀNH</Tag>;
       case TripStatus.CANCELED:
-        return "ĐÃ HỦY";
+        return <Tag color="red">ĐÃ HỦY</Tag>;
       default:
-        return "N/A";
+        return <Tag>N/A</Tag>;
     }
   };
 
@@ -150,13 +150,6 @@ const TripList: React.FC = () => {
           {/* <div>
             <ExportService />
           </div> */}
-          <div>
-            <Button type="primary" onClick={() => setIsOpen(true)}>
-              <div className="flex justify-center">
-                <PlusCircleOutlined className="mr-1 text-lg" /> Thêm chuyến xe
-              </div>
-            </Button>
-          </div>
         </div>
       </div>
       <Table

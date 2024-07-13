@@ -1,10 +1,11 @@
 import { TicketTypeInfo } from "@/types/ticket.types";
+import { CreateTripForm } from "@/types/trip.types";
 import { create } from "zustand";
 
 interface CreateTripState {
   listTicketChoose: TicketTypeInfo[] | null;
   setListTicketChoose: (listTicketChoose: TicketTypeInfo[]) => void;
-  createTripForm: object;
+  createTripForm: CreateTripForm;
   setCreateTripForm: (createTripForm: object) => void;
 }
 
