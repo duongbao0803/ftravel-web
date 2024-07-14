@@ -1,4 +1,10 @@
-import { addUser, getAllUser, deleteUser, editUser, getUserInfoDetail } from "@/api/userApi";
+import {
+  addUser,
+  getAllUser,
+  deleteUser,
+  editUser,
+  getUserInfoDetail,
+} from "@/api/userApi";
 import { UserInfo } from "@/types/auth.types";
 import { CustomError } from "@/types/error.types";
 import { notification } from "antd";
@@ -129,7 +135,7 @@ const useUserService = () => {
     addNewUserItem,
     deleteUserItem,
     updateUserItem,
-    getUserDetail
+    getUserDetail,
   };
 };
 

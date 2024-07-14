@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Button,
   Col,
@@ -28,6 +28,7 @@ import { StationDetailInfo } from "@/types/station.types";
 import { CommonStatusString } from "@/enums/enums";
 import AddStationModal from "./AddStationModal";
 import DropdownStationFunc from "./DropdownStationFunc";
+import ExportStation from "./ExportStation";
 
 const StationList: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -35,7 +36,6 @@ const StationList: React.FC = () => {
   const [stationDetail, setStationDetail] = useState<StationDetailInfo>();
   const { stations, totalCount, isFetching, fetchStationDetail } =
     useStationService();
-  // const [stationId, setStationId] = useState<number>(0);
   const { statusText, tagColor } =
     stationDetail && stationDetail.status
       ? renderStatusTag(stationDetail.status)
@@ -54,13 +54,9 @@ const StationList: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, [stationId]);
-
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
-  };
+  }, []);
 
   const handleRowClick = async (record: number) => {
     setStationDetail(undefined);
@@ -136,14 +132,14 @@ const StationList: React.FC = () => {
     [],
   );
 
-  const getStatusText = (status: string) => {
+  const getStatusText = useCallback((status: string) => {
     if (status === CommonStatusString.ACTIVE) {
       return "HOẠT ĐỘNG";
     } else if (status === CommonStatusString.INACTIVE) {
       return "TẠM DỪNG";
     }
     return "KHÔNG XÁC ĐỊNH";
-  };
+  }, []);
 
   return (
     <>
@@ -159,9 +155,9 @@ const StationList: React.FC = () => {
           </Button>
         </div>
         <div className="flex gap-x-2">
-          {/* <div>
-            <ExportRoute />
-          </div> */}
+          <div>
+            <ExportStation />
+          </div>
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">

@@ -51,7 +51,7 @@ const CreateTripInfoView: React.FC<CreateTripInfoProps> = React.memo(
       try {
         await addNewTripItem(newCreateTripForm);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error", error);
       }
     };
 

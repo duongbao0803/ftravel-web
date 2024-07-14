@@ -71,7 +71,6 @@ const UploadImage: React.FC<UploadImageProps> = (props) => {
         const storageRef = ref(storage, `/FTravel/${newFile.name}`);
         await uploadBytes(storageRef, resizedImage);
         const downloadURL = await getDownloadURL(storageRef);
-        console.log("check url", downloadURL)
         newFile.status = "done";
         setFileChange(downloadURL);
       } catch (error) {

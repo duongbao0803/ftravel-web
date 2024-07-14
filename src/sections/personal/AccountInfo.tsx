@@ -1,5 +1,14 @@
-import React, { useState } from "react";
-import { Row, Col, Form, Input, Button, DatePicker, Select } from "antd";
+import React, { useCallback, useEffect } from "react";
+import {
+  Row,
+  Col,
+  Form,
+  Input,
+  Button,
+  DatePicker,
+  Select,
+  notification,
+} from "antd";
 import {
   AuditOutlined,
   EnvironmentOutlined,
@@ -10,32 +19,62 @@ import { validatePhoneNumber } from "@/util/validate";
 import moment from "moment";
 import useAuthService from "@/services/authService";
 import dayjs from "dayjs";
-import { Gender } from "@/enums/enums";
-import { AccountData } from "@/types/auth.types";
+import { UserInfo } from "@/types/auth.types";
 
-const AccountInfo: React.FC = () => {
+interface AccountInfoProps {
+  fileChange: string;
+}
+
+const AccountInfo: React.FC<AccountInfoProps> = (props) => {
+  const { fileChange } = props;
   const [form] = Form.useForm();
-  const { userInfo } = useAuthService();
-  const [, setValues] = useState<AccountData>({
-    address: "",
-    "avatar-url": "",
-    dob: "",
-    email: "",
-    role: 0,
-    "phone-number": "",
-    "full-name": "",
-  });
+  const { userInfo, updatePersonalItem } = useAuthService();
+  const { Option } = Select;
+  const genderValue =
+    userInfo?.gender === 0 ? "Nam" : userInfo?.gender === 1 ? "Nữ" : "Khác";
 
-  const onFinish = (values: AccountData) => {
-    setValues(values);
-  };
+  useEffect(() => {
+    const updateUserInfo = { ...userInfo };
+    if (userInfo && userInfo.dob) {
+      updateUserInfo.dob = dayjs(userInfo.dob);
+      updateUserInfo.gender = genderValue;
+    }
+    form.setFieldsValue(updateUserInfo);
+  }, []);
+
+  const onFinish = useCallback(
+    async (values: UserInfo) => {
+      if (!fileChange) {
+        notification.warning({
+          message: "Chỉnh sửa không thành công",
+          description: "Vui lòng chọn ảnh đại diện",
+          duration: 2,
+        });
+        return;
+      }
+      if (values.gender === "Nam") {
+        values.gender = 0;
+      } else if (values.gender === "Nữ") {
+        values.gender = 1;
+      }
+      if (userInfo) {
+        const updateValues = {
+          ...values,
+          "account-id": userInfo.id,
+          "avatar-url": fileChange,
+        };
+        await updatePersonalItem(updateValues);
+      }
+    },
+    [fileChange, updatePersonalItem, userInfo],
+  );
 
   const disabledDate = (current: object) => {
     return current && current > moment().startOf("day");
   };
 
   return (
-    <div>
+    <>
       <Form name="normal_login" form={form} onFinish={onFinish}>
         <Row gutter={16} className="relative">
           <Col span={12}>
@@ -50,7 +89,6 @@ const AccountInfo: React.FC = () => {
               label="Email"
               labelCol={{ span: 24 }}
               className="formItem"
-              initialValue={userInfo?.email}
             >
               <Input
                 prefix={<MailOutlined className="site-form-item-icon" />}
@@ -77,7 +115,6 @@ const AccountInfo: React.FC = () => {
               label="Họ và tên"
               labelCol={{ span: 24 }}
               className="formItem"
-              initialValue={userInfo?.["full-name"]}
             >
               <Input
                 prefix={<AuditOutlined className="site-form-item-icon" />}
@@ -102,7 +139,6 @@ const AccountInfo: React.FC = () => {
               label="Số điện thoại"
               labelCol={{ span: 24 }}
               className="formItem"
-              initialValue={userInfo?.["phone-number"]}
             >
               <Input
                 prefix={
@@ -127,7 +163,6 @@ const AccountInfo: React.FC = () => {
                 disabledDate={disabledDate}
                 format="DD/MM/YYYY"
                 className="formItem w-full p-2"
-                defaultValue={dayjs(userInfo?.dob)}
               />
             </Form.Item>
           </Col>
@@ -140,7 +175,6 @@ const AccountInfo: React.FC = () => {
               label="Địa chỉ"
               labelCol={{ span: 24 }}
               className="formItem"
-              initialValue={userInfo?.address}
             >
               <Input
                 prefix={<EnvironmentOutlined className="site-form-item-icon" />}
@@ -152,32 +186,27 @@ const AccountInfo: React.FC = () => {
           <Col span={12}>
             <Form.Item
               name="gender"
-              // rules={[
-              //   {
-              //     required: true,
-              //     message: "Vui lòng chọn giới tính",
-              //   },
-              // ]}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn giới tính",
+                },
+              ]}
               colon={true}
               label="Giới tính"
               labelCol={{ span: 24 }}
               className="formItem"
             >
-              <Select placeholder="Chọn giới tính">
-                {Object.keys(Gender).map((key: string) => {
-                  const genderValue = Gender[key as keyof typeof Gender];
-                  if (typeof genderValue === "number") {
-                    return (
-                      <Select.Option
-                        key={genderValue}
-                        value={genderValue.toString()}
-                      >
-                        {key}
-                      </Select.Option>
-                    );
-                  }
-                  return null;
-                })}
+              <Select placeholder="Chọn giới tính" className="h-10">
+                <Option key={0} value="0">
+                  Nam
+                </Option>
+                <Option key={1} value="1">
+                  Nữ
+                </Option>
+                <Option key={3} value="2">
+                  Khác
+                </Option>
               </Select>
             </Form.Item>
           </Col>
@@ -192,7 +221,7 @@ const AccountInfo: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
-    </div>
+    </>
   );
 };
 

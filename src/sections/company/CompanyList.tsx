@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Button,
   Col,
@@ -65,9 +65,9 @@ const CompanyList: React.FC = () => {
     }
   };
 
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
-  };
+  }, []);
 
   const handleRowClick = async (record: number) => {
     setCompanyDetail(undefined);
@@ -150,16 +150,6 @@ const CompanyList: React.FC = () => {
         },
         width: "10%",
       },
-      // {
-      //   title: "",
-      //   dataIndex: "",
-      //   render: (_, record) => (
-      //     <>
-      //       {" "}
-      //       <DropdownCompanyFunc />
-      //     </>
-      //   ),
-      // },
     ],
     [],
   );
@@ -184,7 +174,8 @@ const CompanyList: React.FC = () => {
           <div>
             <Button type="primary" onClick={() => setIsOpen(true)}>
               <div className="flex justify-center">
-                <PlusCircleOutlined className="mr-1 text-lg"/>Thêm nhà xe
+                <PlusCircleOutlined className="mr-1 text-lg" />
+                Thêm nhà xe
               </div>
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, UserAddOutlined } from "@ant-design/icons";
@@ -10,125 +10,116 @@ import DropdownUserFunc from "./DropdownUserFunc";
 import { Roles } from "@/enums/enums";
 import { UserInfo } from "@/types/auth.types";
 
-// export interface DataType {
-//   id: number;
-//   key: string;
-//   name: string;
-//   image: string;
-//   description: string;
-//   gender: number;
-//   dob: string | Date;
-//   "role-id": number;
-// }
-
 const UserList: React.FC = React.memo(() => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { users, isFetching, totalCount } = useUserService();
-
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
-  };
+  }, []);
 
-  const columns: TableProps<UserInfo>["columns"] = [
-    {
-      title: "STT",
-      dataIndex: "index",
-      key: "index",
-      render: (_, _record, index) => index + 1,
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      width: "20%",
-    },
-    {
-      title: "Họ và tên",
-      dataIndex: "full-name",
-      width: "15%",
-    },
-    {
-      title: "Ngày sinh",
-      dataIndex: "dob",
-      width: "15%",
-    },
-    {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      width: "17%",
-    },
-    {
-      title: "Số điện thoại",
-      dataIndex: "phone-number",
-      width: "10%",
-    },
-    {
-      title: "Vai trò",
-      dataIndex: "role",
-      width: "5%",
-      render: (roleName) => {
-        let roleText = "";
-        let tagColor = "";
-        switch (roleName) {
-          case "CUSTOMER":
-            roleText = "CUSTOMER";
-            tagColor = "pink";
-            break;
-          case Roles.DRIVER.toString():
-            roleText = "DRIVER";
-            tagColor = "green";
-            break;
-          case Roles.BUSCOMPANY.toString():
-            roleText = "BUS";
-            tagColor = "red";
-            break;
-          case Roles.ADMIN.toString():
-            roleText = "ADMIN";
-            tagColor = "blue";
-            break;
-          default:
-            roleText = "UNKNOWN";
-            tagColor = "gray";
-            break;
-        }
-        return <Tag color={tagColor}>{roleText}</Tag>;
+  const columns: TableProps<UserInfo>["columns"] = useMemo(
+    () => [
+      {
+        title: "STT",
+        dataIndex: "index",
+        key: "index",
+        render: (_, _record, index) => index + 1,
       },
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "status",
-      render: (status) => {
-        let statusText = "";
-        let tagColor = "";
-        switch (status) {
-          case "ACTIVE":
-            statusText = "ACTIVE";
-            tagColor = "green";
-            break;
-          case "INACTIVE":
-            statusText = "INACTIVE";
-            tagColor = "pink";
-            break;
-          default:
-            statusText = "UNKNOWN";
-            tagColor = "gray";
-            break;
-        }
-        return <Tag color={tagColor}>{statusText}</Tag>;
+      {
+        title: "Email",
+        dataIndex: "email",
+        width: "20%",
       },
-      width: "10%",
-    },
-    {
-      title: "",
-      dataIndex: "",
-      render: (_, record) => (
-        <>
-          <DropdownUserFunc userInfo={record} />
-        </>
-      ),
-    },
-  ];
+      {
+        title: "Họ và tên",
+        dataIndex: "full-name",
+        width: "15%",
+      },
+      {
+        title: "Ngày sinh",
+        dataIndex: "dob",
+        width: "15%",
+      },
+      {
+        title: "Địa chỉ",
+        dataIndex: "address",
+        width: "17%",
+      },
+      {
+        title: "Số điện thoại",
+        dataIndex: "phone-number",
+        width: "10%",
+      },
+      {
+        title: "Vai trò",
+        dataIndex: "role",
+        width: "5%",
+        render: (roleName) => {
+          let roleText = "";
+          let tagColor = "";
+          switch (roleName) {
+            case "CUSTOMER":
+              roleText = "CUSTOMER";
+              tagColor = "pink";
+              break;
+            case Roles.DRIVER.toString():
+              roleText = "DRIVER";
+              tagColor = "green";
+              break;
+            case Roles.BUSCOMPANY.toString():
+              roleText = "BUS";
+              tagColor = "red";
+              break;
+            case Roles.ADMIN.toString():
+              roleText = "ADMIN";
+              tagColor = "blue";
+              break;
+            default:
+              roleText = "UNKNOWN";
+              tagColor = "gray";
+              break;
+          }
+          return <Tag color={tagColor}>{roleText}</Tag>;
+        },
+      },
+      {
+        title: "Trạng thái",
+        dataIndex: "status",
+        render: (status) => {
+          let statusText = "";
+          let tagColor = "";
+          switch (status) {
+            case "ACTIVE":
+              statusText = "ACTIVE";
+              tagColor = "green";
+              break;
+            case "INACTIVE":
+              statusText = "INACTIVE";
+              tagColor = "pink";
+              break;
+            default:
+              statusText = "UNKNOWN";
+              tagColor = "gray";
+              break;
+          }
+          return <Tag color={tagColor}>{statusText}</Tag>;
+        },
+        width: "10%",
+      },
+      {
+        title: "",
+        dataIndex: "",
+        render: (_, record) => (
+          <>
+            <DropdownUserFunc userInfo={record} />
+          </>
+        ),
+      },
+    ],
+    [],
+  );
 
   return (
     <>
@@ -160,13 +151,22 @@ const UserList: React.FC = React.memo(() => {
         className="pagination"
         id="myTable"
         columns={columns}
-        dataSource={users?.map((record: { id: unknown; dob: string, ["address"]:string, ["phone-number"]:string }) => ({
-          ...record,
-          key: record.id,
-          dob: record.dob ? formatDate2(record.dob) : "N/A",
-          ["address"]: record.address ? record.address : "N/A",
-          ["phone-number"]: record["phone-number"] ? record["phone-number"] : "N/A"
-        }))}
+        dataSource={users?.map(
+          (record: {
+            id: unknown;
+            dob: string;
+            ["address"]: string;
+            ["phone-number"]: string;
+          }) => ({
+            ...record,
+            key: record.id,
+            dob: record.dob ? formatDate2(record.dob) : "N/A",
+            ["address"]: record.address ? record.address : "N/A",
+            ["phone-number"]: record["phone-number"]
+              ? record["phone-number"]
+              : "N/A",
+          }),
+        )}
         pagination={{
           current: currentPage,
           total: totalCount || 0,

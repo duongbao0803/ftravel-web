@@ -6,11 +6,11 @@ export interface SigninValues {
 }
 
 export interface AuthState {
+  role: string | null;
   isAuthenticated: boolean;
+  setRole: (role: string | null) => void;
   login: () => void;
   logout: () => void;
-  setRole: (role: string) => void;
-  role: string | null;
 }
 
 export interface Role {
@@ -31,15 +31,14 @@ export interface SignupValues {
 
 export interface UserInfo {
   id: number;
-  name?: string;
   address?: string;
   "avatar-url"?: string;
-  dob?: Date | string | Dayjs;
+  dob?: string | number | Date | Dayjs;
   email: string;
-  role?: number;
+  role?: number | string;
   "phone-number"?: string;
   "full-name"?: string;
-  gender?: number;
+  gender?: number | string;
 }
 
 export interface AccountData {
@@ -51,7 +50,7 @@ export interface AccountData {
   role?: number;
   "phone-number"?: string;
   "full-name"?: string;
-  gender?: number;
+  gender?: number | string;
 }
 
 export interface UserInfoDetail {

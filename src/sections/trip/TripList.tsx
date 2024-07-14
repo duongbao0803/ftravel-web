@@ -1,49 +1,38 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
-import AddServiceModal from "./AddTripModal";
 import { useNavigate } from "react-router-dom";
 import useTripService from "@/services/tripService";
 import { TripInfo } from "@/types/trip.types";
 import { formatDate4 } from "@/util/validate";
 import { TripStatus } from "@/enums/enums";
-
-// export interface DataType {
-//   id: string;
-//   key: string;
-//   name: string;
-//   defaultPrice: number;
-//   imgUrl: [];
-//   quantity: number;
-//   shortDescription: string;
-//   fullDescription: string;
-// }
+import ExportTrip from "./ExportTrip";
 
 const TripList: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-
+  const [isTemplate, setIsTemplate] = useState<boolean>(true);
   const [, setCurrentPage] = useState<number>(1);
-  const [, setTripId] = useState<number>();
+  const [, setTripId] = useState<number | null>(null);
   const { trips, isFetching } = useTripService();
   const navigate = useNavigate();
 
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
-  };
+  }, []);
 
-  const [isTemplate, setIsTemplate] = useState(true);
-
-  const filterTrips = trips.filter((trip: TripInfo) => trip?.["is-template"]);
-  const filterTripsTemplate = trips.filter(
-    (trip: TripInfo) => !trip?.["is-template"],
+  const filteredTrips = useMemo(
+    () =>
+      trips.filter((trip: TripInfo) =>
+        isTemplate ? !trip["is-template"] : trip["is-template"],
+      ),
+    [trips, isTemplate],
   );
 
-  const handleFilter = () => {
+  const handleFilter = useCallback(() => {
     setIsTemplate((prev) => !prev);
-  };
+  }, []);
 
-  const renderStatusTrip = (status: string) => {
+  const renderStatusTrip = useCallback((status: string) => {
     switch (status) {
       case TripStatus.OPENING:
         return <Tag color="green">ĐANG BÁN VÉ</Tag>;
@@ -58,7 +47,7 @@ const TripList: React.FC = () => {
       default:
         return <Tag>N/A</Tag>;
     }
-  };
+  }, []);
 
   const columns: TableProps<TripInfo>["columns"] = useMemo(
     () => [
@@ -93,38 +82,42 @@ const TripList: React.FC = () => {
         title: "Trạng thái",
         dataIndex: "status",
         width: "15%",
-        render: (status: string) => renderStatusTrip(status),
+        render: renderStatusTrip,
       },
       {
         title: "Loại",
         dataIndex: "is-template",
         width: "30%",
-        render: (_text, record) => (
+        render: (_, record) => (
           <span>{record["is-template"] ? "Mẫu" : "Thương mại"}</span>
         ),
       },
     ],
-    [],
+    [renderStatusTrip],
   );
 
-  const handleRowClick = (record: number) => {
-    setTripId(record);
-    navigate(`/trip/${record}`);
-  };
-
-  const dataSource = (isTemplate ? filterTripsTemplate : filterTrips).map(
-    (record: TripInfo) => ({
-      ...record,
-      key: record.id,
-      "open-ticket-date": record["open-ticket-date"]
-        ? formatDate4(record["open-ticket-date"])
-        : "N/A",
-      "estimated-start-date": record["estimated-start-date"]
-        ? formatDate4(record["estimated-start-date"])
-        : "N/A",
-    }),
+  const handleRowClick = useCallback(
+    (record: number) => {
+      setTripId(record);
+      navigate(`/trip/${record}`);
+    },
+    [navigate],
   );
 
+  const dataSource = useMemo(
+    () =>
+      filteredTrips.map((record: TripInfo) => ({
+        ...record,
+        key: record.id,
+        "open-ticket-date": record["open-ticket-date"]
+          ? formatDate4(record["open-ticket-date"])
+          : "N/A",
+        "estimated-start-date": record["estimated-start-date"]
+          ? formatDate4(record["estimated-start-date"])
+          : "N/A",
+      })),
+    [filteredTrips],
+  );
   return (
     <>
       <div className="flex justify-between">
@@ -147,9 +140,9 @@ const TripList: React.FC = () => {
           </Button>
         </div>
         <div className="flex gap-x-2">
-          {/* <div>
-            <ExportService />
-          </div> */}
+          <div>
+            <ExportTrip />
+          </div>
         </div>
       </div>
       <Table
@@ -164,7 +157,6 @@ const TripList: React.FC = () => {
           onClick: () => handleRowClick(record.id),
         })}
       />
-      <AddServiceModal setIsOpen={setIsOpen} isOpen={isOpen} />
     </>
   );
 };

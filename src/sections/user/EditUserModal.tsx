@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Modal, Form, Input, Row, Col, DatePicker, Select } from "antd";
 import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
 import { FaRegAddressCard } from "react-icons/fa6";
@@ -7,6 +7,7 @@ import { UploadImage } from "@/components";
 import { UserInfo } from "@/types/auth.types";
 import dayjs from "dayjs";
 import useUserService from "@/services/userService";
+import { convertDateFormat } from "@/util/validate";
 
 export interface EditUserModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,51 +21,44 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [userData, setUserData] = useState<UserInfo>();
-  const { getUserDetail } = useUserService();
-
-  useEffect(() => {
-    fetchUserData();
-    if (isOpen) {
-      const updateUserInfo = { ...userData };
-      if (userData && userData.dob) {
-        updateUserInfo.dob = dayjs(updateUserInfo.dob);
-      }
-      form.setFieldsValue(updateUserInfo);
-    }
-  }, [isOpen]);
+  const { updateUserItem } = useUserService();
+  const genderValue =
+    userInfo?.gender === 0 ? "Nam" : userInfo?.gender === 1 ? "Nữ" : "Khác";
 
   useEffect(() => {
     form.setFieldsValue({ "avatar-url": fileChange });
   }, [fileChange, form]);
 
-  const fetchUserData = async () => {
-    try {
-      const res = await getUserDetail(userInfo.id);
-      if (res && res.status === 200) {
-        console.log("Check data", res);
-
-        setUserData(res.data);
+  useEffect(() => {
+    if (isOpen) {
+      const updateUserInfo = { ...userInfo };
+      if (userInfo && userInfo.dob) {
+        updateUserInfo.dob = dayjs(convertDateFormat(userInfo.dob));
+        updateUserInfo.gender = genderValue;
       }
-    } catch (err) {
-      console.log("Error fetching user data", err);
+      form.setFieldsValue(updateUserInfo);
     }
-  };
+  }, [isOpen]);
 
-  const handleOk = async () => {
+  const handleOk = useCallback(async () => {
     try {
-      // const values = await form.validateFields();
-
+      const values = await form.validateFields();
+      if (values.gender === "Nam") {
+        values.gender = 0;
+      } else if (values.gender === "Nữ") {
+        values.gender = 1;
+      }
+      const updateValues = { ...values, "account-id": userInfo.id };
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          // if (productInfo && productInfo._id) {
-          //   await updateProductItem(productInfo._id, values);
-          //   setIsConfirmLoading(false);
-          //   setIsOpen(false);
-          // } else {
-          //   console.error("User is undefined");
-          // }
+          if (userInfo && userInfo.id) {
+            await updateUserItem(updateValues);
+            setIsConfirmLoading(false);
+            setIsOpen(false);
+          } else {
+            console.error("User is undefined");
+          }
         } catch (error) {
           setIsConfirmLoading(false);
           setIsOpen(true);
@@ -73,7 +67,7 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
     } catch (errorInfo) {
       console.error("Validation failed:", errorInfo);
     }
-  };
+  }, [form, setIsOpen, updateUserItem, userInfo]);
 
   const handleCancel = () => {
     setIsOpen(false);
@@ -114,7 +108,6 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
               label="Họ và tên"
               labelCol={{ span: 24 }}
               className="formItem"
-              initialValue={userData?.["full-name"]}
             >
               <Input
                 prefix={<UserOutlined className="site-form-item-icon mr-1" />}
@@ -136,9 +129,9 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
               label="Ngày sinh"
               labelCol={{ span: 24 }}
               className="formItem"
-              // initialValue={dayjs(userData?.dob)}
             >
               <DatePicker
+                picker="date"
                 format="DD/MM/YYYY"
                 className="w-full"
                 disabledDate={disabledDate}
@@ -160,13 +153,8 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
               label="Giới tính"
               labelCol={{ span: 24 }}
               className="formItem"
-              initialValue={userData?.gender}
             >
-              <Select
-                placeholder="Chọn giới tính"
-                // onChange={(value) => handleChooseRoute(value)}
-                // disabled={isSubmitted}
-              >
+              <Select placeholder="Chọn giới tính">
                 <Option key={0} value="0">
                   Nam
                 </Option>
@@ -192,14 +180,14 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
               label="Số điện thoại"
               labelCol={{ span: 24 }}
               className="formItem"
-              initialValue={userData?.["phone-number"]}
             >
               <Input
+                type="number"
                 prefix={
-                  // <FaAddressBook className="site-form-item-icon mr-1 rotate-90" />
                   <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
                 }
                 placeholder="Số điện thoại"
+                className="w-full"
                 maxLength={10}
               />
             </Form.Item>
@@ -217,7 +205,6 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
           label="Địa chỉ"
           labelCol={{ span: 24 }}
           className="formItem"
-          initialValue={userData?.address}
         >
           <Input
             prefix={<FaRegAddressCard site-form-item-icon mr-1 />}
@@ -227,7 +214,7 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
         </Form.Item>
 
         <Form.Item
-          name="image"
+          name="avatar-url"
           rules={[
             {
               required: true,
@@ -241,7 +228,7 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
         >
           <UploadImage
             onFileChange={handleFileChange}
-            initialImage={userData?.["avatar-url"]}
+            initialImage={userInfo?.["avatar-url"]}
           />
         </Form.Item>
       </Form>
