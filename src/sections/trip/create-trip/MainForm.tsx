@@ -248,12 +248,10 @@ const MainForm: React.FC = React.memo(() => {
                 {
                   required: true,
                   message: "Vui lòng chọn loại vé cho chuyến",
-                  type: "array",
                 },
               ]}
             >
               <Select
-                mode="multiple"
                 placeholder="Chọn loại vé"
                 onChange={handleTicketTypeChange}
                 disabled={isSubmitted}

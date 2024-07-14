@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
-import type { TableProps } from "antd";
+import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined } from "@ant-design/icons";
 import { formatDate4 } from "@/util/validate";
 import DropdownCityFunc from "./DropdownOrderFunc";
@@ -17,15 +17,15 @@ import { OrderInfo } from "@/types/order.types";
 // }
 
 const OrderList: React.FC = React.memo(() => {
-  const { orders, isFetching } = useOrderService();
+  const { orders, totalCount, isFetching } = useOrderService();
 
   // const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  // const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // const handleTableChange = (pagination: TablePaginationConfig) => {
-  //   setCurrentPage(pagination.current || 1);
-  // };
+  const handleTableChange = (pagination: TablePaginationConfig) => {
+    setCurrentPage(pagination.current || 1);
+  };
 
   const columns: TableProps<OrderInfo>["columns"] = [
     {
@@ -41,19 +41,13 @@ const OrderList: React.FC = React.memo(() => {
     },
     {
       title: "Nhà xe",
-      // dataIndex: "customer-name",
+      dataIndex: "bus-company-name",
       width: "20%",
-      render: () => {
-        return "Bảo bất lực"
-      }
     },
     {
       title: "Chuyến xe",
-      // dataIndex: "customer-name",
-      width: "20%",
-      render: () => {
-        return "Chuyến xe test"
-      }
+      dataIndex: "trip-name",
+      width: "20%"
     },
     {
       title: "Giá tiền (tokens)",
@@ -137,14 +131,14 @@ const OrderList: React.FC = React.memo(() => {
               : "N/A",
           }),
         )}
-        // pagination={{
-        //   current: currentPage,
-        //   total: totalCount || 0,
-        //   pageSize: 5,
-        // }}
-        // onChange={handleTableChange}
+        pagination={{
+          current: currentPage,
+          total: totalCount || 0,
+          pageSize: 10,
+        }}
+        onChange={handleTableChange}
         loading={isFetching}
-        rowKey={(record) => record.id}
+        rowKey={(record) => record["order-id"]}
       />
     </>
   );
