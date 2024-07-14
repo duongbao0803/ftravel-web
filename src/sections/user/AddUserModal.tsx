@@ -204,11 +204,10 @@ const AddUserModal: React.FC<AddModalProps> = React.memo((props) => {
               labelCol={{ span: 24 }}
               className="formItem"
             >
-              <Select
-                placeholder="Chọn vai trò"
-              >
+              <Select placeholder="Chọn vai trò" className="h-10">
                 {Object.keys(CreateRoles).map((key: string) => {
-                  const roleValue = CreateRoles[key as keyof typeof CreateRoles];
+                  const roleValue =
+                    CreateRoles[key as keyof typeof CreateRoles];
                   if (typeof roleValue === "number") {
                     return (
                       <Select.Option

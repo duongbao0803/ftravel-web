@@ -1,14 +1,16 @@
+import { Dayjs } from "dayjs";
+
 export interface SigninValues {
   email: string;
   password: string;
 }
 
 export interface AuthState {
+  role: string | null;
   isAuthenticated: boolean;
+  setRole: (role: string | null) => void;
   login: () => void;
   logout: () => void;
-  setRole: (role: string) => void;
-  role: string | null;
 }
 
 export interface Role {
@@ -28,14 +30,27 @@ export interface SignupValues {
 }
 
 export interface UserInfo {
+  id: number;
+  address?: string;
+  "avatar-url"?: string;
+  dob?: string | number | Date | Dayjs;
+  email: string;
+  role?: number | string;
+  "phone-number"?: string;
+  "full-name"?: string;
+  gender?: number | string;
+}
+
+export interface AccountData {
   name?: string;
   address?: string;
   "avatar-url"?: string;
-  dob?: Date | string;
+  dob?: Date | string | Dayjs;
   email: string;
   role?: number;
-  "phone-number": string;
-  "full-name": string;
+  "phone-number"?: string;
+  "full-name"?: string;
+  gender?: number | string;
 }
 
 export interface UserInfoDetail {

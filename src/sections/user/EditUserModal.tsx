@@ -1,49 +1,64 @@
-import { useEffect, useState } from "react";
-import { Modal, Form, Input, Row, Col, InputNumber } from "antd";
-import {
-  UserOutlined,
-  PhoneOutlined,
-  StarOutlined,
-  AppstoreAddOutlined,
-  BarsOutlined,
-  PoundCircleOutlined,
-} from "@ant-design/icons";
+import { useCallback, useEffect, useState } from "react";
+import { Modal, Form, Input, Row, Col, DatePicker, Select } from "antd";
+import { UserOutlined, PhoneOutlined } from "@ant-design/icons";
+import { FaRegAddressCard } from "react-icons/fa6";
+import moment from "moment";
+import { UploadImage } from "@/components";
+import { UserInfo } from "@/types/auth.types";
+import dayjs from "dayjs";
+import useUserService from "@/services/userService";
+import { convertDateFormat } from "@/util/validate";
 
 export interface EditUserModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isOpen: boolean;
+  userInfo: UserInfo;
 }
 
 const EditUserModal: React.FC<EditUserModalProps> = (props) => {
-  const { setIsOpen, isOpen } = props;
-  const [fileChange] = useState<string>("");
+  const { setIsOpen, isOpen, userInfo } = props;
+  const [fileChange, setFileChange] = useState<string>("");
   const [isConfirmLoading, setIsConfirmLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
-
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     form.setFieldsValue(productInfo);
-  //   }
-  // }, [isOpen]);
+  const { Option } = Select;
+  const { updateUserItem } = useUserService();
+  const genderValue =
+    userInfo?.gender === 0 ? "Nam" : userInfo?.gender === 1 ? "Nữ" : "Khác";
 
   useEffect(() => {
-    form.setFieldsValue({ image: fileChange });
+    form.setFieldsValue({ "avatar-url": fileChange });
   }, [fileChange, form]);
 
-  const handleOk = async () => {
-    try {
-      // const values = await form.validateFields();
+  useEffect(() => {
+    if (isOpen) {
+      const updateUserInfo = { ...userInfo };
+      if (userInfo && userInfo.dob) {
+        updateUserInfo.dob = dayjs(convertDateFormat(userInfo.dob));
+        updateUserInfo.gender = genderValue;
+      }
+      form.setFieldsValue(updateUserInfo);
+    }
+  }, [isOpen]);
 
+  const handleOk = useCallback(async () => {
+    try {
+      const values = await form.validateFields();
+      if (values.gender === "Nam") {
+        values.gender = 0;
+      } else if (values.gender === "Nữ") {
+        values.gender = 1;
+      }
+      const updateValues = { ...values, "account-id": userInfo.id };
       setIsConfirmLoading(true);
       setTimeout(async () => {
         try {
-          // if (productInfo && productInfo._id) {
-          //   await updateProductItem(productInfo._id, values);
-          //   setIsConfirmLoading(false);
-          //   setIsOpen(false);
-          // } else {
-          //   console.error("User is undefined");
-          // }
+          if (userInfo && userInfo.id) {
+            await updateUserItem(updateValues);
+            setIsConfirmLoading(false);
+            setIsOpen(false);
+          } else {
+            console.error("User is undefined");
+          }
         } catch (error) {
           setIsConfirmLoading(false);
           setIsOpen(true);
@@ -52,15 +67,19 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
     } catch (errorInfo) {
       console.error("Validation failed:", errorInfo);
     }
-  };
+  }, [form, setIsOpen, updateUserItem, userInfo]);
 
   const handleCancel = () => {
     setIsOpen(false);
   };
 
-  // const handleFileChange = (newFileChange: string) => {
-  //   setFileChange(newFileChange);
-  // };
+  const disabledDate = (current: object) => {
+    return current && current > moment().startOf("day");
+  };
+
+  const handleFileChange = (newFileChange: string) => {
+    setFileChange(newFileChange);
+  };
 
   return (
     <Modal
@@ -74,49 +93,48 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
         <Row gutter={16} className="relative mt-1">
           <Col span={12}>
             <Form.Item
-              name="name"
+              name="full-name"
               rules={[
                 {
                   required: true,
-                  message: "Please input name",
+                  message: "Vui lòng nhập tên",
                 },
                 {
                   min: 5,
-                  message: "Name must be at least 5 characters",
+                  message: "Tên phải có ít nhất 5 kí tự",
                 },
               ]}
               colon={true}
-              label="Name"
+              label="Họ và tên"
               labelCol={{ span: 24 }}
               className="formItem"
             >
               <Input
                 prefix={<UserOutlined className="site-form-item-icon mr-1" />}
-                placeholder="Name"
+                placeholder="Họ tên"
                 autoFocus
               />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              name="typeOfProduct"
+              name="dob"
               rules={[
                 {
                   required: true,
-                  message: "Please input typeOfProduct",
+                  message: "Vui lòng chọn ngày sinh",
                 },
               ]}
               colon={true}
-              label="Type Of Product"
+              label="Ngày sinh"
               labelCol={{ span: 24 }}
               className="formItem"
             >
-              <Input
-                prefix={
-                  <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
-                }
-                placeholder="Phone"
-                maxLength={10}
+              <DatePicker
+                picker="date"
+                format="DD/MM/YYYY"
+                className="w-full"
+                disabledDate={disabledDate}
               />
             </Form.Item>
           </Col>
@@ -124,100 +142,79 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
         <Row gutter={16} className="relative mt-1">
           <Col span={12}>
             <Form.Item
-              name="rating"
+              name="gender"
               rules={[
                 {
                   required: true,
-                  message: "Please input rating",
-                },
-                {
-                  type: "number",
-                  min: 1,
-                  max: 5,
-                  message: "Rating must be at least 1 and most 5",
+                  message: "Vui lòng chọn giới tính",
                 },
               ]}
               colon={true}
-              label="Rating"
+              label="Giới tính"
               labelCol={{ span: 24 }}
               className="formItem"
             >
-              <InputNumber
-                className="w-full"
-                prefix={<StarOutlined className="site-form-item-icon mr-1" />}
-                placeholder="Rating"
-              />
+              <Select placeholder="Chọn giới tính">
+                <Option key={0} value="0">
+                  Nam
+                </Option>
+                <Option key={1} value="1">
+                  Nữ
+                </Option>
+                <Option key={3} value="2">
+                  Khác
+                </Option>
+              </Select>
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              name="quantity"
+              name="phone-number"
               rules={[
                 {
                   required: true,
-                  message: "Please input quantity",
-                },
-                {
-                  type: "number",
-                  min: 1,
-                  message: "Quantity must be at least 1",
+                  message: "Vui lòng nhập số điện thoại",
                 },
               ]}
               colon={true}
-              label="Quantity"
+              label="Số điện thoại"
               labelCol={{ span: 24 }}
               className="formItem"
             >
-              <InputNumber
-                className="w-full"
+              <Input
+                type="number"
                 prefix={
-                  <AppstoreAddOutlined className="site-form-item-icon mr-1" />
+                  <PhoneOutlined className="site-form-item-icon mr-1 rotate-90" />
                 }
-                placeholder="Quantity"
+                placeholder="Số điện thoại"
+                className="w-full"
+                maxLength={10}
               />
             </Form.Item>
           </Col>
         </Row>
         <Form.Item
-          name="description"
+          name="address"
           rules={[
             {
               required: true,
-              message: "Please input description",
+              message: "Vui lòng nhập địa chỉ",
             },
           ]}
-          label="Description"
+          colon={true}
+          label="Địa chỉ"
           labelCol={{ span: 24 }}
           className="formItem"
         >
           <Input
-            prefix={<BarsOutlined className="site-form-item-icon mr-1" />}
-            placeholder="Description"
+            prefix={<FaRegAddressCard site-form-item-icon mr-1 />}
+            placeholder="Địa chỉ"
+            maxLength={10}
           />
         </Form.Item>
+
         <Form.Item
-          name="price"
-          rules={[
-            {
-              required: true,
-              message: "Please input price",
-            },
-          ]}
-          colon={true}
-          label="Price"
-          labelCol={{ span: 24 }}
-          className="formItem"
-        >
-          <InputNumber
-            className="w-full"
-            prefix={
-              <PoundCircleOutlined className="site-form-item-icon mr-1" />
-            }
-            placeholder="Price"
-          />
-        </Form.Item>
-        <Form.Item
-          name="image"
+          name="avatar-url"
           rules={[
             {
               required: true,
@@ -229,10 +226,10 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
           labelCol={{ span: 24 }}
           className="formItem"
         >
-          {/* <UploadImageProduct
+          <UploadImage
             onFileChange={handleFileChange}
-            initialImage={productInfo?.image}
-          /> */}
+            initialImage={userInfo?.["avatar-url"]}
+          />
         </Form.Item>
       </Form>
     </Modal>

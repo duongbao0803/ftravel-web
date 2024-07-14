@@ -14,7 +14,7 @@ import {
 import useAuth from "@/hooks/useAuth";
 import useAuthService from "@/services/authService";
 import logo from "../assets/images/logo/FTravel.png";
-import { IoBusOutline } from "react-icons/io5";
+import { IoBusOutline, IoDocumentTextOutline } from "react-icons/io5";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -49,7 +49,7 @@ const items: MenuItem[] = [
   getItem("Dashboard", "1", <PieChartOutlined />, undefined, "/chart"),
   getItem("Thành phố", "2", <PushpinOutlined />, undefined, "/city"),
   getItem("Nhà xe", "3", <HomeOutlined />, undefined, "/company"),
-  // getItem("Dịch vụ", "5", <ShoppingOutlined />, undefined, "/service"),
+  getItem("Đơn hàng", "4", <IoDocumentTextOutline />, undefined, "/order"),
   getItem("Tuyến đường", "5", <ShareAltOutlined />, undefined, "/route"),
   getItem("Trạm xe", "6", <TruckOutlined />, undefined, "/station"),
   getItem("Chuyến xe ", "7", <IoBusOutline />, undefined, "/trip"),
@@ -153,7 +153,7 @@ const DashboardLayout: React.FC<LayoutProps> = ({ children }) => {
           <>
             <img
               className="h-[42px] w-[42px] rounded-full border object-cover ring-2 ring-gray-300 hover:ring-[#0077ff]"
-              src="https://maimoikethon.com/sieu-nhan-gao-do-chibi/imager_5946.jpg"
+              src={userInfo?.["avatar-url"] && userInfo?.["avatar-url"] !== null ? userInfo["avatar-url"] :"https://maimoikethon.com/sieu-nhan-gao-do-chibi/imager_5946.jpg"}
             />
           </>
 
