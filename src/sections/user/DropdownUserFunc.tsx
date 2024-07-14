@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Dropdown } from "antd";
 import { DeleteOutlined, EditOutlined, MoreOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { DataType } from "./UserList";
 import EditUserModal from "./EditUserModal";
 import DeleteUserModal from "./DeleteUserModal";
 import useUserService from "@/services/userService";
+import { UserInfo } from "@/types/auth.types";
 
 export interface DropdownUserFuncProps {
-  userInfo: DataType;
+  userInfo: UserInfo;
 }
 
 const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
@@ -58,7 +58,7 @@ const DropdownUserFunc: React.FC<DropdownUserFuncProps> = (props) => {
       <EditUserModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        // productInfo={productInfo}
+        userInfo={userInfo}
       />
     </>
   );

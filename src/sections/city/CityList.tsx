@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Button, Input, Table, Tag } from "antd";
 import type { TablePaginationConfig, TableProps } from "antd";
 import { FilterOutlined, PushpinOutlined } from "@ant-design/icons";
@@ -19,57 +19,58 @@ export interface DataType {
 
 const CityList: React.FC = React.memo(() => {
   const { cities, isFetching, totalCount } = useCityService();
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const handleTableChange = (pagination: TablePaginationConfig) => {
+  const handleTableChange = useCallback((pagination: TablePaginationConfig) => {
     setCurrentPage(pagination.current || 1);
-  };
+  }, []);
 
-  const columns: TableProps<DataType>["columns"] = [
-    {
-      title: "STT",
-      dataIndex: "index",
-      key: "index",
-      render: (_, _record, index) => index + 1,
-    },
-    {
-      title: "Tên thành phố",
-      dataIndex: "name",
-      width: "35%",
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "create-date",
-      width: "25%",
-    },
-    {
-      title: "Ngày thay đổi",
-      dataIndex: "update-date",
-      width: "25%",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "is-deleted",
-      render: () => {
-        const statusText = "ACTIVE";
-        const tagColor = "green";
-        return <Tag color={tagColor}>{statusText}</Tag>;
+  const columns: TableProps<DataType>["columns"] = useMemo(
+    () => [
+      {
+        title: "STT",
+        dataIndex: "index",
+        key: "index",
+        render: (_, _record, index) => index + 1,
       },
-      width: "15%",
-    },
-    {
-      title: "",
-      dataIndex: "",
-      render: (_, record) => (
-        <>
-          <DropdownCityFunc cityInfo={record} />
-        </>
-      ),
-    },
-  ];
+      {
+        title: "Tên thành phố",
+        dataIndex: "name",
+        width: "35%",
+      },
+      {
+        title: "Ngày tạo",
+        dataIndex: "create-date",
+        width: "25%",
+      },
+      {
+        title: "Ngày thay đổi",
+        dataIndex: "update-date",
+        width: "25%",
+      },
+      {
+        title: "Trạng thái",
+        dataIndex: "is-deleted",
+        render: () => {
+          const statusText = "ACTIVE";
+          const tagColor = "green";
+          return <Tag color={tagColor}>{statusText}</Tag>;
+        },
+        width: "15%",
+      },
+      {
+        title: "",
+        dataIndex: "",
+        render: (_, record) => (
+          <>
+            <DropdownCityFunc cityInfo={record} />
+          </>
+        ),
+      },
+    ],
+    [],
+  );
 
   return (
     <>

@@ -44,16 +44,14 @@ const CreateTripInfoView: React.FC<CreateTripInfoProps> = React.memo(
           duration: 2,
         });
       }
-      // const combinedData = {
-      //   ...mainData,
-      //   'trip-services': [serviceData],
-      //   'trip-tickets': [ticketData],
-      // };
+
+      const newCreateTripForm = { ...createTripForm };
+      delete newCreateTripForm["bus-company-id"];
 
       try {
-        await addNewTripItem(createTripForm);
+        await addNewTripItem(newCreateTripForm);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error", error);
       }
     };
 

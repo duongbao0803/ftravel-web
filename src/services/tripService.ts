@@ -3,9 +3,11 @@ import { CustomError } from "@/types/error.types";
 import { CreateTripForm } from "@/types/trip.types";
 import { notification } from "antd";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 const useTripService = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const fetchTrips = async (page: number) => {
     const res = await getAllTrip(page);
@@ -55,13 +57,24 @@ const useTripService = () => {
   );
 
   const addNewTripMutation = useMutation(addNewTrip, {
-    onSuccess: () => {
+    onSuccess: async () => {
+      let currentSeconds = 3;
       notification.success({
         message: "Tạo thành công",
-        description: "Tạo chuyến xe thành công",
-        duration: 2,
+        description: `Tạo chuyến xe thành công. Quay về danh sách chuyến xe sau ${currentSeconds} giây`,
+        duration: 3,
       });
-      queryClient.invalidateQueries("trips");
+
+      const interval = setInterval(() => {
+        currentSeconds -= 1;
+        if (currentSeconds <= 0) {
+          clearInterval(interval);
+          navigate("/trip");
+          queryClient.invalidateQueries("trips");
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
     },
     onError: (err: CustomError) => {
       notification.error({

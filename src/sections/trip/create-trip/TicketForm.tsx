@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Form, Input, Select, Button, InputNumber } from "antd";
 import { TripDetailInfo } from "@/types/trip.types";
 import useTripService from "@/services/tripService";
@@ -27,6 +26,7 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
   const [form] = Form.useForm();
 
   const handleSubmit = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (values: any) => {
       setCreateTripForm({
         ...createTripForm,
@@ -51,28 +51,63 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
     [fetchTripDetail],
   );
 
-  const handlePrice = useCallback(
-    (value: number, name: string | number) => {
-      const ticketData = listTicketChoose?.find(
-        (listTicket: TicketTypeInfo) => listTicket.id === value,
-      );
-      setTicketPrices((prev) => ({ ...prev, [name]: ticketData?.price }));
-    },
-    [listTicketChoose],
-  );
-
   useEffect(() => {
     fetchDataTrip(tripId);
   }, [tripId]);
 
-  const sortListTicketChoose = listTicketChoose
-    ?.slice()
-    .sort((a: TicketTypeInfo, b: TicketTypeInfo) => a.price - b.price);
+  const sortListTicketChoose = useMemo(() => {
+    return listTicketChoose
+      ?.slice()
+      .sort((a: TicketTypeInfo, b: TicketTypeInfo) => a.price - b.price);
+  }, [listTicketChoose]);
+
+  const initialTickets = useMemo(() => {
+    return tripDetail2?.tickets.map((ticket) => ({
+      ...ticket,
+      "ticket-type-id": sortListTicketChoose
+        ? sortListTicketChoose[0]?.id
+        : ticket["ticket-type-id"],
+      price: sortListTicketChoose
+        ? sortListTicketChoose[0]?.price
+        : ticket.price,
+    }));
+  }, [tripDetail2, sortListTicketChoose]);
+  const handleTicketTypeChange = useCallback(
+    (value: number) => {
+      const selectedTicket = listTicketChoose?.find(
+        (ticket) => ticket.id === value,
+      );
+
+      if (selectedTicket) {
+        form.setFieldsValue({
+          "trip-tickets": form
+            .getFieldValue("trip-tickets")
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map((ticket: any) => ({
+              ...ticket,
+              "ticket-type-id": selectedTicket.id,
+              price: selectedTicket.price,
+            })),
+        });
+
+        setTicketPrices(() =>
+          form
+            .getFieldValue("trip-tickets")
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .reduce((acc: any, index: number) => {
+              acc[index] = selectedTicket.price;
+              return acc;
+            }, {}),
+        );
+      }
+    },
+    [form, listTicketChoose],
+  );
 
   return tripDetail2 && tripDetail2?.tickets ? (
     <Form
       layout="vertical"
-      initialValues={{ "trip-tickets": tripDetail2.tickets }}
+      initialValues={{ "trip-tickets": initialTickets }}
       onFinish={handleSubmit}
       form={form}
     >
@@ -90,7 +125,6 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
                 <Form.Item
                   {...restField}
                   name={[name, "seat-code"]}
-                  //   label="Seat Code"
                   rules={[{ required: true, message: "Seat Code is required" }]}
                   className="flex-1"
                 >
@@ -99,7 +133,6 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
                 <Form.Item
                   {...restField}
                   name={[name, "status"]}
-                  //   label="Status"
                   rules={[
                     {
                       required: true,
@@ -112,7 +145,7 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
                 </Form.Item>
                 <Form.Item
                   {...restField}
-                  // name="ticket-type-id"
+                  name={[name, "ticket-type-id"]}
                   rules={[
                     { required: true, message: "Ticket Type ID is required" },
                   ]}
@@ -121,12 +154,7 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
                   <Select
                     disabled={isSubmitted}
                     className="w-[100px]"
-                    onChange={(value) => handlePrice(parseInt(value), name)}
-                    defaultValue={
-                      sortListTicketChoose
-                        ? sortListTicketChoose[0]?.name
-                        : undefined
-                    }
+                    onChange={(value) => handleTicketTypeChange(value)}
                   >
                     {listTicketChoose?.map((type: TicketTypeInfo) => (
                       <Option key={type.id} value={type.id}>
@@ -135,23 +163,16 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
                     ))}
                   </Select>
                 </Form.Item>
-
                 <Form.Item
-                  rules={[
-                    { required: true, message: "Ticket Type ID is required" },
-                  ]}
+                  {...restField}
+                  name={[name, "price"]}
+                  rules={[{ required: true, message: "Price is required" }]}
                   className="flex-1"
                 >
                   <InputNumber
                     type="number"
-                    readOnly={isSubmitted}
+                    readOnly
                     className="w-full"
-                    defaultValue={
-                      sortListTicketChoose &&
-                      sortListTicketChoose[0]?.price !== null
-                        ? sortListTicketChoose[0]?.price
-                        : undefined
-                    }
                     value={ticketPrices[name]}
                   />
                 </Form.Item>

@@ -1,8 +1,13 @@
 import { getInfoUser } from "@/api/authenApi";
+import { editUser } from "@/api/userApi";
 import { UserInfo } from "@/types/auth.types";
-import { useQuery } from "react-query";
+import { CustomError } from "@/types/error.types";
+import { notification } from "antd";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const useAuthService = () => {
+  const queryClient = useQueryClient();
+
   const fetchUserInfo = async (): Promise<UserInfo | undefined> => {
     try {
       const res = await getInfoUser();
@@ -17,6 +22,10 @@ const useAuthService = () => {
     }
   };
 
+  const updatePersonal = async (formValues: UserInfo) => {
+    await editUser(formValues);
+  };
+
   const { data: userInfo, isLoading: isFetching } = useQuery(
     "userInfo",
     fetchUserInfo,
@@ -26,10 +35,33 @@ const useAuthService = () => {
     },
   );
 
+  const updatePersonalMutation = useMutation(updatePersonal, {
+    onSuccess: () => {
+      notification.success({
+        message: "Chỉnh sửa thành công",
+        description: "Chỉnh sửa thông tin cá thân thành công",
+        duration: 2,
+      });
+      queryClient.invalidateQueries("userInfo");
+    },
+    onError: (err: CustomError) => {
+      notification.error({
+        message: "Lỗi khi chỉnh sửa",
+        description: `${err?.response?.data?.message}`,
+        duration: 2,
+      });
+    },
+  });
+
+  const updatePersonalItem = async (formValues: UserInfo) => {
+    await updatePersonalMutation.mutateAsync(formValues);
+  };
+
   return {
     isFetching,
     userInfo,
     fetchUserInfo,
+    updatePersonalItem,
   };
 };
 

@@ -1,6 +1,6 @@
 import useTripService from "@/services/tripService";
 import { TicketTripInfo } from "@/types/ticket.types";
-import { Table, TableProps } from "antd";
+import { Table, TableProps, Tag } from "antd";
 import React, { useEffect, useState } from "react";
 
 export interface TripTicketListProps {
@@ -33,6 +33,30 @@ const TripTicketList: React.FC<TripTicketListProps> = React.memo((props) => {
     fetchData(tripId);
   }, [tripId]);
 
+  const renderStatusTag = (status: string) => {
+    switch (status) {
+      case "AVAILABLE":
+        return <Tag color="green">Còn trống</Tag>;
+      case "BOOKED":
+        return <Tag color="blue">Đã đặt</Tag>;
+      case "SOLD":
+        return <Tag color="red">Đã bán</Tag>;
+      default:
+        return <Tag color="gray">Không rõ</Tag>;
+    }
+  };
+
+  const renderTicketTypeTag = (type: string) => {
+    switch (type) {
+      case "VIP":
+        return <Tag color="gold">VIP</Tag>;
+      case "Normal":
+        return <Tag color="blue">Normal</Tag>;
+      default:
+        return <Tag color="gray">Khác</Tag>;
+    }
+  };
+
   const columns: TableProps<TicketTripInfo>["columns"] = [
     {
       title: "STT",
@@ -50,11 +74,13 @@ const TripTicketList: React.FC<TripTicketListProps> = React.memo((props) => {
       title: "Trạng thái",
       dataIndex: "status",
       width: "20%",
+      render: (status: string) => renderStatusTag(status),
     },
     {
       title: "Loại vé",
       dataIndex: "ticket-type-name",
       width: "35%",
+      render: (type: string) => renderTicketTypeTag(type),
     },
     // {
     //   title: "",

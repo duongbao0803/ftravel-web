@@ -7,6 +7,7 @@ import AuthenPage from "@/pages/AuthenPage";
 import useAuth from "@/hooks/useAuth";
 import { ROLE } from "@/constants";
 import TripCreatePage from "@/pages/TripCreatePage";
+import useAuthService from "@/services/authService";
 
 export const ChartPage = lazy(() => import("@/pages/ChartPage"));
 export const CityManagementPage = lazy(
@@ -35,10 +36,13 @@ export const PersonalInformationPage = lazy(
 );
 
 export const PushNoticePage = lazy(() => import("@/pages/PushNoticePage"));
-export const TripManagementPage = lazy(() => import("@/pages/TripManagementPage"));
+export const TripManagementPage = lazy(
+  () => import("@/pages/TripManagementPage"),
+);
 export const TripDetailsPage = lazy(() => import("@/pages/TripDetailsPage"));
-
-
+export const OrderManagementPage = lazy(
+  () => import("@/pages/OrderManagementPage"),
+);
 
 const checkAccessAdmin = (role: string) => {
   return role === ROLE.ADMIN;
@@ -51,11 +55,12 @@ const checkAccessBusCompany = (role: string) => {
 const Router: React.FC = () => {
   useAnimation();
   const isAuthenticated = useAuth((state) => state.isAuthenticated);
-  const role = useAuth((state) => state.role);
+  const { userInfo } = useAuthService();
+  const role = userInfo?.role;
   let hasAccessAdmin = false;
   let hasAccessBusCompany = false;
 
-  if (role !== null) {
+  if (userInfo?.role !== null && typeof role === "string") {
     hasAccessAdmin = checkAccessAdmin(role);
     hasAccessBusCompany = checkAccessBusCompany(role);
   }
@@ -189,6 +194,15 @@ const Router: React.FC = () => {
               <ForBidden />
             ),
           path: "/trip/:id/clone",
+        },
+        {
+          element:
+            hasAccessBusCompany || hasAccessAdmin ? (
+              <OrderManagementPage />
+            ) : (
+              <ForBidden />
+            ),
+          path: "/order",
         },
 
         { element: <Error />, path: "*" },

@@ -25,4 +25,15 @@ export interface TripDetailInfo extends TripInfo {
   tickets: [TicketTripInfo];
 }
 
-export interface CreateTripForm {}
+export interface CreateTripForm {
+  "bus-company-id"?: string;
+  "driver-id"?: string;
+  "estimated-end-date"?: string;
+  "estimated-start-date"?: string;
+  name?: string;
+  "open-ticket-date"?: string;
+  "route-id"?: number;
+  "ticket-type-ids"?: string[];
+  "trip-services"?: unknown[];
+  "trip-tickets"?: unknown[];
+}
