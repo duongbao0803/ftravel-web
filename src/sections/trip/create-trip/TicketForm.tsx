@@ -28,6 +28,7 @@ const TicketForm: React.FC<TicketFormProps> = React.memo((props) => {
   const handleSubmit = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (values: any) => {
+      console.log("check values", values);
       setCreateTripForm({
         ...createTripForm,
         "trip-tickets": values["trip-tickets"],
