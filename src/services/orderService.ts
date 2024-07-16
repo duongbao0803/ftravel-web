@@ -6,15 +6,12 @@ const useOrderService = () => {
 
   const fetchOrders = async (page: number) => {
     const res = await getAllOrder(page);
-    const { 
-      data, 
-      // headers 
-    } = res;
-    // const pagination = JSON.parse(headers["x-pagination"]);
-    // const totalCount = pagination.TotalCount;
-    return { 
-      data, 
-      // totalCount 
+    const { data, headers } = res;
+    const pagination = JSON.parse(headers["x-pagination"]);
+    const totalCount = pagination.TotalCount;
+    return {
+      data,
+      totalCount,
     };
   };
 
@@ -112,16 +109,13 @@ const useOrderService = () => {
   //   await updateOrderMutation.mutateAsync(formValues);
   // };
 
-  const orders =
-    ordersData?.data.filter(
-      (order: { [x: string]: boolean }) => order["is-deleted"] === false,
-    ) || [];
-  // const totalCount = ordersData?.totalCount || 0;
+  const orders = ordersData?.data;
+  const totalCount = ordersData?.totalCount || 0;
 
   return {
     isFetching,
     orders,
-    // totalCount,
+    totalCount,
     // deleteOrderItem,
     // addNewOrderItem,
     // updateOrderItem,

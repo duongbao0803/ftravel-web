@@ -11,7 +11,7 @@ const getAllCompany = (page: number) => {
 };
 
 const getCompanyDetail = (companyId: number) => {
-  return axiosClient.get(`/api/buscompany/by-bus-id/${companyId}`);
+  return axiosClient.get(`/api/buscompany/${companyId}`);
 };
 
 const addCompany = (formValues: CompanyInfo) => {
